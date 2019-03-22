@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Gitter Chat -->
 <script>
   ((window.gitter = {}).chat = {}).options = {
-    room: 'moleculerjs/moleculer'
+    room: 'moleculer-go/moleculer'
   };
 </script>
 <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>

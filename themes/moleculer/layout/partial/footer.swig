@@ -1,7 +1,7 @@
 <footer id="footer" class="wrapper">
   <div class="inner">
     <div id="footer-copyright">
-      Copyright &copy; 2016-{{ moment(Date.now()).year() }} <a href="https://github.com/icebob" target="_blank">{{ config.author }}</a><br>
+      Copyright &copy; 2018-{{ moment(Date.now()).year() }} <a href="https://github.com/pentateu" target="_blank">{{ config.author }}</a><br>
       Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
     </div>
     <div id="footer-links">
