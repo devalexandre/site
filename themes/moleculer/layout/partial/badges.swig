@@ -1,19 +1,21 @@
 <!-- Travis badge -->
-<img src="https://travis-ci.org/moleculerjs/moleculer.svg?branch=master" />
+<img src="https://travis-ci.org/moleculer-go/moleculer.svg?branch=develop" />
 
 <!-- Coveralls badge -->
-<img src="https://coveralls.io/repos/github/moleculerjs/moleculer/badge.svg?branch=master" />
-
-<!-- Codacy badge -->
-<img src="https://api.codacy.com/project/badge/Grade/ec4dab24e4ea4c1eb0d1590f12c81a46" />
+<img src="https://coveralls.io/repos/github/moleculer-go/moleculer/badge.svg?branch=develop" />
 
 <!-- Code Climate badge -->
-<img src="https://api.codeclimate.com/v1/badges/05ef990fe1ccb3e56067/maintainability" />
-
-<!-- Snyk badge -->
-<img src="https://snyk.io/test/github/moleculerjs/moleculer/badge.svg" />
-
-<!-- NPM downloads -->
-<a href="http://www.npmtrends.com/moleculer" target="_blank">
-    <img src="https://img.shields.io/npm/dm/moleculer.svg" />
+<a href="https://codeclimate.com/github/moleculer-go/moleculer/maintainability">
+    <img src="https://api.codeclimate.com/v1/badges/514bcfed231e0e74c087/maintainability" />
 </a>
+
+<!-- Go report card -->
+<a href="https://goreportcard.com/report/github.com/moleculer-go/moleculer" rel="nofollow">
+    <img src="https://goreportcard.com/badge/github.com/moleculer-go/moleculer" alt="Go Report Card" data-canonical-src="https://goreportcard.com/badge/github.com/moleculer-go/moleculer" style="max-width:100%;">
+</a>
+
+<!-- fossa -->
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fmoleculer-go%2Fmoleculer?ref=badge_shield" rel="nofollow">
+    <img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmoleculer-go%2Fmoleculer.svg?type=shield" alt="Ffossa Status"  style="max-width:100%;">
+</a>
+

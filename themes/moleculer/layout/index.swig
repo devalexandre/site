@@ -1,14 +1,18 @@
 <header id="banner" class="wrapper">
   <div class="inner">
-    <h1 id="banner-title">{{ page.headline }}</h1>
-    <h2 id="banner-subtitle">{{ page.subtitle }}</h2>
+     
+      <h1 style="display: inline;" id="banner-title">{{ page.headline }}</h1>
+       <h2 id="banner-subtitle">{{ page.subtitle }}</h2>
     <div id="banner-version">
-      <img src="https://img.shields.io/npm/v/moleculer.svg"/>
+      <img src="https://https://img.shields.io/badge/Moleculer-Go-informational.svg?style=flat-square&logo=github"/>
     </div>
 
+    <img id="gopher-start" src="images/moleculer-gopher.jpg" style="width: 100px;height: auto;" />
+    
     <div id="banner-start">
-      <span id="banner-start-command">npm install moleculer</span><a id="banner-start-link" href="docs/"><i class="fa fa-arrow-right"></i></a>
+      <span id="banner-start-command">go get github.com/moleculer-go/moleculer</span><a id="banner-start-link" href="docs/"><i class="fa fa-arrow-right"></i></a>
     </div>
+    
     <div id="banner-badges">{{ partial('partial/badges') }}</div>
     <div id="banner-share">{{ partial('partial/share') }}</div>
     <div id="banner-donate">{{ partial('partial/donate') }}</div>
@@ -22,7 +26,7 @@
           <div class="intro-feature">
             <div class="intro-feature-icon"><i class="fa fa-bolt"></i></div>
             <h3 class="intro-feature-title">Blazing fast</h3>
-            <p class="intro-feature-desc">High-performance microservices framework. Check the <a href="/docs/0.13/benchmark.html">benchmark results</a>!</p>
+            <p class="intro-feature-desc">High-performance microservices framework. Check the <a href="/docs/0.1/benchmark.html">benchmark results</a>!</p>
           </div>
         </li>
         <li class="intro-feature-wrap">

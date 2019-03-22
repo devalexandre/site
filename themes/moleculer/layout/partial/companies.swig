@@ -1,3 +1,4 @@
+<!--
 <section>
 	<h2 class="section-title">Who is using Moleculer?</h2>
 
@@ -13,5 +14,6 @@
     	</div>
     {% endfor %}
 
-	<div class="company-missing">If you don't see here your company, <a href="https://github.com/moleculerjs/moleculer/issues/101" target="_blank">tell us.</a></div>
+	<div class="company-missing">If you don't see here your company, <a href="https://github.com/moleculer-go/moleculer/issues/101" target="_blank">tell us.</a></div>
 </section>
+-->

@@ -1,6 +1,6 @@
 layout: index
-headline: Moleculer
-description: Moleculer is a progressive microservices framework powered by Node.js.
-subtitle: Progressive microservices framework for Node.js.
+headline: Moleculer Go
+description: Moleculer is a progressive microservices framework powered by Golang.
+subtitle: Progressive microservices framework for Golang.
 comments: false
 ---
