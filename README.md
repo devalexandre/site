@@ -17,7 +17,12 @@ $ npm run dev
 $ npm run build
 ```
 
+# terraform
+
+using a template and cli tools from these guys: https://github.com/turnerlabs/fargate
+
 # Contact
+
 Copyright (c) 2016-2018 Moleculer JS
 
 [![@icebob](https://img.shields.io/badge/github-moleculerjs-green.svg)](https://github.com/moleculerjs) [![@icebob](https://img.shields.io/badge/twitter-MoleculerJS-blue.svg)](https://twitter.com/MoleculerJS)
