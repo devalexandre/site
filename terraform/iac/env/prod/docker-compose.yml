@@ -1,0 +1,9 @@
+version: "2"
+services:
+    site:
+        build: ../../../../
+        image: 343426943007.dkr.ecr.us-east-1.amazonaws.com/site:latest
+        ports:
+            - 80:80
+        env_file:
+            - prod.env
