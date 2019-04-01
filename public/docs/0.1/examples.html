@@ -41,17 +41,19 @@
   <link rel="alternate" href="/atom.xml" title="Moleculer Go - Progressive microservices framework in Go">
   -->
   <!-- Open Graph -->
-  <meta name="description" content="Project examplesRealworld backend serverThis is a RealWorld.io example backend server with Moleculer microservices framework. Key features  7 microservices NeDB or MongoDB database without Mongoose Us">
+  <meta name="description" content="Project examples">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Examples">
 <meta property="og:url" content="https://gomicro.services/docs/0.1/examples.html">
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
-<meta property="og:description" content="Project examplesRealworld backend serverThis is a RealWorld.io example backend server with Moleculer microservices framework. Key features  7 microservices NeDB or MongoDB database without Mongoose Us">
+<meta property="og:description" content="Project examples">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-03-28T22:05:28.474Z">
+<meta property="og:image" content="https://img.shields.io/badge/under-construction-red.svg">
+<meta property="og:updated_time" content="2019-04-01T03:23:43.134Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Examples">
-<meta name="twitter:description" content="Project examplesRealworld backend serverThis is a RealWorld.io example backend server with Moleculer microservices framework. Key features  7 microservices NeDB or MongoDB database without Mongoose Us">
+<meta name="twitter:description" content="Project examples">
+<meta name="twitter:image" content="https://img.shields.io/badge/under-construction-red.svg">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
   
@@ -119,52 +121,11 @@
                 <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/examples.md" class="article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
               </header>
               <div class="article-content" itemprop="articleBody">
-                <h2 id="Project-examples" class="article-heading"><a href="#Project-examples" class="headerlink" title="Project examples"></a>Project examples<a class="article-anchor" href="#Project-examples" aria-hidden="true"></a></h2><h3 id="Realworld-backend-server" class="article-heading"><a href="#Realworld-backend-server" class="headerlink" title="Realworld backend server"></a>Realworld backend server<a class="article-anchor" href="#Realworld-backend-server" aria-hidden="true"></a></h3><p>This is a <a href="https://realworld.io/" target="_blank" rel="noopener">RealWorld.io</a> example backend server with Moleculer microservices framework.</p>
-<p><strong>Key features</strong></p>
-<ul>
-<li>7 microservices</li>
-<li>NeDB or MongoDB database without Mongoose</li>
-<li>User login &amp; signup</li>
-<li>User authentication with JWT</li>
-<li>Memory caching</li>
-<li>Docker files</li>
-</ul>
-<p><strong>Repo: <a href="https://github.com/moleculer-go/moleculer-examples/tree/master/conduit#readme" target="_blank" rel="noopener">https://github.com/moleculer-go/moleculer-examples/tree/master/conduit#readme</a></strong></p>
-<h3 id="Blog" class="article-heading"><a href="#Blog" class="headerlink" title="Blog"></a>Blog<a class="article-anchor" href="#Blog" aria-hidden="true"></a></h3><p>This is a simple blog example.</p>
-<p><strong>Key features</strong></p>
-<ul>
-<li>Docker files</li>
-<li>ExpressJS www server with Pug</li>
-<li>MongoDB database with <a href="https://github.com/moleculer-go/moleculer-db" target="_blank" rel="noopener">moleculer-db</a> and <a href="https://github.com/moleculer-go/moleculer-db/tree/master/packages/moleculer-db-adapter-mongoose" target="_blank" rel="noopener">moleculer-db-adapter-mongoose</a> modules</li>
-<li>NATS transporter</li>
-<li>Redis cacher</li>
-<li><a href="https://traefik.io/" target="_blank" rel="noopener">Traefik</a> reverse proxy (in micro arch)</li>
-<li>static frontend</li>
-</ul>
-<p><strong>Repo: <a href="https://github.com/moleculer-go/moleculer-examples/blob/master/blog#readme" target="_blank" rel="noopener">https://github.com/moleculer-go/moleculer-examples/blob/master/blog#readme</a></strong></p>
-<h2 id="Short-examples" class="article-heading"><a href="#Short-examples" class="headerlink" title="Short examples"></a>Short examples<a class="article-anchor" href="#Short-examples" aria-hidden="true"></a></h2><p>The main Moleculer repository contains <a href="https://github.com/moleculer-go/moleculer/blob/master/examples/" target="_blank" rel="noopener">some examples</a>.</p>
-<h3 id="Simple" class="article-heading"><a href="#Simple" class="headerlink" title="Simple"></a>Simple<a class="article-anchor" href="#Simple" aria-hidden="true"></a></h3><p>This is a simple demo with a Math service which can <code>add</code>, <code>sub</code>, <code>mult</code> and <code>divide</code> two numbers.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm run demo simple</span><br></pre></td></tr></table></figure>
-<p><a href="https://github.com/moleculer-go/moleculer/blob/master/examples/simple/index.js" target="_blank" rel="noopener">Source code is available on Github</a></p>
-<h3 id="Server-amp-client-nodes" class="article-heading"><a href="#Server-amp-client-nodes" class="headerlink" title="Server &amp; client nodes"></a>Server &amp; client nodes<a class="article-anchor" href="#Server-amp-client-nodes" aria-hidden="true"></a></h3><p>In this example, you can start any servers &amp; clients. The servers serve the <code>math.add</code> action and clients call it in a loop. You can start multiple instances from both.<br><em>They use TCP transporter, but you can change it with <code>TRANSPORTER</code> env variable.</em></p>
-<p><strong>Start a server</strong><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ node examples/client-server/server</span><br></pre></td></tr></table></figure></p>
-<p><strong>Start a client</strong><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ node examples/client-server/client</span><br></pre></td></tr></table></figure></p>
-<p><a href="https://github.com/moleculer-go/moleculer/tree/master/examples/client-server" target="_blank" rel="noopener">Source code is available on Github</a></p>
-<h3 id="Middlewares" class="article-heading"><a href="#Middlewares" class="headerlink" title="Middlewares"></a>Middlewares<a class="article-anchor" href="#Middlewares" aria-hidden="true"></a></h3><p>This example demonstrates how the middleware system works.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm run demo middlewares</span><br></pre></td></tr></table></figure>
-<p><a href="https://github.com/moleculer-go/moleculer/blob/master/examples/middlewares/index.js" target="_blank" rel="noopener">Source code is available on Github</a></p>
-<h3 id="Runner" class="article-heading"><a href="#Runner" class="headerlink" title="Runner"></a>Runner<a class="article-anchor" href="#Runner" aria-hidden="true"></a></h3><p>This example shows how you can start a broker and load services with <a href="moleculer-runner.html">Moleculer Runner</a>.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ node ./bin/moleculer-runner.js -c examples/runner/moleculer.config.js -r examples/user.service.js</span><br></pre></td></tr></table></figure>
-<p>It starts a broker with options from <code>moleculer.config.js</code>, loads the user service from <code>user.service.js</code> file and switch to REPL mode.</p>
-<p><a href="https://github.com/moleculer-go/moleculer/blob/master/examples/runner" target="_blank" rel="noopener">Source code is available on Github</a></p>
-<h3 id="Load-tester" class="article-heading"><a href="#Load-tester" class="headerlink" title="Load tester"></a>Load tester<a class="article-anchor" href="#Load-tester" aria-hidden="true"></a></h3><p>With this example, you can start a load test. The server &amp; client prints how many requests executed in a second.</p>
-<p><strong>Start server</strong><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ node examples/loadtest/server</span><br></pre></td></tr></table></figure></p>
-<p><strong>Start &amp; fork clients (number of CPU cores)</strong><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ node examples/loadtest/clients</span><br></pre></td></tr></table></figure></p>
-<p><a href="https://github.com/moleculer-go/moleculer/blob/master/examples/loadtest" target="_blank" rel="noopener">Source code is available on Github</a></p>
+                <h2 id="Project-examples" class="article-heading"><a href="#Project-examples" class="headerlink" title="Project examples"></a>Project examples<a class="article-anchor" href="#Project-examples" aria-hidden="true"></a></h2><p><img src="https://img.shields.io/badge/under-construction-red.svg" alt="Under Construction"></p>
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-03-28T22:05:28.474Z" itemprop="dateModified">Last updated: 2019-03-28</time>
+                <time class="article-footer-updated" datetime="2019-04-01T03:23:43.134Z" itemprop="dateModified">Last updated: 2019-04-01</time>
                 <a href="usage.html" class="article-footer-prev" title="Usage"><i class="fa fa-chevron-left"></i><span>Prev</span></a><a href="broker.html" class="article-footer-next" title="Broker"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
@@ -173,7 +134,7 @@
           <aside id="article-toc" role="navigation">
             <div id="article-toc-inner">
               <strong class="sidebar-title">Contents</strong>
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Project-examples"><span class="toc-text">Project examples</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Realworld-backend-server"><span class="toc-text">Realworld backend server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Blog"><span class="toc-text">Blog</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Short-examples"><span class="toc-text">Short examples</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Simple"><span class="toc-text">Simple</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Server-amp-client-nodes"><span class="toc-text">Server &amp; client nodes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Middlewares"><span class="toc-text">Middlewares</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Runner"><span class="toc-text">Runner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Load-tester"><span class="toc-text">Load tester</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Project-examples"><span class="toc-text">Project examples</span></a></li></ol>
               <a href="#" id="article-toc-top">Back to Top</a>
             </div>
           </aside>

@@ -1,20 +1,16 @@
 gateway:
-  -
-    name: moleculer-web
-    link: https://github.com/moleculer-go/moleculer-web#readme
-    desc: Official API Gateway service.
-    author: Rafael Almeida
+    - name: moleculer-web
+      link: https://github.com/moleculer-go/moleculer-web#readme
+      desc: Official API Gateway service.
+      author: Rafael Almeida
 databases:
-  -
-    name: moleculer-db
-    link: https://github.com/moleculer-go/moleculer-db/tree/master/packages/moleculer-db#readme
-    desc: Moleculer service to store entities in database.
-    author: Rafael Almeida
-   
+    - name: moleculer-db
+      link: https://github.com/moleculer-go/moleculer-db#readme
+      desc: Moleculer service to store entities in database.
+      author: Rafael Almeida
+
 metrics:
-  -
-    name: moleculer-prometheus
-    link: https://github.com/moleculer-go/moleculer-metrics/blob/master/packages/moleculer-prometheus#readme
-    desc: Moleculer metrics module for Prometheus.
-    author: Rafael Almeida
- 
+    - name: moleculer-prometheus
+      link: https://github.com/moleculer-go/moleculer-metrics#readme
+      desc: Moleculer metrics module for Prometheus.
+      author: Rafael Almeida

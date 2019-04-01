@@ -1,465 +1,485 @@
 title: Database Adapters
----
+--- 
 Moleculer framework has an official set of [DB adapters](https://github.com/moleculer-go/moleculer-db). Use them to persist your data in a database.
 
 {% note info Database per service%}
-Moleculer follows the *one database per service* pattern. To learn more about this design pattern and its implications check this [article](https://microservices.io/patterns/data/database-per-service.html).
+Moleculer follows the _one database per service_ pattern. To learn more about this design pattern and its implications check this [article](https://microservices.io/patterns/data/database-per-service.html).
 {% endnote %}
 
 ## Features
-* default CRUD actions
-* [cached](caching.html) actions
-* pagination support
-* pluggable adapter ([NeDB](https://github.com/louischatriot/nedb) is the default memory adapter for testing & prototyping)
-* official adapters for MongoDB, PostgreSQL, SQLite, MySQL, MSSQL.
-* fields filtering
-* populating
-* encode/decode IDs
-* entity lifecycle events for notifications
 
-## Base Adapter [![NPM version](https://img.shields.io/npm/v/moleculer-db.svg)](https://www.npmjs.com/package/moleculer-db)
+-   default CRUD actions (create, find, count, list, get, update, remove)
+-   [cached](caching.html) actions
+-   pagination support
+-   pluggable adapter - There is the default memory adapter for testing & prototyping)
+-   official adapters for MongoDB.
+-   fields filtering
+-   populating
+-   encode/decode IDs
+-   entity lifecycle events for notifications
 
-Moleculer's default adapter is based on [NeDB](https://github.com/louischatriot/nedb). Use it to quickly set up and test you prototype.
+## Memory Adapter
+
+Moleculer's memory adapter uses [hashicorp/go-memdb](https://github.com/hashicorp/go-memdb). Use it to quickly set up and test you prototype and for writing test cases.
 
 {% note warn%}
-Only use this adapter for prototyping and testing. When you are ready to go into production simply swap to [Mongo](moleculer-db.html#Mongo-Adapter), [Mongoose](moleculer-db.html#Mongoose-Adapter) or [Sequelize](moleculer-db.html#Sequelize-Adapter) adapters as they all implement common [Settings](moleculer-db.html#Settings), [Actions](moleculer-db.html#Actions) and [Methods](moleculer-db.html#Methods).
+Only use this adapter for prototyping and testing. When you are ready to go into production simply swap to [Mongo](moleculer-db.html#Mongo-Adapter) ... adapters as they all implement common [Settings](moleculer-db.html#Settings), [Actions](moleculer-db.html#Actions).
 {% endnote %}
 
 ### Install
 
 ```bash
-$ npm install moleculer-db --save
+$ go get -u github.com/moleculer-go/moleculer-db
 ```
 
 ### Usage
 
-```js
-"use strict";
+```go
+package main
 
-const { ServiceBroker } = require("moleculer");
-const DbService = require("moleculer-db");
+import (
+ "fmt"
+ "time"
 
-const broker = new ServiceBroker();
+ db "github.com/moleculer-go/moleculer-db"
 
-// Create a DB service for `user` entities
-broker.createService({
-    name: "users",
+ "github.com/moleculer-go/moleculer"
+ "github.com/moleculer-go/moleculer/broker"
+)
 
-    // Mixin DB service into (current) 'users' service
-    mixins: [DbService],
+func main() {
+ var bkr = broker.New(&moleculer.Config{LogLevel: "info"})
+ bkr.AddService(moleculer.Service{
+  Name: "users",
+  Settings: map[string]interface{}{
+   "fields":    []string{"_id", "username", "name"},
+   "populates": map[string]interface{}{"friends": "users.get"},
+  },
+  Mixins: []moleculer.Mixin{db.Mixin(&db.MemoryAdapter{
+   Table:        "users",
+   SearchFields: []string{"name", "username"},
+  })},
+ })
+ bkr.Start()
+ time.Sleep(time.Millisecond * 300)
+ user := <-bkr.Call("users.create", map[string]interface{}{
+  "username": "john",
+  "name":     "John Doe",
+  "status":   1,
+ })
 
-    settings: {
-        fields: ["_id", "username", "name"]
-    },
+ id := user.Get("id").String()
+ // Get all users
+ fmt.Printf("all users: ", <-bkr.Call("users.find", map[string]interface{}{}))
 
-    afterConnected() {
-        // Seed the DB with ˙this.create`
-    }
-});
+ // List users with pagination
+ fmt.Printf("list users: ", <-bkr.Call("users.list", map[string]interface{}{
+  "page":     2,
+  "pageSize": 10,
+ }))
 
-broker.start()
+ idParam := map[string]interface{}{"id": id}
 
-// Create a new user
-.then(() => broker.call("users.create", {
-    username: "john",
-    name: "John Doe",
-    status: 1
-}))
+ // Get a user
+ fmt.Printf("get user: ", <-bkr.Call("users.get", idParam))
 
-// Get all users
-.then(() => broker.call("users.find").then(console.log));
+ // Update a user
+ fmt.Printf("update user: ", <-bkr.Call("users.update", map[string]interface{}{
+  "id":   id,
+  "name": "Jane Doe",
+ }))
 
-// List users with pagination
-.then(() => broker.call("users.list", { page: 2, pageSize: 10 }).then(console.log));
+ // Print user after update
+ fmt.Printf("get user: ", <-bkr.Call("users.get", idParam))
 
-// Get a user
-.then(() => broker.call("users.get", { id: 2 }).then(console.log));
+ // Delete a user
+ fmt.Printf("remove user: ", <-bkr.Call("users.remove", idParam))
 
-// Update a user
-.then(() => broker.call("users.update", { id: 2, name: "Jane Doe" }).then(console.log));
-
-// Delete a user
-.then(() => broker.call("users.remove", { id: 2 }).then(console.log));
-
+ bkr.Stop()
+}
 ```
 
-> More examples can be found on [GitHub](https://github.com/moleculer-go/moleculer-db/tree/master/packages/moleculer-db/examples)
+#### run the example above with:
+
+```bash
+$ go run github.com/moleculer-go/moleculer-db/examples/users
+```
+
+> More examples can be found on [GitHub](https://github.com/moleculer-go/moleculer-db/examples)
 
 ## Settings
 
 All DB adapters share a common set of settings:
 
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `idField` | `String` | **required** | Name of ID field. |
-| `fields` | `Array.<String>` | `null` | Field filtering list. It must be an `Array`. If the value is `null` or `undefined` doesn't filter the fields of entities. |
-| `populates` | `Array` | `null` | Schema for population. [Read more](#Populating). |
-| `pageSize` | `Number` | **required** | Default page size in `list` action. |
-| `maxPageSize` | `Number` | **required** | Maximum page size in `list` action. |
-| `maxLimit` | `Number` | **required** | Maximum value of limit in `find` action. Default: `-1` (no limit) |
-| `entityValidator` | `Object`, `function` | `null` | Validator schema or a function to validate the incoming entity in `create` & 'insert' actions. |
-
-{% note warn%}
-`idField` does not work with Sequelize adapter as you can freely set your own ID while creating the model.
-{% endnote %}
+| Property          | Type                     | Default      | Description                                                                                                                           |
+| ----------------- | ------------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `idField`         | `string`                 | **required** | Name of ID field.                                                                                                                     |
+| `fields`          | `[]string`               | ["**"]       | Field filtering list. It must be an `Array`. If the value is nil it will assume ["**"] and it will not filter the fields of entities. |
+| `populates`       | `map[string]interface{}` |              | Schema for population. [Read more](#Populating).                                                                                      |
+| `pageSize`        | `Number`                 | **required** | Default page size in `list` action.                                                                                                   |
+| `maxPageSize`     | `Number`                 | **required** | Maximum page size in `list` action.                                                                                                   |
+| `maxLimit`        | `Number`                 | **required** | Maximum value of limit in `find` action. Default: `-1` (no limit)                                                                     |
+| `entityValidator` | `Object`, `function`     | `null`       | Validator schema or a function to validate the incoming entity in `create` action.                                                    |
 
 ## Actions
 
 DB adapters also implement CRUD operations. These actions are public methods and can be called by other services.
 
-### [`find`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L75) ![Cached action](https://img.shields.io/badge/cache-true-blue.svg) 
+### [`find`](https://github.com/moleculer-go/moleculer-db/blob/master/moleculer_db.go#L81) ![Cached action](https://img.shields.io/badge/cache-true-blue.svg)
 
 Find entities by query.
 
 #### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `populate` | `Array.<String>` | - | Populated fields. |
-| `fields` | `Array.<String>` | - | Fields filter. |
-| `limit` | `Number` | **required** | Max count of rows. |
-| `offset` | `Number` | **required** | Count of skipped rows. |
-| `sort` | `String` | **required** | Sorted fields. |
-| `search` | `String` | **required** | Search text. |
-| `searchFields` | `String` | **required** | Fields for searching. |
-| `query` | `Object` | **required** | Query object. Passes to adapter. |
+
+| Property       | Type                     | Default      | Description                      |
+| -------------- | ------------------------ | ------------ | -------------------------------- |
+| `populate`     | `[]string`               | -            | Populated fields.                |
+| `fields`       | `[]string`               | -            | Fields filter.                   |
+| `limit`        | `Number`                 | **required** | Max count of rows.               |
+| `offset`       | `Number`                 | **required** | Count of skipped rows.           |
+| `sort`         | `string`                 | **required** | Sorted fields.                   |
+| `search`       | `string`                 | **required** | Search text.                     |
+| `searchFields` | `string`                 | **required** | Fields for searching.            |
+| `query`        | `map[string]interface{}` | **required** | Query object. Passes to adapter. |
 
 #### Results
-**Type:** `Array.<Object>` - List of found entities.
 
+**Type:** `moluculer.Paylod` - List of found entities.
 
-### [`count`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L110) ![Cached action](https://img.shields.io/badge/cache-true-blue.svg) 
+### [`count`](https://github.com/moleculer-go/moleculer-db/blob/master/moleculer_db.go#L261) ![Cached action](https://img.shields.io/badge/cache-true-blue.svg)
 
 Get count of entities by query.
 
 #### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `search` | `String` | **required** | Search text. |
-| `searchFields` | `String` | **required** | Fields list for searching. |
-| `query` | `Object` | **required** | Query object. Passes to adapter. |
+
+| Property       | Type     | Default      | Description                      |
+| -------------- | -------- | ------------ | -------------------------------- |
+| `search`       | `string` | **required** | Search text.                     |
+| `searchFields` | `string` | **required** | Fields list for searching.       |
+| `query`        | `Object` | **required** | Query object. Passes to adapter. |
 
 #### Results
+
 **Type:** `Number` - Count of found entities.
 
-
-### [`list`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L149) ![Cached action](https://img.shields.io/badge/cache-true-blue.svg) 
+### [`list`](https://github.com/moleculer-go/moleculer-db/blob/master/moleculer_db.go#L140) ![Cached action](https://img.shields.io/badge/cache-true-blue.svg)
 
 List entities by filters and pagination results.
 
 #### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `populate` | `Array.<String>` | - | Populated fields. |
-| `fields` | `Array.<String>` | - | Fields filter. |
-| `page` | `Number` | **required** | Page number. |
-| `pageSize` | `Number` | **required** | Size of a page. |
-| `sort` | `String` | **required** | Sorted fields. |
-| `search` | `String` | **required** | Search text. |
-| `searchFields` | `String` | **required** | Fields for searching. |
-| `query` | `Object` | **required** | Query object. Passes to adapter. |
+
+| Property       | Type                     | Default      | Description                      |
+| -------------- | ------------------------ | ------------ | -------------------------------- |
+| `populate`     | `[]string`               | -            | Populated fields.                |
+| `fields`       | `[]string`               | -            | Fields filter.                   |
+| `page`         | `Number`                 | **required** | Page number.                     |
+| `pageSize`     | `Number`                 | **required** | Size of a page.                  |
+| `sort`         | `string`                 | **required** | Sorted fields.                   |
+| `search`       | `string`                 | **required** | Search text.                     |
+| `searchFields` | `string`                 | **required** | Fields for searching.            |
+| `query`        | `map[string]interface{}` | **required** | Query object. Passes to adapter. |
 
 #### Results
-**Type:** `Object` - List of found entities and count.
 
-### [`create`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L207)
+**Type:** `moleculer.Payload` - List of found entities and count.
+
+### [`create`](https://github.com/moleculer-go/moleculer-db/blob/master/moleculer_db.go#L88)
 
 Create a new entity.
 
 #### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| - | - | - | - |
-*No input parameters.*
+
+Payload with fields to be saved in the new entity record.
 
 #### Results
-**Type:** `Object` - Saved entity.
 
-### [`insert`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L229)
+**Type:** `moleculer.Payload` - Saved entity.
 
-Create many new entities.
-
-#### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `entity` | `Object` | - | Entity to save. |
-| `entities` | `Array.<Object>` | - | Entities to save. |
-
-#### Results
-**Type:** `Object`, `Array.<Object>` - Saved entity(ies).
-
-### [`get`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L268) ![Cached action](https://img.shields.io/badge/cache-true-blue.svg) 
+### [`get`](https://github.com/moleculer-go/moleculer-db/blob/master/moleculer_db.go#L174) ![Cached action](https://img.shields.io/badge/cache-true-blue.svg)
 
 Get entity by ID.
 
 ##### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `id` | `any`, `Array.<any>` | **required** | ID(s) of entity. |
-| `populate` | `Array.<String>` | - | Field list for populate. |
-| `fields` | `Array.<String>` | - | Fields filter. |
-| `mapping` | `Boolean` | - | Convert the returned `Array` to `Object` where the key is the value of `id`. |
+
+| Property   | Type       | Default      | Description                                                               |
+| ---------- | ---------- | ------------ | ------------------------------------------------------------------------- |
+| `id`       | `string`   | **required** | ID of entity.                                                             |
+| `ids`      | `[]string` | **required** | ID(s) of entities.                                                        |
+| `populate` | `[]string` | -            | Field list for populate.                                                  |
+| `fields`   | `[]string` | -            | Fields filter.                                                            |
+| `mapping`  | `Bool`     | -            | Convert the returned `Array` to `Map` where the key is the value of `id`. |
 
 #### Results
-**Type:** `Object`, `Array.<Object>` - Found entity(ies).
 
+**Type:** `moleculer.Payload` - Found entity(ies).
 
-### [`update`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L322)
+### [`update`](https://github.com/moleculer-go/moleculer-db/blob/master/moleculer_db.go#L103)
 
 Update an entity by ID.
+
 > After update, clear the cache & call lifecycle events.
 
 #### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| - | - | - | - |
-*No input parameters.*
+
+| Property | Type     | Default | Description                      |
+| -------- | -------- | ------- | -------------------------------- |
+| `id`     | `string` | -       | Id of the records being updated. |
 
 #### Results
-**Type:** `Object` - Updated entity.
 
+**Type:** `moleculer.Payload` - Updated entity.
 
-### [`remove`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L357)
+### [`remove`](https://github.com/moleculer-go/moleculer-db/blob/master/moleculer_db.go#L121)
 
 Remove an entity by ID.
 
 #### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `id` | `any` | **required** | ID of entity. |
+
+| Property | Type     | Default      | Description   |
+| -------- | -------- | ------------ | ------------- |
+| `id`     | `string` | **required** | ID of entity. |
 
 #### Results
+
 **Type:** `Number` - Count of removed entities.
 
-## Methods
-
-DB adapters also has a set of helper methods
-
-### [`getById`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L469)
-
-Get entity(ies) by ID(s).
-
-#### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `id` | `String`, `Number`, `Array` | **required** | ID or IDs. |
-| `decoding` | `Boolean` | **required** | Need to decode IDs. |
-
-#### Results
-**Type:** `Object`, `Array.<Object>` - Found entity(ies).
-
-
-### [`clearCache`](https://github.com/moleculer-go/moleculer-db/blob/master/packages/moleculer-db/src/index.js#L507)
-
-Clear cached entities
-
-#### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| - | - | - | - |
-*No input parameters.*
-
-#### Results
-**Type:** `Promise`
-
-
-### `encodeID` 
-
-Encode ID of entity.
-
-#### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `id` | `any` | **required** | - |
-
-#### Results
-**Type:** `any`
-
-
-### `decodeID` 
-
-Decode ID of entity.
-
-#### Parameters
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| `id` | `any` | **required** | - |
-
-#### Results
-**Type:** `any`
-
 ## Populating
+
 The service allows you to easily populate fields from other services. For exapmle: If you have an `author` field in `post` entity, you can populate it with `users` service by ID of author. If the field is an `Array` of IDs, it will populate all entities via only one request
 
-
 **Example of populate schema**
-```js
-broker.createService({
-    name: "posts",
-    mixins: [DbService],
-    settings: {
-        populates: {
-            // Shorthand populate rule. Resolve the `voters` values with `users.get` action.
-            "voters": "users.get",
 
-            // Define the params of action call. It will receive only with username & full name of author.
-            "author": {
-                action: "users.get",
-                params: {
-                    fields: "username fullName"
-                }
-            },
+```go
+package main
 
-            // Custom populator handler function
-            "rate"(ids, rule, ctx) {
-                return Promise.resolve(...);
-            }
-        }
-    }
-});
+import (
+ "fmt"
+ "time"
 
-// List posts with populated authors
-broker.call("posts.find", { populate: ["author"]}).then(console.log);
+ db "github.com/moleculer-go/moleculer-db"
+
+ "github.com/moleculer-go/moleculer"
+ "github.com/moleculer-go/moleculer/broker"
+)
+
+func main() {
+ var bkr = broker.New(&moleculer.Config{LogLevel: "info"})
+ bkr.AddService(moleculer.Service{
+  Name: "users",
+  Settings: map[string]interface{}{
+   "fields":    []string{"id", "username", "name"},
+   "populates": map[string]interface{}{"friends": "users.get"},
+  },
+  Mixins: []moleculer.Mixin{db.Mixin(&db.MemoryAdapter{
+   Table:        "users",
+   SearchFields: []string{"name", "username"},
+  })},
+ })
+ bkr.AddService(moleculer.Service{
+  Name: "posts",
+  Settings: map[string]interface{}{
+   "populates": map[string]interface{}{
+    //Shorthand populate rule. Resolve the 'voters' values with the users.get action.
+    "voters": "users.get",
+    // Define the params of action call.
+    //It will receive only with username of author.
+    "author": map[string]interface{}{
+     "action": "users.get",
+     "params": map[string]interface{}{
+      "fields": []string{"username"},
+     },
+    },
+   },
+  },
+  Mixins: []moleculer.Mixin{db.Mixin(&db.MemoryAdapter{
+   Table: "posts",
+  })},
+ })
+ bkr.Start()
+ time.Sleep(time.Millisecond * 300)
+
+ johnSnow := <-bkr.Call("users.create", map[string]interface{}{
+  "name":     "John",
+  "lastname": "Snow",
+  "username": "jsnow",
+  "fullname": "John Snow",
+ })
+ marie := <-bkr.Call("users.create", map[string]interface{}{
+  "name":     "Marie",
+  "lastname": "Claire",
+  "username": "mclaire",
+  "fullname": "Marie Claire",
+ })
+
+ post := <-bkr.Call("posts.create", map[string]interface{}{
+  "content": "Lorem ipsum dolor sit amet, consectetur ...",
+  "voters":  []string{marie.Get("id").String()},
+  "author":  johnSnow.Get("id").String(),
+  "status":  1,
+ })
+
+ // List posts with populated author
+ fmt.Printf("posts with author: ", <-bkr.Call("posts.find", map[string]interface{}{
+  "populate": []string{"author"},
+ }))
+
+ // List posts with populated voters
+ fmt.Printf("posts with voters: ", <-bkr.Call("posts.find", map[string]interface{}{
+  "populate": []string{"voters"},
+ }))
+
+ // remove post
+ <-bkr.Call("posts.remove", map[string]interface{}{
+  "id": post.Get("id").String(),
+ })
+
+ //remove users
+ <-bkr.Call("users.remove", map[string]interface{}{
+  "id": johnSnow.Get("id").String(),
+ })
+ <-bkr.Call("users.remove", map[string]interface{}{
+  "id": marie.Get("id").String(),
+ })
+
+ bkr.Stop()
+}
+
+```
+
+```bash
+run the example above with:
+$ go run github.com/moleculer-go/moleculer-db/examples/populates
 ```
 
 > The `populate` parameter is available in `find`, `list` and `get` actions.
 
-
-## Lifecycle entity events
-There are 3 lifecycle entity events which are called when entities are manipulated.
-
-```js
-broker.createService({
-    name: "posts",
-    mixins: [DbService],
-    settings: {},
-
-    afterConnected() {
-        this.logger.info("Connected successfully");
-    },
-
-    entityCreated(json, ctx) {
-        this.logger.info("New entity created!");
-    },
-
-    entityUpdated(json, ctx) {
-        // You can also access to Context
-        this.logger.info(`Entity updated by '${ctx.meta.user.name}' user!`);
-    },
-
-    entityRemoved(json, ctx) {
-        this.logger.info("Entity removed", json);
-    },    
-});
-```
-
-> Please note! If you manipulate multiple entities (updateMany, removeMany), the `json` parameter will be a `Number` instead of entities!
-
 ## Extend with custom actions
+
 Naturally you can extend this service with your custom actions.
 
-```js
-const DbService = require("moleculer-db");
+```go
+package main
 
-module.exports = {
-    name: "posts",
-    mixins: [DbService],
+import (
+ "fmt"
+ "time"
 
-    settings: {
-        fields: ["_id", "title", "content", "votes"]
+ db "github.com/moleculer-go/moleculer-db"
+
+ "github.com/moleculer-go/moleculer"
+ "github.com/moleculer-go/moleculer/broker"
+)
+
+func main() {
+ var bkr = broker.New(&moleculer.Config{LogLevel: "info"})
+ bkr.AddService(moleculer.Service{
+  Name: "users",
+  Settings: map[string]interface{}{
+   "fields":    []string{"id", "username", "name"},
+   "populates": map[string]interface{}{"friends": "users.get"},
+  },
+  Mixins: []moleculer.Mixin{db.Mixin(&db.MemoryAdapter{
+   Table:        "users",
+   SearchFields: []string{"name", "username"},
+  })},
+ })
+ adapter := &db.MemoryAdapter{
+  Table: "posts",
+ }
+ bkr.AddService(moleculer.Service{
+  Name: "posts",
+  Settings: map[string]interface{}{
+   "populates": map[string]interface{}{
+    //Shorthand populate rule. Resolve the 'voters' values with the users.get action.
+    "voters": "users.get",
+    // Define the params of action call. It will receive only with username & full name of author.
+    "author": map[string]interface{}{
+     "action": "users.get",
+     "params": map[string]interface{}{
+      "fields": []string{"username", "fullname"},
+     },
     },
+   },
+  },
+  Mixins: []moleculer.Mixin{db.Mixin(adapter)},
+  Actions: []moleculer.Action{
+   {
+    Name: "byAuthors",
+    Handler: func(ctx moleculer.Context, params moleculer.Payload) interface{} {
+     return <-ctx.Call("posts.find", map[string]interface{}{
+      "query": map[string]interface{}{
+       "author": params.Get("authorId").String(),
+      },
+      "limit": 10,
+      "sort":  "-createdAt",
+     })
+    },
+   },
+  },
+ })
+ bkr.Start()
+ time.Sleep(time.Millisecond * 300)
 
-    actions: {
-        // Increment `votes` field by post ID
-        vote(ctx) {
-            return this.adapter.updateById(ctx.params.id, { $inc: { votes: 1 } });
-        },
+ johnSnow := <-bkr.Call("users.create", map[string]interface{}{
+  "name":     "John",
+  "lastname": "Snow",
+  "username": "jsnow",
+  "fullname": "John Snow",
+ })
+ marie := <-bkr.Call("users.create", map[string]interface{}{
+  "name":     "Marie",
+  "lastname": "Claire",
+  "username": "mclaire",
+  "fullname": "Marie Claire",
+ })
 
-        // List posts of an author
-        byAuthors(ctx) {
-            return this.find({
-                query: {
-                    author: ctx.params.authorID
-                },
-                limit: ctx.params.limit || 10,
-                sort: "-createdAt"
-            });
-        }
-    }
+ post := <-bkr.Call("posts.create", map[string]interface{}{
+  "content": "Lorem ipsum dolor sit amet, consectetur ...",
+  "voters":  []string{marie.Get("id").String()},
+  "author":  johnSnow.Get("id").String(),
+  "status":  1,
+ })
+
+ // List posts with populated authors
+ fmt.Printf("posts by authors: ", <-bkr.Call("posts.byAuthors", map[string]interface{}{
+  "authorId": johnSnow.Get("id").String(),
+ }))
+
+ // remove post
+ <-bkr.Call("posts.remove", map[string]interface{}{
+  "id": post.Get("id").String(),
+ })
+
+ //remove users
+ <-bkr.Call("users.remove", map[string]interface{}{
+  "id": johnSnow.Get("id").String(),
+ })
+ <-bkr.Call("users.remove", map[string]interface{}{
+  "id": marie.Get("id").String(),
+ })
+
+ bkr.Stop()
 }
 ```
 
+```bash
+run the example above with:
+$ go run github.com/moleculer-go/moleculer-db/examples/customActions
+```
 
-## Mongo Adapter [![NPM version](https://img.shields.io/npm/v/moleculer-db-adapter-mongo.svg)](https://www.npmjs.com/package/moleculer-db-adapter-mongo)
+## Cache
 
-This adapter is based on [MongoDB](http://mongodb.github.io/node-mongodb-native/).
+Not Implemented yet!
+![Under Construction](https://img.shields.io/badge/under-construction-red.svg)
+
+## Mongo Adapter
+
+This adapter is based on [MongoDB](https://go.mongodb.org/mongo-driver/).
 
 ### Install
 
 ```bash
-$ npm install moleculer-db moleculer-db-adapter-mongo --save
-```
-{% note info Dependencies%}
-To use this adapter you need to install [MongoDB](https://www.mongodb.com/) on you system.
-{% endnote %}
-
-### Usage
-
-```js
-"use strict";
-
-const { ServiceBroker } = require("moleculer");
-const DbService = require("moleculer-db");
-const MongoDBAdapter = require("moleculer-db-adapter-mongo");
-
-const broker = new ServiceBroker();
-
-// Create a Mongoose service for `post` entities
-broker.createService({
-    name: "posts",
-    mixins: [DbService],
-    adapter: new MongoDBAdapter("mongodb://localhost/moleculer-demo"),
-    collection: "posts"
-});
-
-
-broker.start()
-// Create a new post
-.then(() => broker.call("posts.create", {
-    title: "My first post",
-    content: "Lorem ipsum...",
-    votes: 0
-}))
-
-// Get all posts
-.then(() => broker.call("posts.find").then(console.log));
-```
-
-### Options
-
-**Example with connection URI**
-```js
-new MongoDBAdapter("mongodb://localhost/moleculer-db")
-```
-
-
-**Example with connection URI & options**
-```js
-new MongoDBAdapter("mongodb://db-server-hostname/my-db", {
-    keepAlive: 1
-})
-
-```
-
-> More MongoDB examples can be found on [GitHub](https://github.com/moleculer-go/moleculer-db/tree/master/packages/moleculer-db-adapter-mongo/examples)
-
-## Mongoose Adapter [![NPM version](https://img.shields.io/npm/v/moleculer-db-adapter-mongoose.svg)](https://www.npmjs.com/package/moleculer-db-adapter-mongoose)
-
-This adapter is based on [Mongoose](https://mongoosejs.com/docs/).
-
-### Install
-
-```bash
-$ npm install moleculer-db moleculer-db-adapter-mongoose mongoose --save
+$ go get -u github.com/moleculer-go/moleculer-db
 ```
 
 {% note info Dependencies%}
@@ -468,152 +488,49 @@ To use this adapter you need to install [MongoDB](https://www.mongodb.com/) on y
 
 ### Usage
 
-```js
-"use strict";
+```go
+package main
 
-const { ServiceBroker } = require("moleculer");
-const DbService = require("moleculer-db");
-const MongooseAdapter = require("moleculer-db-adapter-mongoose");
-const mongoose = require("mongoose");
+import (
+ "fmt"
+ "time"
 
-const broker = new ServiceBroker();
+ db "github.com/moleculer-go/moleculer-db"
 
-// Create a Mongoose service for `post` entities
-broker.createService({
-    name: "posts",
-    mixins: [DbService],
-    adapter: new MongooseAdapter("mongodb://localhost/moleculer-demo"),
-    model: mongoose.model("Post", mongoose.Schema({
-        title: { type: String },
-        content: { type: String },
-        votes: { type: Number, default: 0}
-    }))
-});
+ "github.com/moleculer-go/moleculer"
+ "github.com/moleculer-go/moleculer/broker"
+)
 
+func main() {
+ var bkr = broker.New(&moleculer.Config{LogLevel: "info"})
+ bkr.AddService(moleculer.Service{
+  Name: "users",
+  Settings: map[string]interface{}{
+   "fields":    []string{"_id", "username", "name"},
+   "populates": map[string]interface{}{"friends": "users.get"},
+  },
+  Mixins: []moleculer.Mixin{db.Mixin(&db.MongoAdapter{
+   MongoURL:   "mongodb://localhost:27017",
+   Collection: "users",
+   Database:   "test",
+   Timeout:    time.Second * 5,
+  })},
+ })
+ bkr.Start()
+ time.Sleep(time.Millisecond * 300)
+ user := <-bkr.Call("users.create", map[string]interface{}{
+  "username": "john",
+  "name":     "John Doe",
+  "status":   1,
+ })
 
-broker.start()
-// Create a new post
-.then(() => broker.call("posts.create", {
-    title: "My first post",
-    content: "Lorem ipsum...",
-    votes: 0
-}))
+ id := user.Get("id").String()
+ // Get all users
+ fmt.Printf("all users: ", <-bkr.Call("users.find", map[string]interface{}{}))
+ //...
+ bkr.Stop()
+}
 
-// Get all posts
-.then(() => broker.call("posts.find").then(console.log));
 ```
 
-### Options
-
-**Example with connection URI**
-```js
-new MongooseAdapter("mongodb://localhost/moleculer-db")
-```
-
-**Example with URI and options**
-```js
-new MongooseAdapter("mongodb://db-server-hostname/my-db", {
-    user: process.env.MONGO_USERNAME,
-    pass: process.env.MONGO_PASSWORD
-    keepAlive: true
-})
-```
-
-> More Mongoose examples can be found on [GitHub](https://github.com/moleculer-go/moleculer-db/tree/master/packages/moleculer-db-adapter-mongoose/examples)
-
-## Sequelize Adapter [![NPM version](https://img.shields.io/npm/v/moleculer-db-adapter-sequelize.svg)](https://www.npmjs.com/package/moleculer-db-adapter-sequelize)
-
-SQL adapter (Postgres, MySQL, SQLite & MSSQL) for Moleculer DB service with [Sequelize](https://github.com/sequelize/sequelize).
-
-### Install
-
-```bash
-$ npm install moleculer-db-adapter-sequelize --save
-```
-
-You have to install additional packages for your database server:
-```bash
-# For SQLite
-$ npm install sqlite3 --save
-
-# For MySQL
-$ npm install mysql2 --save
-
-# For PostgreSQL
-$ npm install pg pg-hstore --save
-
-# For MSSQL
-$ npm install tedious --save
-```
-
-### Usage
-
-```js
-"use strict";
-
-const { ServiceBroker } = require("moleculer");
-const DbService = require("moleculer-db");
-const SqlAdapter = require("moleculer-db-adapter-sequelize");
-const Sequelize = require("sequelize");
-
-const broker = new ServiceBroker();
-
-// Create a Sequelize service for `post` entities
-broker.createService({
-    name: "posts",
-    mixins: [DbService],
-    adapter: new SqlAdapter("sqlite://:memory:"),
-    model: {
-        name: "post",
-        define: {
-            title: Sequelize.STRING,
-            content: Sequelize.TEXT,
-            votes: Sequelize.INTEGER,
-            author: Sequelize.INTEGER,
-            status: Sequelize.BOOLEAN
-        },
-        options: {
-            // Options from http://docs.sequelizejs.com/manual/tutorial/models-definition.html
-        }
-    },
-});
-
-
-broker.start()
-// Create a new post
-.then(() => broker.call("posts.create", {
-    title: "My first post",
-    content: "Lorem ipsum...",
-    votes: 0
-}))
-
-// Get all posts
-.then(() => broker.call("posts.find").then(console.log));
-```
-
-### Options
-Every constructor arguments are passed to the `Sequelize` constructor. Read more about [Sequelize connection](http://docs.sequelizejs.com/manual/installation/getting-started.html).
-
-**Example with connection URI**
-```js
-new SqlAdapter("postgres://user:pass@example.com:5432/dbname");
-```
-
-**Example with connection options**
-```js
-new SqlAdapter('database', 'username', 'password', {
-    host: 'localhost',
-    dialect: 'mysql'|'sqlite'|'postgres'|'mssql',
-
-    pool: {
-        max: 5,
-        min: 0,
-        idle: 10000
-    },
-
-    // SQLite only
-    storage: 'path/to/database.sqlite'
-});
-```
-
-> More Sequelize examples can be found on [GitHub](https://github.com/moleculer-go/moleculer-db/tree/master/packages/moleculer-db-adapter-sequelize/examples)
+> More MongoDB examples can be found on [GitHub](https://github.com/moleculer-go/moleculer-db/tree/master/examples)

@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://gomicro.services/docs/0.1/examples.html</loc>
+    
+    <lastmod>2019-04-01T03:23:43.134Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/moleculer-db.html</loc>
+    
+    <lastmod>2019-04-01T02:52:51.169Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/usage.html</loc>
+    
+    <lastmod>2019-04-01T02:52:16.326Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/index.html</loc>
+    
+    <lastmod>2019-04-01T01:55:50.474Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gomicro.services/modules.html</loc>
     
     <lastmod>2019-03-28T22:05:28.504Z</lastmod>
@@ -30,13 +58,6 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/validation.html</loc>
-    
-    <lastmod>2019-03-28T22:05:28.480Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://gomicro.services/docs/0.1/validating.html</loc>
     
     <lastmod>2019-03-28T22:05:28.480Z</lastmod>
@@ -44,14 +65,14 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/usage.html</loc>
+    <loc>https://gomicro.services/docs/0.1/validation.html</loc>
     
     <lastmod>2019-03-28T22:05:28.480Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/services.html</loc>
+    <loc>https://gomicro.services/docs/0.1/transporters.html</loc>
     
     <lastmod>2019-03-28T22:05:28.479Z</lastmod>
     
@@ -72,16 +93,9 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/transporters.html</loc>
+    <loc>https://gomicro.services/docs/0.1/services.html</loc>
     
     <lastmod>2019-03-28T22:05:28.479Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/runner.html</loc>
-    
-    <lastmod>2019-03-28T22:05:28.478Z</lastmod>
     
   </url>
   
@@ -94,6 +108,13 @@
   
   <url>
     <loc>https://gomicro.services/docs/0.1/serverless.html</loc>
+    
+    <lastmod>2019-03-28T22:05:28.478Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/runner.html</loc>
     
     <lastmod>2019-03-28T22:05:28.478Z</lastmod>
     
@@ -114,6 +135,13 @@
   </url>
   
   <url>
+    <loc>https://gomicro.services/docs/0.1/networking.html</loc>
+    
+    <lastmod>2019-03-28T22:05:28.477Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gomicro.services/docs/0.1/moleculer-web.html</loc>
     
     <lastmod>2019-03-28T22:05:28.477Z</lastmod>
@@ -128,20 +156,6 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/networking.html</loc>
-    
-    <lastmod>2019-03-28T22:05:28.477Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/moleculer-cli.html</loc>
-    
-    <lastmod>2019-03-28T22:05:28.476Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://gomicro.services/docs/0.1/moleculer-repl.html</loc>
     
     <lastmod>2019-03-28T22:05:28.476Z</lastmod>
@@ -149,7 +163,7 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/moleculer-db.html</loc>
+    <loc>https://gomicro.services/docs/0.1/moleculer-cli.html</loc>
     
     <lastmod>2019-03-28T22:05:28.476Z</lastmod>
     
@@ -163,7 +177,7 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/metrics.html</loc>
+    <loc>https://gomicro.services/docs/0.1/logging.html</loc>
     
     <lastmod>2019-03-28T22:05:28.475Z</lastmod>
     
@@ -177,16 +191,9 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/logging.html</loc>
+    <loc>https://gomicro.services/docs/0.1/metrics.html</loc>
     
     <lastmod>2019-03-28T22:05:28.475Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/index.html</loc>
-    
-    <lastmod>2019-03-28T22:05:28.474Z</lastmod>
     
   </url>
   
@@ -219,13 +226,6 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/examples.html</loc>
-    
-    <lastmod>2019-03-28T22:05:28.474Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://gomicro.services/docs/0.1/contributing.html</loc>
     
     <lastmod>2019-03-28T22:05:28.473Z</lastmod>
@@ -240,7 +240,7 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/deploying.html</loc>
+    <loc>https://gomicro.services/docs/0.1/events.html</loc>
     
     <lastmod>2019-03-28T22:05:28.473Z</lastmod>
     
@@ -254,9 +254,23 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/events.html</loc>
+    <loc>https://gomicro.services/docs/0.1/deploying.html</loc>
     
     <lastmod>2019-03-28T22:05:28.473Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/circuit-breaker.html</loc>
+    
+    <lastmod>2019-03-28T22:05:28.472Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/context.html</loc>
+    
+    <lastmod>2019-03-28T22:05:28.472Z</lastmod>
     
   </url>
   
@@ -282,28 +296,14 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/circuit-breaker.html</loc>
-    
-    <lastmod>2019-03-28T22:05:28.472Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/context.html</loc>
-    
-    <lastmod>2019-03-28T22:05:28.472Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/benchmark.html</loc>
+    <loc>https://gomicro.services/docs/0.1/broker.html</loc>
     
     <lastmod>2019-03-28T22:05:28.471Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/broker.html</loc>
+    <loc>https://gomicro.services/docs/0.1/benchmark.html</loc>
     
     <lastmod>2019-03-28T22:05:28.471Z</lastmod>
     
@@ -324,14 +324,14 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/api/index.html</loc>
+    <loc>https://gomicro.services/docs/0.1/api/context.html</loc>
     
     <lastmod>2019-03-28T22:05:28.460Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/api/context.html</loc>
+    <loc>https://gomicro.services/docs/0.1/api/index.html</loc>
     
     <lastmod>2019-03-28T22:05:28.460Z</lastmod>
     

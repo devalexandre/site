@@ -1,68 +1,85 @@
 title: Usage
 ---
 
-# Install Moleculer
+# Install Moleculer Go
 
 Moleculer can be installed with npm or yarn
 
 ```bash
-$ npm i moleculer --save
+$ go get -u github.com/moleculer-go/moleculer
 ```
 
 # Create your first microservice
+
 This example shows how to create a small `math` service to add two numbers.
 
-```js
-const { ServiceBroker } = require("moleculer");
+```go
+package main
 
-const broker = new ServiceBroker();
+import (
+ "fmt"
 
-broker.createService({
-    name: "math",
-    actions: {
-        add(ctx) {
-            return Number(ctx.params.a) + Number(ctx.params.b);
-        }
-    }
-});
+ "github.com/moleculer-go/moleculer"
+ "github.com/moleculer-go/moleculer/broker"
+ "github.com/moleculer-go/moleculer/payload"
+)
 
-broker.start()
-    // Call service
-    .then(() => broker.call("math.add", { a: 5, b: 3 }))
-    .then(res => console.log("5 + 3 =", res))
-    .catch(err => console.error(`Error occured! ${err.message}`));
+var mathService = moleculer.Service{
+ Name: "math",
+ Actions: []moleculer.Action{
+  {
+   Name: "add",
+   Handler: func(ctx moleculer.Context, params moleculer.Payload) interface{} {
+    return params.Get("a").Int() + params.Get("b").Int()
+   },
+  },
+ },
+}
+
+func main() {
+ var bkr = broker.New(&moleculer.Config{LogLevel: "error"})
+ bkr.AddService(mathService)
+ bkr.Start()
+ result := <-bkr.Call("math.add", payload.New(map[string]int{
+  "a": 10,
+  "b": 130,
+ }))
+ fmt.Println("result: ", result.Int()) //$ result: 140
+ bkr.Stop()
+}
 ```
 
-{% note info Try it in your browser! %}
-Open this example on [Runkit!](https://runkit.com/icebob/moleculer-usage)
-{% endnote %}
+Try it!
 
-# Create a Moleculer project
+```bash
+$ go run github.com/moleculer-go/moleculer/examples/standalone
+```
+
+# Create a Moleculer Go project
+
 Use the [Moleculer CLI tool](moleculer-cli.html) to create a new Moleculer-based microservices project.
+![Under Construction](https://img.shields.io/badge/under-construction-red.svg)
 
-1. Install `moleculer-cli` globally
+1. Create a new project (named `first-demo`)
+
     ```bash
-    $ npm i moleculer-cli -g
+    $ moleculer init project first-demo
     ```
-2. Create a new project (named `first-demo`)
-    ```bash
-    $ moleculer init project moleculer-demo
-    ```
+
     > Press Y to all questions
-    
-3. Open project folder
+
+2. Open project folder
+
     ```bash
-    $ cd moleculer-demo
+    $ cd first-demo
     ```
-    
-4. Start project
+
+3. Start project
     ```bash
-    $ npm run dev
+    $ go run .
     ```
-5. Open the [http://localhost:3000/](http://localhost:3000/) link in your browser. It shows a start page which contains two links to call the `greeter` service via [API gateway](https://github.com/moleculer-go/moleculer-web).
+4. Open the [http://localhost:3000/](http://localhost:3000/) link in your browser. It shows a start page which contains two links to call the `greeter` service via [API gateway](https://github.com/moleculer-go/moleculer-web).
 
 {% note info Congratulations! %}
 You have just created your first Moleculer-based microservices project! The next step is to check our [examples](examples.html) or [demo projects](https://github.com/moleculer-go/moleculer-examples).
 {% endnote %}
-
-
