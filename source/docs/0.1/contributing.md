@@ -1,13 +1,16 @@
-title: Contributing
+# Contributing
+
 ---
+
 We welcome you to join the development of Moleculer. This document helps you through the process.
 
 ## Before You Start
 
 Please follow the coding style:
-- Use tabs with size of 4 for indents.
-- Always use strict mode & semicolons.
-- Use double quotes instead of single quotes.
+
+-   Use tabs with size of 4 for indents.
+-   Always use strict mode & semicolons.
+-   Use double quotes instead of single quotes.
 
 ## Contribution in the core modules
 
@@ -62,11 +65,13 @@ Follow this workflow if you would like to create a new module for Moleculer
 ### Workflow
 
 1. Install the command-line tool.
+
     ```bash
     $ npm install moleculer-cli -g
     ```
 
 2. Create a new module skeleton (named `moleculer-awesome`).
+
     ```bash
     $ moleculer init module moleculer-awesome
     ```

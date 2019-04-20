@@ -1,6 +1,10 @@
-## title: What is Moleculer?
+## What is Moleculer?
 
-Moleculer is a fast, modern and powerful microservices framework in Go (https://golang.org/). It helps you to build efficient, reliable & scalable services. Moleculer provides many features for building and managing your microservices.
+Moleculer is a simple, fast, modern and powerful microservices framework written in Go (https://golang.org/).
+
+It helps you to build simple, efficient, reliable & scalable services.
+
+Easy to go from 1 machine to many machines. Easy to focus on your problem.
 
 ## Features
 

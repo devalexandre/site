@@ -1,9 +1,13 @@
-title: REPL console
+# REPL console
+
 ---
+
 ## moleculer repl [![npm](https://img.shields.io/npm/v/moleculer-repl.svg?maxAge=3600)](https://www.npmjs.com/package/moleculer-repl)
+
 The [moleculer-repl](https://github.com/moleculer-go/moleculer-repl) is an interactive developer console for Moleculer.
 
 ## Install
+
 ```bash
 npm i moleculer-repl
 ```
@@ -11,6 +15,7 @@ npm i moleculer-repl
 ## Usage
 
 **Switch broker to REPL mode**
+
 ```js
 const broker = new ServiceBroker();
 
@@ -31,7 +36,7 @@ broker.repl();
     call [options] <actionName> [jsonParams]            Call an action
     dcall [options] <nodeID> <actionName> [jsonParams]  Direct call an action
     clear [pattern]                                     Clear cache entries
-    cls                                                 Clear console    
+    cls                                                 Clear console
     emit <eventName>                                    Emit an event
     env                                                 List of environment variables
     events [options]                                    List of event listeners
@@ -43,11 +48,13 @@ broker.repl();
 ```
 
 ### List nodes
+
 ```bash
 mol $ nodes
 ```
 
 **Options**
+
 ```
     -a, --all             list all (offline) nodes
     -d, --details         detailed list
@@ -63,11 +70,13 @@ mol $ nodes
 ![image](assets/repl/nodes-detailed.png)
 
 ### List services
+
 ```bash
 mol $ services
 ```
 
 **Options**
+
 ```
     -a, --all             list all (offline) services
     -d, --details         print endpoints
@@ -83,11 +92,13 @@ mol $ services
 ![image](assets/repl/services-detailed.png)
 
 ### List actions
+
 ```bash
 mol $ actions
 ```
 
 **Options**
+
 ```
     -a, --all             list all (offline) actions
     -d, --details         print endpoints
@@ -103,11 +114,13 @@ mol $ actions
 ![image](assets/repl/actions-detailed.png)
 
 ### List events
+
 ```bash
 mol $ events
 ```
 
 **Options**
+
 ```
     -a, --all             list all (offline) event listeners
     -d, --details         print endpoints
@@ -122,8 +135,8 @@ mol $ events
 **Detailed output**
 ![image](assets/repl/events-detailed.png)
 
-
 ### Show common information
+
 ```bash
 mol $ info
 ```
@@ -132,11 +145,13 @@ mol $ info
 ![image](https://cloud.githubusercontent.com/assets/306521/26260974/aaea9b02-3ccf-11e7-9e1c-ec9150518791.png)
 
 ### List environment variables
+
 ```bash
 mol $ env
 ```
 
 ### Call an action
+
 ```bash
 mol $ call "test.hello"
 ```
@@ -145,6 +160,7 @@ mol $ call "test.hello"
 ![image](assets/repl/call1.png)
 
 **Options**
+
 ```
     --help               output usage information
     --load [filename]    Load params from file
@@ -153,61 +169,79 @@ mol $ call "test.hello"
 ```
 
 #### Call an action with parameters
+
 ```bash
 mol $ call "math.add" --a 5 --b Bob --c --no-d --e.f "hello"
 ```
+
 Params will be `{ a: 5, b: 'Bob', c: true, d: false, e: { f: 'hello' } }`
 
 #### Call with JSON string parameter
+
 ```bash
 mol $ call "math.add" '{"a": 5, "b": "Bob", "c": true, "d": false, "e": { "f": "hello" } }'
 ```
+
 Params will be `{ a: 5, b: 'Bob', c: true, d: false, e: { f: 'hello' } }`
 
 #### Call with parameters from file
+
 ```bash
 mol $ call "math.add" --load
 ```
+
 It tries to load the `<current_dir>/math.add.params.json` file to params.
 
 ```bash
 mol $ call "math.add" --load my-params.json
 ```
+
 It tries to load the `my-params.jon` file to params.
 
 #### Call with file stream
+
 ```bash
 mol $ call "math.add" --stream my-picture.jpg
 ```
+
 It loads the `my-picture.png` file and send to the `math.add` action as a `Stream`.
 
 #### Call and save response to file
+
 ```bash
 mol $ call "math.add" --save
 ```
+
 It saved the response to the `<current_dir>/posts.find.response.json` file. The extension is `.json` when the response is `object`. Otherwise it is `.txt`.
 
 ```bash
 mol $ call "math.add" --save my-response.json
 ```
+
 It saved the response to the `my-response.json` file.
 
 ### Direct call
+
 Get health info from `node-12` node
+
 ```bash
 mol $ dcall "node-12" "$node.health"
 ```
->Parameter passing is similar to `call` command.
+
+> Parameter passing is similar to `call` command.
 
 ### Emit an event
+
 ```bash
 mol $ emit "user.created"
 ```
 
 #### Emit an event with parameters
+
 ```bash
 mol $ emit "user.created" --a 5 --b Bob --c --no-d --e.f "hello"
 ```
+
 Params will be `{ a: 5, b: 'Bob', c: true, d: false, e: { f: 'hello' } }`
 
 ### Benchmark services
@@ -226,6 +260,7 @@ mol $ bench --time 30 math.add
 ```
 
 **Options**
+
 ```
     --num <number>     Number of iterates
     --time <seconds>   Time of bench
@@ -235,24 +270,28 @@ mol $ bench --time 30 math.add
 **Output**
 ![image](assets/repl/bench.gif)
 
-
 #### Parameters
+
 Please note, parameters can be passed only as JSON string.
+
 ```bash
 mol $ bench math.add '{ "a": 50, "b": 32 }'
 ```
 
 ### Load a service from file
+
 ```bash
 mol $ load "./math.service.js"
 ```
 
 ### Load all services from a folder
+
 ```bash
 mol $ load "./services"
 ```
 
 ### Custom commands
+
 Custom REPL commands can be defined in broker options to extend Moleculer REPL commands.
 
 ```js
@@ -274,8 +313,10 @@ const broker = new ServiceBroker({
             //validate(args) {},
             //help(args) {},
             allowUnknownOptions: true,
-            action(broker, args/*, helpers*/) {
-                const name = args.options.uppercase ? args.name.toUpperCase() : args.name;
+            action(broker, args /*, helpers*/) {
+                const name = args.options.uppercase
+                    ? args.name.toUpperCase()
+                    : args.name;
                 return broker.call("greeter.hello", { name }).then(console.log);
             }
         }

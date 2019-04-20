@@ -1,9 +1,11 @@
-title: Middlewares
+# Middlewares
+
 ---
 
 Moleculer supports middlewares. The middleware is an `Object` with hooks & wrapper functions. Wrap action handlers, event handlers, broker methods and hook lifecycle events.
 
 **All available methods:**
+
 ```js
 const MyCustomMiddleware = {
     // Wrap local action handlers (legacy middleware handler)
@@ -19,7 +21,7 @@ const MyCustomMiddleware = {
                     // Handle error or throw further
                     throw err;
                 });
-        }
+        };
     },
 
     // Wrap remote action calling
@@ -35,7 +37,7 @@ const MyCustomMiddleware = {
                     // Handle error or throw further
                     throw err;
                 });
-        }
+        };
     },
 
     // Wrap local event handlers
@@ -157,14 +159,16 @@ const MyCustomMiddleware = {
     stopped(broker) {
         console.log("Broker stopped");
     }
-}
+};
 ```
 
 ## Wrapping handlers
+
 Some hooks are wrappers. It means you must wrap the original handler and return a new Function.
 Wrap hooks where the first parameter is `next`.
 
 **Wrap local action handler**
+
 ```js
 const MyDoSomethingMiddleware = {
     localAction(next, action) {
@@ -185,7 +189,7 @@ const MyDoSomethingMiddleware = {
                         // Throw further the error
                         throw err;
                     });
-            }
+            };
         }
 
         // If the feature is disabled we don't wrap it, return the original handler
@@ -196,6 +200,7 @@ const MyDoSomethingMiddleware = {
 ```
 
 **Example validator middleware**
+
 ```js
 const MyValidator = {
     localAction(next, action) {
@@ -214,14 +219,19 @@ const MyValidator = {
 The `next` is the original handler or the following wrapped handler. The middleware should return either the original `handler` or a new wrapped handler. As you can see above, we check whether the action has a `params` props. If yes, we'll return a wrapped handler which calls the validator module before calling the original `handler`.
 If the `params` property is not defined, we will return the original `handler` (skipped wrapping).
 
->If you don't call the original `next` in the middleware it will break the request. It can be used in cachers. For example, if it finds the requested data in the cache, it'll return the cached data instead of calling the `next`.
+> If you don't call the original `next` in the middleware it will break the request. It can be used in cachers. For example, if it finds the requested data in the cache, it'll return the cached data instead of calling the `next`.
 
 **Example cacher middleware**
+
 ```js
 const MyCacher = {
     localAction(next, action) {
         return function cacherMiddleware(ctx) {
-            const cacheKey = this.getCacheKey(action.name, ctx.params, action.cache.keys);
+            const cacheKey = this.getCacheKey(
+                action.name,
+                ctx.params,
+                action.cache.keys
+            );
             const content = this.get(cacheKey);
             if (content != null) {
                 // Found in the cache! Don't call next, return with the cached content
@@ -240,12 +250,15 @@ const MyCacher = {
     }
 };
 ```
+
 > The `next` always returns a `Promise`. So you can access to responses and manipulate them, as well.
 
 ### Decorate core modules (extend functionality)
+
 With other hooks are help you to add new features to `ServiceBroker` & `Service`.
 
 **Decorate broker with a new `allCall` method**
+
 ```js
 const broker = new ServiceBroker({
     middlewares: [
@@ -254,12 +267,21 @@ const broker = new ServiceBroker({
             created(broker) {
                 // Call action on all available nodes
                 broker.allCall = function(action, params, opts = {}) {
-                    const nodeIDs = this.registry.getNodeList({ onlyAvailable: true })
+                    const nodeIDs = this.registry
+                        .getNodeList({ onlyAvailable: true })
                         .map(node => node.id);
 
                     // Make direct call to the given Node ID
-                    return Promise.all(nodeIDs.map(nodeID => broker.call(action, params, Object.assign({ nodeID }, opts))));
-                }
+                    return Promise.all(
+                        nodeIDs.map(nodeID =>
+                            broker.call(
+                                action,
+                                params,
+                                Object.assign({ nodeID }, opts)
+                            )
+                        )
+                    );
+                };
             }
         }
     ]
@@ -271,31 +293,31 @@ await broker.start();
 const res = await broker.allCall("$node.health");
 ```
 
-
 ## Internal middlewares
-Many integrated features have been exposed to internal middlewares. These middlewares are loaded by default when broker is created. It can be turned off with the `internalMiddlewares: false` in broker option. In this case you must add what you need in the `middlewares: []` broker option.  
+
+Many integrated features have been exposed to internal middlewares. These middlewares are loaded by default when broker is created. It can be turned off with the `internalMiddlewares: false` in broker option. In this case you must add what you need in the `middlewares: []` broker option.
 
 **Internal middlewares**
 
-| Class name | Type | Description |
-| ---------- | ---- | ----------- |
-| `ActionHook` | Optional | Action hooks handler. [Read more](actions.html#Action-hooks) |
-| Validator | Optional | Parameter validation. [Read more](validating.html) |
-| `Bulkhead` | Optional | Bulkhead feature. [Read more](fault-tolerance.html#Bulkhead) |
-| Cacher | Optional | Cacher middleware. [Read more](caching.html) |
-| `ContextTracker` | Optional | Context tracker feature. [Read more](actions.html#Context-tracking) |
+| Class name       | Type     | Description                                                                |
+| ---------------- | -------- | -------------------------------------------------------------------------- |
+| `ActionHook`     | Optional | Action hooks handler. [Read more](actions.html#Action-hooks)               |
+| Validator        | Optional | Parameter validation. [Read more](validating.html)                         |
+| `Bulkhead`       | Optional | Bulkhead feature. [Read more](fault-tolerance.html#Bulkhead)               |
+| Cacher           | Optional | Cacher middleware. [Read more](caching.html)                               |
+| `ContextTracker` | Optional | Context tracker feature. [Read more](actions.html#Context-tracking)        |
 | `CircuitBreaker` | Optional | Circuit Breaker feature. [Read more](fault-tolerance.html#Circuit-Breaker) |
-| `Timeout` | Always | Timeout feature. [Read more](fault-tolerance.html#Timeout) |
-| `Retry` | Always | Retry feature. [Read more](fault-tolerance.html#Retry) |
-| `Fallback` | Always | Fallback feature. [Read more](fault-tolerance.html#Fallback) |
-| `ErrorHandler` | Always | Error handling. |
-| `Metrics` | Optional | Metrics feature. [Read more](metrics.html) |
+| `Timeout`        | Always   | Timeout feature. [Read more](fault-tolerance.html#Timeout)                 |
+| `Retry`          | Always   | Retry feature. [Read more](fault-tolerance.html#Retry)                     |
+| `Fallback`       | Always   | Fallback feature. [Read more](fault-tolerance.html#Fallback)               |
+| `ErrorHandler`   | Always   | Error handling.                                                            |
+| `Metrics`        | Optional | Metrics feature. [Read more](metrics.html)                                 |
 
 **Access to internal middlewares**
+
 ```js
 const { Bulkhead, Retry } = require("moleculer").Middlewares;
 ```
-
 
 <div align="center">
 ![Middlewares diagram](assets/middlewares.svg)

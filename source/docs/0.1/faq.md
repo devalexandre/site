@@ -1,10 +1,13 @@
-title: FAQ
+# FAQ
+
 ---
 
 # Core & Common
 
 ## How can I start services with Moleculer Runner in debug mode?
+
 Use the following command:
+
 ```bash
 $ node --inspect=0.0.0.0:9229 node_modules/moleculer/bin/moleculer-runner services
 ```
@@ -12,23 +15,26 @@ $ node --inspect=0.0.0.0:9229 node_modules/moleculer/bin/moleculer-runner servic
 # API Gateway (moleculer-web)
 
 ## Why am I getting `413 - request entity too large` error message when sending a big POST body
+
 You should configure the `bodyParsers` to overwrite the default `100kb` POST body limit. [More info](https://github.com/expressjs/body-parser#limit).
 
 ```js
 module.exports = {
     name: "api",
     settings: {
-        routes: [{
-            path: "/api",
-            
-            // Use bodyparser modules
-            bodyParsers: {
-                json: { limit: "2MB" },
-                urlencoded: { extended: true, limit: "2MB" }
+        routes: [
+            {
+                path: "/api",
+
+                // Use bodyparser modules
+                bodyParsers: {
+                    json: { limit: "2MB" },
+                    urlencoded: { extended: true, limit: "2MB" }
+                }
             }
-        }]
+        ]
     }
-}
+};
 ```
 
 {% note info Recommendation %}

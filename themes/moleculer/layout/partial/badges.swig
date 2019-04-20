@@ -1,5 +1,5 @@
 <!-- Travis badge -->
-<img src="https://travis-ci.org/moleculer-go/moleculer.svg?branch=develop" />
+<img src="https://cloud.drone.io/api/badges/moleculer-go/moleculer/status.svg" />
 
 <!-- Coveralls badge -->
 <img src="https://coveralls.io/repos/github/moleculer-go/moleculer/badge.svg?branch=develop" />

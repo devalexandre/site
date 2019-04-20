@@ -2,7 +2,7 @@
 <html lang="en">
 <head prefix="og: http://ogp.me/ns#"><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  <title>Statistics | Moleculer Go - Progressive microservices framework in Go</title>
+  <title>Moleculer Go - Progressive microservices framework in Go</title>
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="keywords" content="microservices, nodejs, node.js, javascript, github, opensource, framework, moleculer, github, scaling">
@@ -41,17 +41,17 @@
   <link rel="alternate" href="/atom.xml" title="Moleculer Go - Progressive microservices framework in Go">
   -->
   <!-- Open Graph -->
-  <meta name="description" content="Moleculer has a statistics module that collects and aggregates the count &amp;amp; latency info of the requests.You can enable it in the broker options with statistics: true.The data is stored only in mem">
+  <meta name="description" content="Statistics Moleculer has a statistics module that collects and aggregates the count &amp;amp; latency info of the requests.You can enable it in the broker options with statistics: true.The data is stored">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Statistics">
+<meta property="og:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta property="og:url" content="https://gomicro.services/docs/0.1/statistics.html">
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
-<meta property="og:description" content="Moleculer has a statistics module that collects and aggregates the count &amp;amp; latency info of the requests.You can enable it in the broker options with statistics: true.The data is stored only in mem">
+<meta property="og:description" content="Statistics Moleculer has a statistics module that collects and aggregates the count &amp;amp; latency info of the requests.You can enable it in the broker options with statistics: true.The data is stored">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-03-28T22:05:28.479Z">
+<meta property="og:updated_time" content="2019-04-20T06:15:27.355Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Statistics">
-<meta name="twitter:description" content="Moleculer has a statistics module that collects and aggregates the count &amp;amp; latency info of the requests.You can enable it in the broker options with statistics: true.The data is stored only in mem">
+<meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
+<meta name="twitter:description" content="Statistics Moleculer has a statistics module that collects and aggregates the count &amp;amp; latency info of the requests.You can enable it in the broker options with statistics: true.The data is stored">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
   
@@ -114,18 +114,17 @@
         <div class="article-inner">
           <div class="article">
             <div class="inner">
-              <header class="article-header">
-                <h1 class="article-title" itemprop="name">Statistics</h1>
-                <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/statistics.md" class="article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
-              </header>
               <div class="article-content" itemprop="articleBody">
-                <p>Moleculer has a statistics module that collects and aggregates the count &amp; latency info of the requests.<br>You can enable it in the <a href="broker.html#Broker-options">broker options</a> with <code>statistics: true</code>.<br><blockquote class="note warn"><p>The data is stored only in <strong>memory</strong>. If you would like to store it, you have to do it!<br>You can access the statistics data if you call the internal <code>$node.stats</code> action.</p>
+                <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/statistics.md" class="corner-right article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
+                <h1 id="Statistics" class="article-heading"><a href="#Statistics" class="headerlink" title="Statistics"></a>Statistics<a class="article-anchor" href="#Statistics" aria-hidden="true"></a></h1><hr>
+<p>Moleculer has a statistics module that collects and aggregates the count &amp; latency info of the requests.<br>You can enable it in the <a href="broker.html#Broker-options">broker options</a> with <code>statistics: true</code>.<br><blockquote class="note warn"><p>The data is stored only in <strong>memory</strong>. If you would like to store it, you have to do it!<br>You can access the statistics data if you call the internal <code>$node.stats</code> action.</p>
 </blockquote></p>
 <p>The result looks like the following:</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"requests"</span>: &#123;</span><br><span class="line">    <span class="comment">// Total statistics</span></span><br><span class="line">    <span class="string">"total"</span>: &#123;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Count of requests</span></span><br><span class="line">      <span class="string">"count"</span>: <span class="number">45</span>,</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Count of error by code</span></span><br><span class="line">      <span class="string">"errors"</span>: &#123;&#125;,</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Req/sec values</span></span><br><span class="line">      <span class="string">"rps"</span>: &#123;</span><br><span class="line">        <span class="string">"current"</span>: <span class="number">0.7999854548099126</span>,</span><br><span class="line">        <span class="comment">// Last x values</span></span><br><span class="line">        <span class="string">"values"</span>: [</span><br><span class="line">          <span class="number">0</span>,</span><br><span class="line">          <span class="number">6.59868026394721</span>,</span><br><span class="line">          <span class="number">2.200440088017604</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Request latency values (ms)</span></span><br><span class="line">      <span class="string">"latency"</span>: &#123;</span><br><span class="line">        <span class="string">"mean"</span>: <span class="number">0.8863636363636364</span>,</span><br><span class="line">        <span class="string">"median"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="string">"90th"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"95th"</span>: <span class="number">5</span>,</span><br><span class="line">        <span class="string">"99th"</span>: <span class="number">12</span>,</span><br><span class="line">        <span class="string">"99.5th"</span>: <span class="number">12</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Action-based statistics</span></span><br><span class="line">    <span class="string">"actions"</span>: &#123;</span><br><span class="line">      <span class="string">"posts.find"</span>: &#123;</span><br><span class="line">        <span class="string">"count"</span>: <span class="number">4</span>,</span><br><span class="line">        <span class="string">"errors"</span>: &#123;&#125;,</span><br><span class="line">        <span class="string">"rps"</span>: &#123;</span><br><span class="line">          <span class="string">"current"</span>: <span class="number">0.599970001499925</span>,</span><br><span class="line">          <span class="string">"values"</span>: [</span><br><span class="line">            <span class="number">1.7985611510791368</span>,</span><br><span class="line">            <span class="number">0.20004000800160032</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"latency"</span>: &#123;</span><br><span class="line">          <span class="string">"mean"</span>: <span class="number">7.5</span>,</span><br><span class="line">          <span class="string">"median"</span>: <span class="number">5</span>,</span><br><span class="line">          <span class="string">"90th"</span>: <span class="number">12</span>,</span><br><span class="line">          <span class="string">"95th"</span>: <span class="number">12</span>,</span><br><span class="line">          <span class="string">"99th"</span>: <span class="number">12</span>,</span><br><span class="line">          <span class="string">"99.5th"</span>: <span class="number">12</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-03-28T22:05:28.479Z" itemprop="dateModified">Last updated: 2019-03-28</time>
+                <time class="article-footer-updated" datetime="2019-04-20T06:15:27.355Z" itemprop="dateModified">Last updated: 2019-04-20</time>
                 <a href="index.html" class="article-footer-next" title="What is Moleculer?"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
@@ -134,7 +133,7 @@
           <aside id="article-toc" role="navigation">
             <div id="article-toc-inner">
               <strong class="sidebar-title">Contents</strong>
-              
+              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Statistics"><span class="toc-text">Statistics</span></a></li></ol>
               <a href="#" id="article-toc-top">Back to Top</a>
             </div>
           </aside>

@@ -1,5 +1,7 @@
-title: Database Adapters
---- 
+# Database Adapters
+
+---
+
 Moleculer framework has an official set of [DB adapters](https://github.com/moleculer-go/moleculer-db). Use them to persist your data in a database.
 
 {% note info Database per service%}
@@ -49,7 +51,7 @@ import (
 
 func main() {
  var bkr = broker.New(&moleculer.Config{LogLevel: "info"})
- bkr.AddService(moleculer.Service{
+ bkr.Publish(moleculer.Service{
   Name: "users",
   Settings: map[string]interface{}{
    "fields":    []string{"_id", "username", "name"},
@@ -264,7 +266,7 @@ import (
 
 func main() {
  var bkr = broker.New(&moleculer.Config{LogLevel: "info"})
- bkr.AddService(moleculer.Service{
+ bkr.Publish(moleculer.Service{
   Name: "users",
   Settings: map[string]interface{}{
    "fields":    []string{"id", "username", "name"},
@@ -275,7 +277,7 @@ func main() {
    SearchFields: []string{"name", "username"},
   })},
  })
- bkr.AddService(moleculer.Service{
+ bkr.Publish(moleculer.Service{
   Name: "posts",
   Settings: map[string]interface{}{
    "populates": map[string]interface{}{
@@ -372,7 +374,7 @@ import (
 
 func main() {
  var bkr = broker.New(&moleculer.Config{LogLevel: "info"})
- bkr.AddService(moleculer.Service{
+ bkr.Publish(moleculer.Service{
   Name: "users",
   Settings: map[string]interface{}{
    "fields":    []string{"id", "username", "name"},
@@ -386,7 +388,7 @@ func main() {
  adapter := &db.MemoryAdapter{
   Table: "posts",
  }
- bkr.AddService(moleculer.Service{
+ bkr.Publish(moleculer.Service{
   Name: "posts",
   Settings: map[string]interface{}{
    "populates": map[string]interface{}{
@@ -503,7 +505,7 @@ import (
 
 func main() {
  var bkr = broker.New(&moleculer.Config{LogLevel: "info"})
- bkr.AddService(moleculer.Service{
+ bkr.Publish(moleculer.Service{
   Name: "users",
   Settings: map[string]interface{}{
    "fields":    []string{"_id", "username", "name"},

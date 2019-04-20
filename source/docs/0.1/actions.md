@@ -1,4 +1,4 @@
-title: Actions
+# Actions
 ---
 
 The actions are the callable/public methods of the service. The action calling represents a remote-procedure-call (RPC). It has request parameters & returns response, like a HTTP request.
@@ -65,7 +65,7 @@ broker.call("user.recommendation", { limit: 5 }, {
 
 **Call with error handling**
 ```js
-broker.call("posts.update", { id: 2, title: "Modified post title" })
+broker.call("posts.update", { id: 2, # "Modified post title" })
     .then(res => console.log("Post updated!"))
     .catch(err => console.error("Unable to update Post!", err));    
 ```

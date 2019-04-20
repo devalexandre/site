@@ -2,7 +2,7 @@
 <html lang="en">
 <head prefix="og: http://ogp.me/ns#"><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  <title>Moleculer Runner | Moleculer Go - Progressive microservices framework in Go</title>
+  <title>Moleculer Go - Progressive microservices framework in Go</title>
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="keywords" content="microservices, nodejs, node.js, javascript, github, opensource, framework, moleculer, github, scaling">
@@ -41,17 +41,17 @@
   <link rel="alternate" href="/atom.xml" title="Moleculer Go - Progressive microservices framework in Go">
   -->
   <!-- Open Graph -->
-  <meta name="description" content="There is a project runner helper script in the Moleculer project. With it you don’t need to create a ServiceBroker instance with options, but a moleculer.config.js or moleculer.config.json file in the">
+  <meta name="description" content="Moleculer Runner There is a project runner helper script in the Moleculer project. With it you don’t need to create a ServiceBroker instance with options, but a moleculer.config.js or moleculer.config">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Moleculer Runner">
+<meta property="og:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta property="og:url" content="https://gomicro.services/docs/0.1/runner.html">
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
-<meta property="og:description" content="There is a project runner helper script in the Moleculer project. With it you don’t need to create a ServiceBroker instance with options, but a moleculer.config.js or moleculer.config.json file in the">
+<meta property="og:description" content="Moleculer Runner There is a project runner helper script in the Moleculer project. With it you don’t need to create a ServiceBroker instance with options, but a moleculer.config.js or moleculer.config">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-03-28T22:05:28.478Z">
+<meta property="og:updated_time" content="2019-04-20T06:15:51.514Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Moleculer Runner">
-<meta name="twitter:description" content="There is a project runner helper script in the Moleculer project. With it you don’t need to create a ServiceBroker instance with options, but a moleculer.config.js or moleculer.config.json file in the">
+<meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
+<meta name="twitter:description" content="Moleculer Runner There is a project runner helper script in the Moleculer project. With it you don’t need to create a ServiceBroker instance with options, but a moleculer.config.js or moleculer.config">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
   
@@ -114,12 +114,10 @@
         <div class="article-inner">
           <div class="article">
             <div class="inner">
-              <header class="article-header">
-                <h1 class="article-title" itemprop="name">Moleculer Runner</h1>
-                <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/runner.md" class="article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
-              </header>
               <div class="article-content" itemprop="articleBody">
-                <p>There is a project runner helper script in the Moleculer project. With it you don’t need to create a ServiceBroker instance with options, but a <code>moleculer.config.js</code> or <code>moleculer.config.json</code> file in the root of repo, fill it with your options, then call the <code>moleculer-runner</code> NPM script.<br>Another solution is to put them into environment variables instead of putting options to file.</p>
+                <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/runner.md" class="corner-right article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
+                <h1 id="Moleculer-Runner" class="article-heading"><a href="#Moleculer-Runner" class="headerlink" title="Moleculer Runner"></a>Moleculer Runner<a class="article-anchor" href="#Moleculer-Runner" aria-hidden="true"></a></h1><hr>
+<p>There is a project runner helper script in the Moleculer project. With it you don’t need to create a ServiceBroker instance with options, but a <code>moleculer.config.js</code> or <code>moleculer.config.json</code> file in the root of repo, fill it with your options, then call the <code>moleculer-runner</code> NPM script.<br>Another solution is to put them into environment variables instead of putting options to file.</p>
 <blockquote class="note info"><strong class="note-title">Production-ready</strong><p>In production, we recommend putting options into the environment variables! Use the <code>moleculer.config.js</code> only during development or store only common options.</p>
 </blockquote>
 <h2 id="Syntax" class="article-heading"><a href="#Syntax" class="headerlink" title="Syntax"></a>Syntax<a class="article-anchor" href="#Syntax" aria-hidden="true"></a></h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ moleculer-runner [options] [service files or directories or glob masks]</span><br></pre></td></tr></table></figure>
@@ -180,7 +178,8 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Example NPM scripts</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"scripts"</span>: &#123;</span><br><span class="line">        <span class="string">"dev"</span>: <span class="string">"moleculer-runner --repl --hot --config moleculer.dev.config.js services"</span>,</span><br><span class="line">        <span class="string">"start"</span>: <span class="string">"moleculer-runner --instances=4 services"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>Example NPM scripts</strong></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"scripts"</span>: &#123;</span><br><span class="line">        <span class="string">"dev"</span>: <span class="string">"moleculer-runner --repl --hot --config moleculer.dev.config.js services"</span>,</span><br><span class="line">        <span class="string">"start"</span>: <span class="string">"moleculer-runner --instances=4 services"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>The <code>dev</code> script loads development configurations from the <code>moleculer.dev.config.js</code> file, start all services from the <code>services</code> folder, enable hot-reloading and switches to REPL mode. Run it with the <code>npm run dev</code> command.</p>
 <p>The <code>start</code> script is to load the default <code>moleculer.config.js</code> file if it exists, otherwise only loads options from environment variables. Starts 4 instances of broker, then they start all services from the <code>services</code> folder. Run it with <code>npm start</code> command.</p>
 <h2 id="Configuration-loading-logic" class="article-heading"><a href="#Configuration-loading-logic" class="headerlink" title="Configuration loading logic"></a>Configuration loading logic<a class="article-anchor" href="#Configuration-loading-logic" aria-hidden="true"></a></h2><p>The runner does the following steps to load &amp; merge configurations:</p>
@@ -194,9 +193,11 @@
 <p>To overwrite broker’s deeply nested default options, which are not present in <code>moleculer.config.js</code>, via environment variables, use the <code>MOL_</code> prefix and double underscore <code>__</code> for nested properties in <code>.env</code> file. For example, to set the <a href="caching.html#Built-in-cachers">cacher prefix</a> to <code>MOL</code> you should declare as <code>MOL_CACHER__OPTIONS__PREFIX=MOL</code>.</p>
 </blockquote>
 <h3 id="Configuration-file" class="article-heading"><a href="#Configuration-file" class="headerlink" title="Configuration file"></a>Configuration file<a class="article-anchor" href="#Configuration-file" aria-hidden="true"></a></h3><p>The structure of the configuration file is the same as that of the <a href="broker.html#Broker-options">broker options</a>. Every property has the same name.</p>
-<p><strong>Example config file</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    nodeID: <span class="string">"node-test"</span>,</span><br><span class="line">    logger: <span class="literal">true</span>,</span><br><span class="line">    logLevel: <span class="string">"debug"</span>,</span><br><span class="line"></span><br><span class="line">    transporter: <span class="string">"nats://localhost:4222"</span>,</span><br><span class="line">    requestTimeout: <span class="number">5</span> * <span class="number">1000</span>,</span><br><span class="line"></span><br><span class="line">    circuitBreaker: &#123;</span><br><span class="line">        enabled: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    metrics: <span class="literal">true</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p><strong>Example config file</strong></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    nodeID: <span class="string">"node-test"</span>,</span><br><span class="line">    logger: <span class="literal">true</span>,</span><br><span class="line">    logLevel: <span class="string">"debug"</span>,</span><br><span class="line"></span><br><span class="line">    transporter: <span class="string">"nats://localhost:4222"</span>,</span><br><span class="line">    requestTimeout: <span class="number">5</span> * <span class="number">1000</span>,</span><br><span class="line"></span><br><span class="line">    circuitBreaker: &#123;</span><br><span class="line">        enabled: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    metrics: <span class="literal">true</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="Environment-variables" class="article-heading"><a href="#Environment-variables" class="headerlink" title="Environment variables"></a>Environment variables<a class="article-anchor" href="#Environment-variables" aria-hidden="true"></a></h3><p>The runner transforms the property names to uppercase. If nested, the runner concatenates names with <code>_</code>.</p>
-<p><strong>Example environment variables</strong><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">NODEID=node-test</span><br><span class="line">LOGGER=<span class="literal">true</span></span><br><span class="line">LOGLEVEL=debug</span><br><span class="line"></span><br><span class="line"><span class="comment"># Shorthand transporter</span></span><br><span class="line">TRANSPORTER=nats://localhost:4222</span><br><span class="line">REQUESTTIMEOUT=5000</span><br><span class="line"></span><br><span class="line"><span class="comment"># Nested property</span></span><br><span class="line">CIRCUITBREAKER_ENABLED=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line">METRICS=<span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>Example environment variables</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">NODEID=node-test</span><br><span class="line">LOGGER=<span class="literal">true</span></span><br><span class="line">LOGLEVEL=debug</span><br><span class="line"></span><br><span class="line"><span class="comment"># Shorthand transporter</span></span><br><span class="line">TRANSPORTER=nats://localhost:4222</span><br><span class="line">REQUESTTIMEOUT=5000</span><br><span class="line"></span><br><span class="line"><span class="comment"># Nested property</span></span><br><span class="line">CIRCUITBREAKER_ENABLED=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line">METRICS=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <h2 id="Services-loading-logic" class="article-heading"><a href="#Services-loading-logic" class="headerlink" title="Services loading logic"></a>Services loading logic<a class="article-anchor" href="#Services-loading-logic" aria-hidden="true"></a></h2><p>The runner loads service files or folders defined in CLI arguments. If you define folder(s), the runner loads all services <code>**/*.service.js</code> from specified one(s) (including sub-folders too). Services &amp; service folder can be loaded with <code>SERVICES</code> and <code>SERVICEDIR</code> environment variables.</p>
 <p><strong>Loading steps:</strong></p>
 <ol>
@@ -208,7 +209,8 @@
 <blockquote>
 <p>Please note: shorthand names can also be used in <code>SERVICES</code> env var.</p>
 </blockquote>
-<p><strong>Example</strong><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SERVICEDIR=services</span><br><span class="line">SERVICES=math,post,user</span><br></pre></td></tr></table></figure></p>
+<p><strong>Example</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SERVICEDIR=services</span><br><span class="line">SERVICES=math,post,user</span><br></pre></td></tr></table></figure>
 <p>It loads the <code>math.service.js</code>, <code>post.service.js</code> and <code>user.service.js</code> files from the <code>services</code> folder.</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SERVICEDIR=my-services</span><br></pre></td></tr></table></figure>
 <p>It loads all <code>*.service.js</code> files from the <code>my-services</code> folder (including sub-folders too).</p>
@@ -224,7 +226,8 @@
 <p>The glob patterns work in the <code>SERVICES</code> enviroment variables, as well.</p>
 </blockquote>
 <h2 id="Built-in-clustering" class="article-heading"><a href="#Built-in-clustering" class="headerlink" title="Built-in clustering"></a>Built-in clustering<a class="article-anchor" href="#Built-in-clustering" aria-hidden="true"></a></h2><p>Moleculer Runner has a built-in clustering function to start multiple instances from your broker.</p>
-<p>Example to start all services from the <code>services</code> folder in 4 instances.<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ moleculer-runner --instances 4 services</span><br></pre></td></tr></table></figure></p>
+<p>Example to start all services from the <code>services</code> folder in 4 instances.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ moleculer-runner --instances 4 services</span><br></pre></td></tr></table></figure>
 <blockquote class="note info"><strong class="note-title">Clustered Node ID</strong><p>The <code>nodeID</code> will be suffixed with the worker ID. E.g. if you define <code>my-node</code> nodeID in options, and starts 4 instances, the instance nodeIDs will be <code>my-node-1</code>, <code>my-node-2</code>, <code>my-node-3</code>, <code>my-node-4</code>.</p>
 </blockquote>
 <h2 id="env-files" class="article-heading"><a href="#env-files" class="headerlink" title=".env files"></a>.env files<a class="article-anchor" href="#env-files" aria-hidden="true"></a></h2><p>Moleculer runner can load <code>.env</code> file at starting. There are two new cli options to load env file:</p>
@@ -232,13 +235,14 @@
 <li><code>-e, --env</code> - Load envorinment variables from the ‘.env’ file from the current folder.</li>
 <li><code>-E, --envfile &lt;filename&gt;</code> - Load envorinment variables from the specified file.</li>
 </ul>
-<p><strong>Example</strong><br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Load the default .env file from current directory</span></span><br><span class="line">$ moleculer-runner --env</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the specified .my-env file</span></span><br><span class="line">$ moleculer-runner --envfile .my-env</span><br></pre></td></tr></table></figure></p>
+<p><strong>Example</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Load the default .env file from current directory</span></span><br><span class="line">$ moleculer-runner --env</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the specified .my-env file</span></span><br><span class="line">$ moleculer-runner --envfile .my-env</span><br></pre></td></tr></table></figure>
 <blockquote class="note info"><strong class="note-title">Dependencies</strong><p>To use this feature install the <code>dotenv</code> module with <code>npm install dotenv --save</code> command.</p>
 </blockquote>
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-03-28T22:05:28.478Z" itemprop="dateModified">Last updated: 2019-03-28</time>
+                <time class="article-footer-updated" datetime="2019-04-20T06:15:51.514Z" itemprop="dateModified">Last updated: 2019-04-20</time>
                 <a href="errors.html" class="article-footer-prev" title="Errors"><i class="fa fa-chevron-left"></i><span>Prev</span></a><a href="moleculer-web.html" class="article-footer-next" title="API Gateway"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
@@ -247,7 +251,7 @@
           <aside id="article-toc" role="navigation">
             <div id="article-toc-inner">
               <strong class="sidebar-title">Contents</strong>
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Syntax"><span class="toc-text">Syntax</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Options"><span class="toc-text">Options</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuration-loading-logic"><span class="toc-text">Configuration loading logic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Configuration-file"><span class="toc-text">Configuration file</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Environment-variables"><span class="toc-text">Environment variables</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Services-loading-logic"><span class="toc-text">Services loading logic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Glob-patterns"><span class="toc-text">Glob patterns</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Built-in-clustering"><span class="toc-text">Built-in clustering</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#env-files"><span class="toc-text">.env files</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Moleculer-Runner"><span class="toc-text">Moleculer Runner</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Syntax"><span class="toc-text">Syntax</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Options"><span class="toc-text">Options</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuration-loading-logic"><span class="toc-text">Configuration loading logic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Configuration-file"><span class="toc-text">Configuration file</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Environment-variables"><span class="toc-text">Environment variables</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Services-loading-logic"><span class="toc-text">Services loading logic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Glob-patterns"><span class="toc-text">Glob patterns</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Built-in-clustering"><span class="toc-text">Built-in clustering</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#env-files"><span class="toc-text">.env files</span></a></li></ol></li></ol>
               <a href="#" id="article-toc-top">Back to Top</a>
             </div>
           </aside>

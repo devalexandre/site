@@ -1,4 +1,5 @@
-title: Fault tolerance
+# Fault tolerance
+
 ---
 
 ## Circuit Breaker
@@ -14,6 +15,7 @@ Read more about circuit breaker on [Martin Fowler blog](https://martinfowler.com
 If you enable it, all service calls will be protected by this built-in circuit breaker.
 
 **Enable it in the broker options**
+
 ```js
 const broker = new ServiceBroker({
     circuitBreaker: {
@@ -29,18 +31,19 @@ const broker = new ServiceBroker({
 
 ### Settings
 
-| Name | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `enabled` | `Boolean` | `false` | Enable feature |
-| `threshold` | `Number` | `0.5` | Threshold value. `0.5` means that 50% should be failed for tripping. |
-| `minRequestCount` | `Number` | `20` | Minimum request count. Below it, CB does not trip. |
-| `windowTime` | `Number` | `60` | Number of seconds for time window. |
-| `halfOpenTime` | `Number` | `10000` | Number of milliseconds to switch from `open` to `half-open` state |
-| `check` | `Function` | `err && err.code >= 500` | A function to check failed requests. |
+| Name              | Type       | Default                  | Description                                                          |
+| ----------------- | ---------- | ------------------------ | -------------------------------------------------------------------- |
+| `enabled`         | `Boolean`  | `false`                  | Enable feature                                                       |
+| `threshold`       | `Number`   | `0.5`                    | Threshold value. `0.5` means that 50% should be failed for tripping. |
+| `minRequestCount` | `Number`   | `20`                     | Minimum request count. Below it, CB does not trip.                   |
+| `windowTime`      | `Number`   | `60`                     | Number of seconds for time window.                                   |
+| `halfOpenTime`    | `Number`   | `10000`                  | Number of milliseconds to switch from `open` to `half-open` state    |
+| `check`           | `Function` | `err && err.code >= 500` | A function to check failed requests.                                 |
 
 > If the circuit-breaker state is changed, ServiceBroker will send [internal events](events.html#Internal-events).
 
 These global options can be overridden in action definition, as well.
+
 ```js
 // users.service.js
 module.export = {
@@ -59,9 +62,11 @@ module.export = {
 ```
 
 ## Retry
+
 There is an exponential backoff retry solution. It can recall failed requests.
 
 **Enable it in the broker options**
+
 ```js
 const broker = new ServiceBroker({
     retryPolicy: {
@@ -77,21 +82,23 @@ const broker = new ServiceBroker({
 
 ### Settings
 
-| Name | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `enabled` | `Boolean` | `false` | Enable feature. |
-| `retries` | `Number` | `5` | Count of retries. |
-| `delay` | `Number` | `100` | First delay in milliseconds. |
-| `maxDelay` | `Number` | `2000` | Maximum delay in milliseconds. |
-| `factor` | `Number` | `2` | Backoff factor for delay. `2` means exponential backoff. |
-| `check` | `Function` | `err && !!err.retryable` | A function to check failed requests. |
+| Name       | Type       | Default                  | Description                                              |
+| ---------- | ---------- | ------------------------ | -------------------------------------------------------- |
+| `enabled`  | `Boolean`  | `false`                  | Enable feature.                                          |
+| `retries`  | `Number`   | `5`                      | Count of retries.                                        |
+| `delay`    | `Number`   | `100`                    | First delay in milliseconds.                             |
+| `maxDelay` | `Number`   | `2000`                   | Maximum delay in milliseconds.                           |
+| `factor`   | `Number`   | `2`                      | Backoff factor for delay. `2` means exponential backoff. |
+| `check`    | `Function` | `err && !!err.retryable` | A function to check failed requests.                     |
 
-**Overwrite the retries value in calling option** 
+**Overwrite the retries value in calling option**
+
 ```js
 broker.call("posts.find", {}, { retries: 3 });
 ```
 
-**Overwrite the retry policy values in action definitions** 
+**Overwrite the retry policy values in action definitions**
+
 ```js
 // users.service.js
 module.export = {
@@ -117,51 +124,58 @@ module.export = {
 ```
 
 ## Timeout
+
 Timeout can be set for service calling. It can be set globally in broker options, or in calling options.
 If timeout is defined and request is timed out, broker will throw a `RequestTimeoutError` error.
 
 **Enable it in the broker options**
+
 ```js
 const broker = new ServiceBroker({
     requestTimeout: 5 * 1000 // in seconds
 });
 ```
 
-**Overwrite the timeout value in calling option** 
+**Overwrite the timeout value in calling option**
+
 ```js
 broker.call("posts.find", {}, { timeout: 3000 });
 ```
 
 ### Distributed timeouts
+
 Moleculer uses [distributed timeouts](https://www.datawire.io/guide/traffic/deadlines-distributed-timeouts-microservices/). In case of nested calls, the timeout value is decremented with the elapsed time. If the timeout value is less or equal than 0, the next nested calls will be skipped (`RequestSkippedError`) because the first call has already been rejected with a `RequestTimeoutError` error.
 
 ## Bulkhead
+
 Bulkhead feature is implemented in Moleculer framework to control the concurrent request handling of actions.
 
 **Enable it in the broker options**
+
 ```js
 const broker = new ServiceBroker({
     bulkhead: {
         enabled: true,
         concurrency: 3,
-        maxQueueSize: 10,
+        maxQueueSize: 10
     }
 });
 ```
 
 ### Settings
 
-| Name | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `enabled` | `Boolean` | `false` | Enable feature. |
-| `concurreny` | `Number` | `3` | Maximum concurrent executions. |
-| `maxQueueSize` | `Number` | `10` | Maximum size of queue |
+| Name           | Type      | Default | Description                    |
+| -------------- | --------- | ------- | ------------------------------ |
+| `enabled`      | `Boolean` | `false` | Enable feature.                |
+| `concurreny`   | `Number`  | `3`     | Maximum concurrent executions. |
+| `maxQueueSize` | `Number`  | `10`    | Maximum size of queue          |
 
 The `concurrency` value restricts the concurrent request executions. If the `maxQueueSize` is bigger than `0`, broker stores the additional requests in a queue if all slots are taken. If the queue size reaches the `maxQueueSize` limit or it is 0, broker will throw `QueueIsFull` exception for every addition requests.
 
 These global options can be overridden in action definition, as well.
 
-**Overwrite the retry policy values in action definitions** 
+**Overwrite the retry policy values in action definitions**
+
 ```js
 // users.service.js
 module.export = {
@@ -186,25 +200,36 @@ module.export = {
 ```
 
 ## Fallback
+
 Fallback feature is useful, when you don't want to give back errors to the users. Instead, call an other action or return some common content.
 Fallback response can be set in calling options or in action definition. It should be a `Function` which returns a `Promise` with any content. The broker passes the current `Context` & `Error` objects to this function as arguments.
 
 **Fallback response setting in calling options**
+
 ```js
-const result = await broker.call("users.recommendation", { userID: 5 }, {
-    timeout: 500,
-    fallbackResponse(ctx, err) {
-        // Return a common response from cache
-        return broker.cacher.get("users.fallbackRecommendation:" + ctx.params.userID);
+const result = await broker.call(
+    "users.recommendation",
+    { userID: 5 },
+    {
+        timeout: 500,
+        fallbackResponse(ctx, err) {
+            // Return a common response from cache
+            return broker.cacher.get(
+                "users.fallbackRecommendation:" + ctx.params.userID
+            );
+        }
     }
-});
+);
 ```
 
 ### Fallback in action definition
+
 Fallback response can be also defined in receiver-side, in action definition.
+
 > Please note, this fallback response will only be used if the error occurs within action handler. If the request is called from a remote node and the request is timed out on the remote node, the fallback response is not be used. In this case, use the `fallbackResponse` in calling option.
 
 **Fallback as a function**
+
 ```js
 module.exports = {
     name: "recommends",
@@ -221,6 +246,7 @@ module.exports = {
 ```
 
 **Fallback as method name string**
+
 ```js
 module.exports = {
     name: "recommends",

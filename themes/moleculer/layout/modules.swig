@@ -7,7 +7,7 @@
 			<header class="article-header">
 				<h1 class="article-title" itemprop="name">{{ page.title }}</h1>
 			</header>
-            <a href="https://github.com/moleculerjs/awesome-moleculer">Check our Awesome Moleculer repo!</a>
+      
 			<div class="article-content" itemprop="articleBody">
 			{% for category in site.data.modules %}
 				<h3 id="{{ loop.key }}" class="article-heading">
@@ -19,7 +19,6 @@
 						<th>Name</th>
 						<th>Description</th>
 						<th>Author</th>
-						<th>Version</th>
 					</thead>
 					<tbody>
 						{% for module in category %}
@@ -33,11 +32,7 @@
 										{{ module.author }}
 									</a>
 								</td>
-								<td>
-									<a href="https://www.npmjs.com/package/{{module.name}}" target="_blank" rel="noopener">
-										<img src="https://img.shields.io/npm/v/{{module.name}}.svg?maxAge=3600" alt="npm" />
-									</a>
-								</td>
+								
 							</tr>
 						{% endfor %}
 					</tbody>

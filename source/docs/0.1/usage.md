@@ -1,5 +1,4 @@
-title: Usage
----
+# Usage
 
 # Install Moleculer Go
 
@@ -38,7 +37,7 @@ var mathService = moleculer.Service{
 
 func main() {
  var bkr = broker.New(&moleculer.Config{LogLevel: "error"})
- bkr.AddService(mathService)
+ bkr.Publish(mathService)
  bkr.Start()
  result := <-bkr.Call("math.add", payload.New(map[string]int{
   "a": 10,

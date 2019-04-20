@@ -1,5 +1,7 @@
-title: Circuit breaker
+# Circuit breaker
+
 ---
+
 _Added in: v0.7.6_
 
 The Moleculer has a built-in circuit-breaker solution.
@@ -10,6 +12,7 @@ Read more about circuit breaker on [Martin Fowler blog](https://martinfowler.com
 If you enable it, every service call will be protected by a built-in circuit breaker.
 
 **Enable it in the broker options**
+
 ```js
 const broker = new ServiceBroker({
     circuitBreaker: {
@@ -24,12 +27,12 @@ const broker = new ServiceBroker({
 
 ## Settings
 
-| Name | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `enabled` | `Boolean` | `false` | Enable the protection |
-| `maxFailures` | `3` | `false` | Breaker trips after 3 failures |
-| `halfOpenTime` | `Number` | `10000` | Number of milliseconds to switch from `open` to `half-open` state |
-| `failureOnTimeout` | `Boolean` | `true` | Increment failures if the request is timed out |
-| `failureOnReject` | `Boolean` | `true` | Increment failures if the request is rejected (by any `Error`) |
+| Name               | Type      | Default | Description                                                       |
+| ------------------ | --------- | ------- | ----------------------------------------------------------------- |
+| `enabled`          | `Boolean` | `false` | Enable the protection                                             |
+| `maxFailures`      | `3`       | `false` | Breaker trips after 3 failures                                    |
+| `halfOpenTime`     | `Number`  | `10000` | Number of milliseconds to switch from `open` to `half-open` state |
+| `failureOnTimeout` | `Boolean` | `true`  | Increment failures if the request is timed out                    |
+| `failureOnReject`  | `Boolean` | `true`  | Increment failures if the request is rejected (by any `Error`)    |
 
 > If the circuit-breaker state is changed, ServiceBroker will send [internal](broker.html#Internal-events) & [metrics](metrics.html#Circuit-breaker-events) events.

@@ -17,7 +17,13 @@ $ npm run dev
 $ npm run build
 ```
 
+# TODO
+
+Try to create the infra and CI/CD for the site image using kubernets -> https://opencredo.com/blogs/kubernetes-aws-terraform-ansible-1/
+and use it as the basis for the exemple builds.
+
 # Contact
+
 Copyright (c) 2016-2018 Moleculer JS
 
 [![@icebob](https://img.shields.io/badge/github-moleculerjs-green.svg)](https://github.com/moleculerjs) [![@icebob](https://img.shields.io/badge/twitter-MoleculerJS-blue.svg)](https://twitter.com/MoleculerJS)

@@ -1,11 +1,15 @@
-title: Benchmark
+# Benchmark
+
 ---
+
 In development, we measure every critical part of the framework to ensure the best possible performance.
 
 ## Request times
+
 We [tested](https://github.com/icebob/microservices-benchmark) Moleculer against some other frameworks and measured the request times.
 
 ### Local request
+
 ```
 Suite: Call local actions
 √ Moleculer*           1,713,579 rps
@@ -16,9 +20,11 @@ Suite: Call local actions
    Nanoservices*      -94.72%         (90,510 rps)   (avg: 11μs)
    Seneca*            -99.23%         (13,252 rps)   (avg: 75μs)
 ```
+
 [![Result chart](assets/benchmark/benchmark_local.svg)](http://cloud.highcharts.com/show/utideti)
 
 ### Remote request
+
 ```
 Suite: Call remote actions
 √ Moleculer*           10,445 rps
@@ -31,18 +37,21 @@ Suite: Call remote actions
    Cote*                0%         (15,442 rps)   (avg: 64μs)
    Seneca*         -80.91%          (2,947 rps)   (avg: 339μs)
 ```
+
 [![Result chart](assets/benchmark/benchmark_remote.svg)](http://cloud.highcharts.com/show/abyfite)
 
 ## Benchmark results
 
 **Tester platform:**
-- **OS**: Windows_NT 6.1.7601 x64
-- **Node**: 8.11.0
-- **v8**: 6.2.414.50
-- **CPU**: Intel(R) Core(TM) i7-4770K CPU @ 3.50GHz × 8
-- **Memory**: 16 GB
+
+-   **OS**: Windows_NT 6.1.7601 x64
+-   **Node**: 8.11.0
+-   **v8**: 6.2.414.50
+-   **CPU**: Intel(R) Core(TM) i7-4770K CPU @ 3.50GHz × 8
+-   **Memory**: 16 GB
 
 ### Common test suite
+
 ```
 Suite: Local call
 √ broker.call (normal)*             1,595,635 rps
@@ -86,6 +95,7 @@ Suite: Context tracking
 ```
 
 ### Calling test suite
+
 ```
 Suite: Call methods
 √ broker.call (normal)*             1,660,419 rps
@@ -135,6 +145,7 @@ Suite: Call with metrics
 ```
 
 ### Cachers test suite
+
 ```
 Suite: Set & get 1k data with cacher
 √ Memory*        2,233,922 rps
@@ -162,6 +173,7 @@ Suite: Test cloning on MemoryCacher
 ```
 
 ### Events test suite
+
 ```
 Suite: Emit event
 √ Emit event without subscribers                                     7,093,574 rps
@@ -181,6 +193,7 @@ Suite: Emit event
 ```
 
 ### Middlewares test suite
+
 ```
 Suite: Middleware test
 √ Without internal & custom middlewares*        2,786,666 rps
@@ -196,6 +209,7 @@ Suite: Middleware test
 ```
 
 ### Transporters test suite
+
 ```
 Suite: Transport with 10bytes
 √ Fake*            40,182 rps
@@ -213,6 +227,7 @@ Suite: Transport with 10bytes
 ```
 
 ### Serializers test suite
+
 ```
 JSON length: 89
 Avro length: 38

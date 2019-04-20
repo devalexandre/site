@@ -1,55 +1,55 @@
-title: Command Line Tool
+# Command Line Tool
+
 ---
 
 ## moleculer-cli [![npm](https://img.shields.io/npm/v/moleculer-cli.svg?maxAge=3600)](https://www.npmjs.com/package/moleculer-cli)
+
 This is a [command-line tool](https://github.com/moleculer-go/moleculer-cli) for Moleculer to help developing & testing.
 
 ## Install
 
-``` bash
+```bash
 $ npm i -g moleculer-cli
 ```
 
 ## Commands
 
 ### Init a new project
+
 Scaffold a new Moleculer project.
 
-``` bash
+```bash
 $ moleculer init project my-project
 ```
+
 The above command downloads the template from [moleculer-go/moleculer-template-project](https://github.com/moleculer-go/moleculer-template-project), prompts some information and generates a new module to the `./my-project` folder.
 
 #### [Official templates](https://github.com/topics/moleculer-template)
 
-* [**project**](https://github.com/moleculer-go/moleculer-template-project) - Generate a common Moleculer-based project. *Use it if you want to start a new project which is based on Moleculer framework*
-	* sample service (`greeter`)
-	* official [API Gateway](https://github.com/moleculer-go/moleculer-web) (optional)
-	* Docker & Docker Compose files
-	* tests & coverage with [Jest](http://facebook.github.io/jest/)
-	* lint with [ESLint](http://eslint.org/)
+-   [**project**](https://github.com/moleculer-go/moleculer-template-project) - Generate a common Moleculer-based project. _Use it if you want to start a new project which is based on Moleculer framework_
+    _ sample service (`greeter`)
+    _ official [API Gateway](https://github.com/moleculer-go/moleculer-web) (optional)
+    _ Docker & Docker Compose files
+    _ tests & coverage with [Jest](http://facebook.github.io/jest/) \* lint with [ESLint](http://eslint.org/)
 
+*   [**nano**](https://github.com/moleculer-go/moleculer-template-nano) - Minimal project template for one microservice. _Use it if you want to create a microservice which connect to others via transporter_
+    _ sample service (`greeter`)
+    _ Docker & Docker Compose files
+    _ tests & coverage with [Jest](http://facebook.github.io/jest/)
+    _ lint with [ESLint](http://eslint.org/) \* Minimal Docker file
 
-* [**nano**](https://github.com/moleculer-go/moleculer-template-nano) - Minimal project template for one microservice. *Use it if you want to create a microservice which connect to others via transporter*
-	* sample service (`greeter`)
-	* Docker & Docker Compose files
-	* tests & coverage with [Jest](http://facebook.github.io/jest/)
-	* lint with [ESLint](http://eslint.org/)
-	* Minimal Docker file
-
-
-* [**module**](https://github.com/moleculer-go/moleculer-template-module) - Generate a new Moleculer module project (e.g.: `moleculer-xyz`). *Use it if you want to create a module for Moleculer framework*
-	* empty service skeleton
-	* examples skeleton
-	* readme skeleton
-	* tests & coverage with [Jest](http://facebook.github.io/jest/)
-	* lint with [ESLint](http://eslint.org/)
+-   [**module**](https://github.com/moleculer-go/moleculer-template-module) - Generate a new Moleculer module project (e.g.: `moleculer-xyz`). _Use it if you want to create a module for Moleculer framework_
+    _ empty service skeleton
+    _ examples skeleton
+    _ readme skeleton
+    _ tests & coverage with [Jest](http://facebook.github.io/jest/) \* lint with [ESLint](http://eslint.org/)
 
 #### Custom templates
 
-``` bash
+```bash
 $ moleculer init username/repo my-project
 ```
+
 Where username/repo is the GitHub repo shorthand for your fork.
 
 The shorthand repo notation is passed to [download-git-repo](https://github.com/flipxfx/download-git-repo) so it can be `bitbucket:username/repo` for a Bitbucket repo and `username/repo#branch` for tags or branches.
@@ -57,13 +57,15 @@ The shorthand repo notation is passed to [download-git-repo](https://github.com/
 #### Local Templates
 
 Instead of a GitHub repo, use a template from local filesystem:
-``` bash
+
+```bash
 $ moleculer init ./path/to-custom-template my-project
 ```
 
 #### Template aliases
 
 To simplify usage of custom templates (local and remote), it is possible to register an alias and use that afterwards instead of the whole repository url.
+
 ```bash
 $ moleculer alias-template myAlias somegithubuser/reponame
 $ moleculer alias-template otherAlias ./path/to/some-local/custom/template
@@ -71,6 +73,7 @@ $ moleculer alias-template otherAlias ./path/to/some-local/custom/template
 
 $ moleculer init myAlias my-project
 ```
+
 All registered template aliases are stored in the file `~/.moleculer-templates.json` and can also be edited manually.
 
 #### Creating Custom Templates
@@ -98,12 +101,15 @@ The `template` directory contains files which will be transformed using [Handleb
 Handlebars can also transform file names.
 
 ### Start a broker locally
+
 This command starts a new `ServiceBroker` locally and switches to REPL mode.
+
 ```bash
 $ moleculer start
 ```
 
 **Options**
+
 ```
   --config, -c   Load configuration from a file           [string] [default: ""]
   --ns           Namespace                                [string] [default: ""]
@@ -115,7 +121,9 @@ $ moleculer start
 ```
 
 ### Start a broker and connect to a transporter
+
 This command starts a new `ServiceBroker`, connects to a transporter server and switches to REPL mode.
+
 ```bash
 # Connect with TCP transporter
 $ moleculer connect
@@ -137,6 +145,7 @@ $ moleculer connect --config ./moleculer.config.js
 ```
 
 **Options**
+
 ```
   --config, -c   Load configuration from a file           [string] [default: ""]
   --ns           Namespace                                [string] [default: ""]

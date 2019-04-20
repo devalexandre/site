@@ -2,7 +2,7 @@
 <html lang="en">
 <head prefix="og: http://ogp.me/ns#"><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  <title>Lifecycle | Moleculer Go - Progressive microservices framework in Go</title>
+  <title>Moleculer Go - Progressive microservices framework in Go</title>
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="keywords" content="microservices, nodejs, node.js, javascript, github, opensource, framework, moleculer, github, scaling">
@@ -41,19 +41,19 @@
   <link rel="alternate" href="/atom.xml" title="Moleculer Go - Progressive microservices framework in Go">
   -->
   <!-- Open Graph -->
-  <meta name="description" content="Broker lifecycleThis section describes what happens when the broker is starting &amp;amp; stopping. Starting logicThe broker starts transporter connecting but it doesn’t publish the local service list to">
+  <meta name="description" content="Lifecycle Broker lifecycleThis section describes what happens when the broker is starting &amp;amp; stopping. Starting logicThe broker starts transporter connecting but it doesn’t publish the local servic">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Lifecycle">
+<meta property="og:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta property="og:url" content="https://gomicro.services/docs/0.1/lifecycle.html">
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
-<meta property="og:description" content="Broker lifecycleThis section describes what happens when the broker is starting &amp;amp; stopping. Starting logicThe broker starts transporter connecting but it doesn’t publish the local service list to">
+<meta property="og:description" content="Lifecycle Broker lifecycleThis section describes what happens when the broker is starting &amp;amp; stopping. Starting logicThe broker starts transporter connecting but it doesn’t publish the local servic">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://gomicro.services/docs/0.1/assets/lifecycle/broker-start.svg">
 <meta property="og:image" content="https://gomicro.services/docs/0.1/assets/lifecycle/broker-stop.svg">
-<meta property="og:updated_time" content="2019-03-28T22:05:28.474Z">
+<meta property="og:updated_time" content="2019-04-20T06:16:18.302Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Lifecycle">
-<meta name="twitter:description" content="Broker lifecycleThis section describes what happens when the broker is starting &amp;amp; stopping. Starting logicThe broker starts transporter connecting but it doesn’t publish the local service list to">
+<meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
+<meta name="twitter:description" content="Lifecycle Broker lifecycleThis section describes what happens when the broker is starting &amp;amp; stopping. Starting logicThe broker starts transporter connecting but it doesn’t publish the local servic">
 <meta name="twitter:image" content="https://gomicro.services/docs/0.1/assets/lifecycle/broker-start.svg">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
@@ -117,12 +117,10 @@
         <div class="article-inner">
           <div class="article">
             <div class="inner">
-              <header class="article-header">
-                <h1 class="article-title" itemprop="name">Lifecycle</h1>
-                <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/lifecycle.md" class="article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
-              </header>
               <div class="article-content" itemprop="articleBody">
-                <h2 id="Broker-lifecycle" class="article-heading"><a href="#Broker-lifecycle" class="headerlink" title="Broker lifecycle"></a>Broker lifecycle<a class="article-anchor" href="#Broker-lifecycle" aria-hidden="true"></a></h2><p>This section describes what happens when the broker is starting &amp; stopping.</p>
+                <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/lifecycle.md" class="corner-right article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
+                <h1 id="Lifecycle" class="article-heading"><a href="#Lifecycle" class="headerlink" title="Lifecycle"></a>Lifecycle<a class="article-anchor" href="#Lifecycle" aria-hidden="true"></a></h1><hr>
+<h2 id="Broker-lifecycle" class="article-heading"><a href="#Broker-lifecycle" class="headerlink" title="Broker lifecycle"></a>Broker lifecycle<a class="article-anchor" href="#Broker-lifecycle" aria-hidden="true"></a></h2><p>This section describes what happens when the broker is starting &amp; stopping.</p>
 <h3 id="Starting-logic" class="article-heading"><a href="#Starting-logic" class="headerlink" title="Starting logic"></a>Starting logic<a class="article-anchor" href="#Starting-logic" aria-hidden="true"></a></h3><p>The broker starts transporter connecting but it doesn’t publish the local service list to remote nodes. When it’s done, it starts all services (calls service <code>started</code> handler). Once all services start successfully, broker publishes the local service list to remote nodes. Hence remote nodes send requests only after all local service are started properly.</p>
 <div align="center"><br><img src="assets/lifecycle/broker-start.svg" alt="Broker starting lifecycle diagram"><br></div>
 
@@ -132,25 +130,25 @@
 <div align="center"><br><img src="assets/lifecycle/broker-stop.svg" alt="Broker stopping lifecycle diagram"><br></div>
 
 <h2 id="Service-lifecycle" class="article-heading"><a href="#Service-lifecycle" class="headerlink" title="Service lifecycle"></a>Service lifecycle<a class="article-anchor" href="#Service-lifecycle" aria-hidden="true"></a></h2><p>This section describes what happens when a service is starting &amp; stopping and how you should use the lifecycle event handler.</p>
-<h3 id="created-event-handler" class="article-heading"><a href="#created-event-handler" class="headerlink" title="created event handler"></a><code>created</code> event handler<a class="article-anchor" href="#created-event-handler" aria-hidden="true"></a></h3><p>It is triggered when the service instance is created (e.g.: at <code>broker.createService</code> or <code>broker.loadService</code>).<br>Use it to create other module instances (e.g. http server, database modules) and store them in <code>this</code>. </p>
+<h3 id="created-event-handler" class="article-heading"><a href="#created-event-handler" class="headerlink" title="created event handler"></a><code>created</code> event handler<a class="article-anchor" href="#created-event-handler" aria-hidden="true"></a></h3><p>It is triggered when the service instance is created (e.g.: at <code>broker.createService</code> or <code>broker.loadService</code>).<br>Use it to create other module instances (e.g. http server, database modules) and store them in <code>this</code>.</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">"http"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"www"</span>,</span><br><span class="line">    created() &#123;</span><br><span class="line">        <span class="comment">// Create HTTP server</span></span><br><span class="line">        <span class="keyword">this</span>.server = http.createServer(<span class="keyword">this</span>.httpHandler);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>This is a sync event handler. You <strong>cannot</strong> return a <code>Promise</code> and you <strong>cannot</strong> use <code>async/await</code>.</p>
 </blockquote>
 <h3 id="started-event-handler" class="article-heading"><a href="#started-event-handler" class="headerlink" title="started event handler"></a><code>started</code> event handler<a class="article-anchor" href="#started-event-handler" aria-hidden="true"></a></h3><p>It is triggered when the <code>broker.start</code> is called and the broker starts all local services. Use it to connect to database, listen servers…etc.</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"users"</span>,</span><br><span class="line">    <span class="keyword">async</span> started() &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">await</span> <span class="keyword">this</span>.db.connect();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MoleculerServerError(<span class="string">"Unable to connect to database."</span>, e.message);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"users"</span>,</span><br><span class="line">    <span class="keyword">async</span> started() &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">await</span> <span class="keyword">this</span>.db.connect();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MoleculerServerError(</span><br><span class="line">                <span class="string">"Unable to connect to database."</span>,</span><br><span class="line">                e.message</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>This is an async event handler. A <code>Promise</code> can be returned or use <code>async/await</code>.</p>
 </blockquote>
 <h3 id="stopped-event-handler" class="article-heading"><a href="#stopped-event-handler" class="headerlink" title="stopped event handler"></a><code>stopped</code> event handler<a class="article-anchor" href="#stopped-event-handler" aria-hidden="true"></a></h3><p>It is triggered when the <code>broker.stop</code> is called and the broker starts stopping all local services. Use it to close database connections, close sockets…etc.</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"users"</span>,</span><br><span class="line">    <span class="keyword">async</span> stopped() &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">await</span> <span class="keyword">this</span>.db.disconnect();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">            <span class="keyword">this</span>.logger.warn(<span class="string">"Unable to stop database connection gracefully."</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"users"</span>,</span><br><span class="line">    <span class="keyword">async</span> stopped() &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">await</span> <span class="keyword">this</span>.db.disconnect();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">            <span class="keyword">this</span>.logger.warn(</span><br><span class="line">                <span class="string">"Unable to stop database connection gracefully."</span>,</span><br><span class="line">                e</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>This is an async event handler. A <code>Promise</code> can be returned or use <code>async/await</code>.</p>
 </blockquote>
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-03-28T22:05:28.474Z" itemprop="dateModified">Last updated: 2019-03-28</time>
+                <time class="article-footer-updated" datetime="2019-04-20T06:16:18.302Z" itemprop="dateModified">Last updated: 2019-04-20</time>
                 <a href="events.html" class="article-footer-prev" title="Events"><i class="fa fa-chevron-left"></i><span>Prev</span></a><a href="logging.html" class="article-footer-next" title="Logging"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
@@ -159,7 +157,7 @@
           <aside id="article-toc" role="navigation">
             <div id="article-toc-inner">
               <strong class="sidebar-title">Contents</strong>
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Broker-lifecycle"><span class="toc-text">Broker lifecycle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Starting-logic"><span class="toc-text">Starting logic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stopping-logic"><span class="toc-text">Stopping logic</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Service-lifecycle"><span class="toc-text">Service lifecycle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#created-event-handler"><span class="toc-text">created event handler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#started-event-handler"><span class="toc-text">started event handler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stopped-event-handler"><span class="toc-text">stopped event handler</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lifecycle"><span class="toc-text">Lifecycle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Broker-lifecycle"><span class="toc-text">Broker lifecycle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Starting-logic"><span class="toc-text">Starting logic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stopping-logic"><span class="toc-text">Stopping logic</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Service-lifecycle"><span class="toc-text">Service lifecycle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#created-event-handler"><span class="toc-text">created event handler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#started-event-handler"><span class="toc-text">started event handler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stopped-event-handler"><span class="toc-text">stopped event handler</span></a></li></ol></li></ol></li></ol>
               <a href="#" id="article-toc-top">Back to Top</a>
             </div>
           </aside>
