@@ -7,7 +7,7 @@ Is where you publish your services, calls actions, emits events and communicates
 You must create a `Broker` instance for every node.
 
 <div align="center">
-    <img src="https://moleculer-go-site.herokuapp.com/docs/0.1/assets/service-broker.svg" />
+    <img src="/assets/service-broker.svg" />
 </div>
 
 ## Create broker

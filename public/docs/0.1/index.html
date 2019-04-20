@@ -48,12 +48,14 @@
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
 <meta property="og:description" content="What is Moleculer?Moleculer is a simple, fast, modern and powerful microservices framework written in Go (https://golang.org/). It helps you to build simple, efficient, reliable &amp;amp; scalable service">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://gomicro.services/images/main-example.png">
+<meta property="og:image" content="https://gomicro.services/images/timeline.png">
 <meta property="og:image" content="https://img.shields.io/badge/under-construction-red.svg">
-<meta property="og:updated_time" content="2019-04-20T06:02:29.361Z">
+<meta property="og:updated_time" content="2019-04-20T07:27:08.228Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta name="twitter:description" content="What is Moleculer?Moleculer is a simple, fast, modern and powerful microservices framework written in Go (https://golang.org/). It helps you to build simple, efficient, reliable &amp;amp; scalable service">
-<meta name="twitter:image" content="https://img.shields.io/badge/under-construction-red.svg">
+<meta name="twitter:image" content="https://gomicro.services/images/main-example.png">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
   
@@ -121,30 +123,50 @@
                 <h2 id="What-is-Moleculer" class="article-heading"><a href="#What-is-Moleculer" class="headerlink" title="What is Moleculer?"></a>What is Moleculer?<a class="article-anchor" href="#What-is-Moleculer" aria-hidden="true"></a></h2><p>Moleculer is a simple, fast, modern and powerful microservices framework written in Go (<a href="https://golang.org/)" target="_blank" rel="noopener">https://golang.org/)</a>.</p>
 <p>It helps you to build simple, efficient, reliable &amp; scalable services.</p>
 <p>Easy to go from 1 machine to many machines. Easy to focus on your problem.</p>
-<h2 id="Features" class="article-heading"><a href="#Features" class="headerlink" title="Features"></a>Features<a class="article-anchor" href="#Features" aria-hidden="true"></a></h2><ul>
-<li>request-reply concept</li>
-<li>support streams</li>
-<li>support event driven architecture with balancing</li>
-<li>built-in service registry &amp; dynamic service discovery</li>
-<li>load balanced requests &amp; events (round-robin, random, cpu-usage, latency)</li>
-<li>many fault tolerance features (Circuit Breaker, Bulkhead, Retry, Timeout, Fallback)</li>
-<li>supports middlewares</li>
-<li>supports versioned services</li>
-<li>service mixins</li>
-<li>built-in caching solution (memory, Redis)</li>
-<li>pluggable transporters (TCP, NATS, MQTT, Redis, NATS Streaming, Kafka)</li>
-<li>pluggable serializers (JSON, Avro, MsgPack, Protocol Buffer, Thrift)</li>
-<li>pluggable validator</li>
-<li>multiple services on a node/server</li>
-<li>all nodes are equal, no master/leader node</li>
+<h2 id="Example" class="article-heading"><a href="#Example" class="headerlink" title="Example"></a>Example<a class="article-anchor" href="#Example" aria-hidden="true"></a></h2><p><img src="/images/main-example.png" alt="Example"></p>
+<h1 id="Roadmap" class="article-heading"><a href="#Roadmap" class="headerlink" title="Roadmap"></a>Roadmap<a class="article-anchor" href="#Roadmap" aria-hidden="true"></a></h1><p><img src="/images/timeline.png" alt="Timeline"></p>
+<h2 id="v0-1-0-MVP" class="article-heading"><a href="#v0-1-0-MVP" class="headerlink" title="v0.1.0 (MVP)"></a>v0.1.0 (MVP)<a class="article-anchor" href="#v0-1-0-MVP" aria-hidden="true"></a></h2><p>Development is <code>complete</code> - Documentation is <code>in-progress</code> and benchmark is also <code>in-progress</code>.</p>
+<p><strong>Contents:</strong></p>
+<ul>
+<li>Service Broker</li>
+<li>Transit and Transport</li>
+<li>Actions (request-reply)</li>
+<li>Events</li>
+<li>Mixins</li>
+<li>Load balancing for actions and events (random round-robin)</li>
+<li>Service registry &amp; dynamic service discovery</li>
+<li>Versioned services</li>
+<li>Middlewares</li>
+<li>NATS Streaming Transporter</li>
+<li>JSON Serializer</li>
+<li>Examples :)</li>
 </ul>
+<h2 id="v0-2-0-Beta-RC1" class="article-heading"><a href="#v0-2-0-Beta-RC1" class="headerlink" title="v0.2.0 (Beta RC1)"></a>v0.2.0 (Beta RC1)<a class="article-anchor" href="#v0-2-0-Beta-RC1" aria-hidden="true"></a></h2><ul>
+<li>Action validators</li>
+<li>Support for streams</li>
+<li>More Load balancing implementations (cpu-usage, latency)</li>
+<li>Fault tolerance features (Circuit Breaker, Bulkhead, Retry, Timeout, Fallback)</li>
+<li>Built-in caching solution (memory, Redis)</li>
+<li>More transporters (gRPC, TCP, Redis, Kafka)</li>
+<li>More serializers (Avro, MsgPack, Protocol Buffer, Thrift)</li>
+</ul>
+<h2 id="v0-3-0-Beta" class="article-heading"><a href="#v0-3-0-Beta" class="headerlink" title="v0.3.0 (Beta)"></a>v0.3.0 (Beta)<a class="article-anchor" href="#v0-3-0-Beta" aria-hidden="true"></a></h2><ul>
+<li>Performance and Optimization</li>
+<li>More DB Adaptors (SQLLite, Firebase, MySQL)</li>
+<li>CLI for Project Seed Generation</li>
+</ul>
+<h2 id="v0-4-0-Alpha" class="article-heading"><a href="#v0-4-0-Alpha" class="headerlink" title="v0.4.0 (Alpha)"></a>v0.4.0 (Alpha)<a class="article-anchor" href="#v0-4-0-Alpha" aria-hidden="true"></a></h2><ul>
+<li>Event Sourcing Mixins</li>
+</ul>
+<h2 id="v0-5-0-Release" class="article-heading"><a href="#v0-5-0-Release" class="headerlink" title="v0.5.0 (Release)"></a>v0.5.0 (Release)<a class="article-anchor" href="#v0-5-0-Release" aria-hidden="true"></a></h2><h1 id="Installation" class="article-heading"><a href="#Installation" class="headerlink" title="Installation"></a>Installation<a class="article-anchor" href="#Installation" aria-hidden="true"></a></h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ go get github.com/moleculer-go/moleculer</span><br></pre></td></tr></table></figure>
+<h1 id="Running-examples" class="article-heading"><a href="#Running-examples" class="headerlink" title="Running examples"></a>Running examples<a class="article-anchor" href="#Running-examples" aria-hidden="true"></a></h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># simple moleculer db example with memory adaptor</span></span><br><span class="line">$ go run github.com/moleculer-go/moleculer-db/examples/users</span><br><span class="line"></span><br><span class="line"><span class="comment"># simple moleculer db example with Mongo adaptor</span></span><br><span class="line">$ go run github.com/moleculer-go/moleculer-db/examples/usersMongo</span><br><span class="line"></span><br><span class="line"><span class="comment"># complex moleculer db example with population of fields by other services</span></span><br><span class="line">$ go run github.com/moleculer-go/moleculer-db/examples/populates</span><br></pre></td></tr></table></figure>
 <h2 id="How-fast" class="article-heading"><a href="#How-fast" class="headerlink" title="How fast?"></a>How fast?<a class="article-anchor" href="#How-fast" aria-hidden="true"></a></h2><p><img src="https://img.shields.io/badge/under-construction-red.svg" alt="Under Construction"></p>
 <blockquote class="note info"><strong class="note-title">Versioning</strong><p>Until Moleculer reaches a <code>1.0</code> release, breaking changes will be released with a new minor version. For example <code>0.1.1</code>, and <code>0.1.4</code> will be backward compatible, but <code>0.2.0</code> will have breaking changes.</p>
 </blockquote>
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-04-20T06:02:29.361Z" itemprop="dateModified">Last updated: 2019-04-20</time>
+                <time class="article-footer-updated" datetime="2019-04-20T07:27:08.228Z" itemprop="dateModified">Last updated: 2019-04-20</time>
                 <a href="usage.html" class="article-footer-next" title="Usage"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
@@ -153,9 +175,9 @@
           <aside id="article-toc" role="navigation">
             <div id="article-toc-inner">
               <strong class="sidebar-title">Contents</strong>
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-Moleculer"><span class="toc-text">What is Moleculer?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Features"><span class="toc-text">Features</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#How-fast"><span class="toc-text">How fast?</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-Moleculer"><span class="toc-text">What is Moleculer?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example"><span class="toc-text">Example</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#Roadmap"><span class="toc-text">Roadmap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#v0-1-0-MVP"><span class="toc-text">v0.1.0 (MVP)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v0-2-0-Beta-RC1"><span class="toc-text">v0.2.0 (Beta RC1)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v0-3-0-Beta"><span class="toc-text">v0.3.0 (Beta)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v0-4-0-Alpha"><span class="toc-text">v0.4.0 (Alpha)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v0-5-0-Release"><span class="toc-text">v0.5.0 (Release)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Installation"><span class="toc-text">Installation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Running-examples"><span class="toc-text">Running examples</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#How-fast"><span class="toc-text">How fast?</span></a></li></ol>
               <a href="#" id="article-toc-top">Back to Top</a>
-            </div>
+            </li></div>
           </aside>
         </div>
       </article>
