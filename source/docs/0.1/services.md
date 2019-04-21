@@ -410,46 +410,46 @@ func (svc *HttpService) Events() []moleculer.Event {
 
 ```go
 import (
-	"fmt"
+  "fmt"
 
-	"github.com/moleculer-go/moleculer"
-	"github.com/moleculer-go/moleculer/broker"
+  "github.com/moleculer-go/moleculer"
+  "github.com/moleculer-go/moleculer/broker"
 )
 
 type MathService struct {
 }
 
 func (s MathService) Name() string {
-	return "math"
+  return "math"
 }
 //  ⭐ You can have just the parameters in case you don't need the context ⭐
 func (s *MathService) Add(params moleculer.Payload) int {
-	return params.Get("a").Int() + params.Get("b").Int()
+  return params.Get("a").Int() + params.Get("b").Int()
 }
 // ⭐ You might just need the arguments, but to be able to call this actions the arguments needs to be passed as an array! ⭐
 func (s *MathService) Sub(a int, b int) int {
-	return a - b
+  return a - b
 }
 //  ⭐ You can also have an action that receive no parameters ⭐
 func (s *MathService) Inc() {
-	//do magic!
+  //do magic!
 }
 
 func main() {
-	var bkr = broker.New(&moleculer.Config{LogLevel: "error"})
-	bkr.Publish(&MathService{})
-	bkr.Start()
-	result := <-bkr.Call("math.add", map[string]int{
-		"a": 10,
-		"b": 130,
-	})
-	fmt.Println("result: ", result.Int())
+  var bkr = broker.New(&moleculer.Config{LogLevel: "error"})
+  bkr.Publish(&MathService{})
+  bkr.Start()
+  result := <-bkr.Call("math.add", map[string]int{
+    "a": 10,
+    "b": 130,
+  })
+  fmt.Println("result: ", result.Int())
     //$ result: 140
     result = <-bkr.Call("math.sub", []int{ // remember for action sub we need to wrap the argments in an array! look above
-		50,
-		20,
-	})
-	fmt.Println("result: ", result.Int())
+    50,
+    20,
+  })
+  fmt.Println("result: ", result.Int())
     //$ result: 30
     <-bkr.Call("math.inc", payload.Empty())
     bkr.Stop()
