@@ -2,16 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/broker.html</loc>
+    <loc>https://gomicro.services/docs/0.1/services.html</loc>
     
-    <lastmod>2019-04-21T01:19:28.443Z</lastmod>
+    <lastmod>2019-04-21T02:44:37.036Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/examples.html</loc>
+    
+    <lastmod>2019-04-21T01:25:17.089Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/usage.html</loc>
+    
+    <lastmod>2019-04-21T01:25:03.685Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://gomicro.services/docs/0.1/index.html</loc>
     
-    <lastmod>2019-04-20T07:27:08.228Z</lastmod>
+    <lastmod>2019-04-21T01:23:49.664Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/broker.html</loc>
+    
+    <lastmod>2019-04-21T01:23:19.803Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/api/service.html</loc>
+    
+    <lastmod>2019-04-21T01:22:48.226Z</lastmod>
     
   </url>
   
@@ -72,13 +100,6 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/api/service.html</loc>
-    
-    <lastmod>2019-04-20T06:16:11.559Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://gomicro.services/docs/0.1/api/context.html</loc>
     
     <lastmod>2019-04-20T06:16:10.366Z</lastmod>
@@ -114,13 +135,6 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/services.html</loc>
-    
-    <lastmod>2019-04-20T06:16:03.270Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://gomicro.services/docs/0.1/moleculer-web.html</loc>
     
     <lastmod>2019-04-20T06:16:01.835Z</lastmod>
@@ -145,13 +159,6 @@
     <loc>https://gomicro.services/docs/0.1/registry.html</loc>
     
     <lastmod>2019-04-20T06:15:57.776Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/service.html</loc>
-    
-    <lastmod>2019-04-20T06:15:56.587Z</lastmod>
     
   </url>
   
@@ -327,20 +334,6 @@
     <loc>https://gomicro.services/docs/0.1/moleculer-db.html</loc>
     
     <lastmod>2019-04-20T06:09:09.564Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/usage.html</loc>
-    
-    <lastmod>2019-04-20T06:04:53.058Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/examples.html</loc>
-    
-    <lastmod>2019-04-20T06:04:31.352Z</lastmod>
     
   </url>
   
