@@ -4,31 +4,30 @@ The `Broker` is the main component of Moleculer.
 
 Is where you publish your services, calls actions, emits events and communicates with other brokers.
 
-You must create a `Broker` instance for every node.
-
 <div align="center">
-    <img src="/assets/service-broker.svg" />
+    <img src="assets/service-broker.png" />
 </div>
 
-## Create broker
+## Create a broker
 
-**Create broker with default settings:**
+**Broker lifecycle**
 
 ```go
 import (
- //...
  "github.com/moleculer-go/moleculer"
  "github.com/moleculer-go/moleculer/broker"
 )
 
 bkr := broker.New()
+bkr.Publish(services...)
+bkr.Start()
+bkr.Stop()
 ```
 
 **Create broker with custom settings:**
 
 ```go
 import (
- //...
  "github.com/moleculer-go/moleculer"
  "github.com/moleculer-go/moleculer/broker"
 )
@@ -40,7 +39,6 @@ bkr := broker.New(&moleculer.Config{LogLevel: "info"})
 
 ```go
 import (
- //...
  "github.com/moleculer-go/moleculer"
  "github.com/moleculer-go/moleculer/broker"
 )
@@ -51,253 +49,124 @@ bkr := broker.New(&moleculer.Config{
 })
 ```
 
+## Usage
+
+```go
+package main
+
+import (
+	"github.com/moleculer-go/example-whatsapp/services"
+	"github.com/moleculer-go/moleculer"
+	"github.com/moleculer-go/moleculer-web"
+	"github.com/moleculer-go/moleculer/broker"
+	"github.com/moleculer-go/moleculer/cli"
+	"github.com/spf13/cobra"
+)
+
+func main() {
+	cli.Start(
+        &moleculer.Config{LogLevel: "debug"},
+        //handler called when cli has loaded broker settings
+        //and is now ready to start
+        func(broker *broker.ServiceBroker, cmd *cobra.Command) {
+            broker.Publish(&gateway.HttpService{})
+            broker.Publish(services.Login)
+            broker.Publish(services.Chat)
+            broker.Publish(services.Session)
+            broker.Publish(services.Contacts)
+            broker.Start()
+        })
+}
+```
+
 ## Broker options
 
 List of all available broker options:
 
-| Name                           | Type                                  | Default          | Description                                                                                                                                                                                                           |
-| ------------------------------ | ------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `namespace`                    | `String`                              | `""`             | Namespace of nodes to segment your nodes on the same network.                                                                                                                                                         |
-| `nodeID`                       | `String`                              | hostname + PID   | Unique node identifier. Must be unique in a namespace.                                                                                                                                                                |
-| `logger`                       | `Boolean` or `Object` or `Function`   | `console`        | Logger class. By default, it prints message to the `console`. External logger can be used, e.g. [winston](https://github.com/winstonjs/winston) or [pino](https://github.com/pinojs/pino). [Read more](logging.html). |
-| `logLevel`                     | `String`                              | `info`           | Log level for built-in console logger (trace, debug, info, warn, error, fatal).                                                                                                                                       |
-| `logFormatter`                 | `String` or `Function`                | `"default"`      | Log formatter for built-in console logger. Values: `default`, `simple`, `short`. It can be also a `Function`.                                                                                                         |
-| `logObjectPrinter`             | `Function`                            | `null`           | Custom object & array printer for built-in console logger.                                                                                                                                                            |
-| `transporter`                  | `String` or `Object` or `Transporter` | `null`           | Transporter settings. [Read more](networking.html).                                                                                                                                                                   |
-| `requestTimeout`               | `Number`                              | `0`              | Number of milliseconds to wait before reject a request with a `RequestTimeout` error. Disabled: `0`                                                                                                                   |
-| `retryPolicy`                  | `Object`                              |                  | Retry policy settings. [Read more](fault-tolerance.html#Retry)                                                                                                                                                        |
-| `maxCallLevel`                 | `Number`                              | `0`              | Limit of calling level. If it reaches the limit, broker will throw an `MaxCallLevelError` error. _(Infinite loop protection)_                                                                                         |
-| `heartbeatInterval`            | `Number`                              | `5`              | Number of seconds to send heartbeat packet to other nodes.                                                                                                                                                            |
-| `heartbeatTimeout`             | `Number`                              | `15`             | Number of seconds to wait before setting node to unavailable status.                                                                                                                                                  |
-| `tracking`                     | `Object`                              |                  | Tracking requests and waiting for running requests before shutdowning. [Read more](fault-tolerance.html)                                                                                                              |
-| `disableBalancer`              | `Boolean`                             | `false`          | Disable built-in request & emit balancer. _Transporter must support it, as well._                                                                                                                                     |
-| `registry`                     | `Object`                              |                  | Settings of [Service Registry](registry.html)                                                                                                                                                                         |
-| `circuitBreaker`               | `Object`                              |                  | Settings of [Circuit Breaker](fault-tolerance.html#Circuit-Breaker)                                                                                                                                                   |
-| `bulkhead`                     | `Object`                              |                  | Settings of [bulkhead](fault-tolerance.html#Bulkhead)                                                                                                                                                                 |
-| `transit.maxQueueSize`         | `Number`                              | `50000`          | A protection against inordinate memory usages when there are too many outgoing requests. If there are more than _stated_ outgoing live requests, the new requests will be rejected with `QueueIsFullError` error.     |
-| `transit.disableReconnect`     | `Boolean`                             | `false`          | Disables the reconnection logic while starting a broker                                                                                                                                                               |
-| `transit.packetLogFilter`      | `Array`                               | `empty`          | Filters out the packets in debug logs                                                                                                                                                                                 |
-| `cacher`                       | `String` or `Object` or `Cacher`      | `null`           | Cacher settings. [Read more](caching.html)                                                                                                                                                                            |
-| `serializer`                   | `String` or `Serializer`              | `JSONSerializer` | Instance of serializer. [Read more](networking.html)                                                                                                                                                                  |
-| `skipProcessEventRegistration` | `Boolean`                             | `false`          | Skip the [default](https://github.com/moleculer-go/moleculer/blob/master/src/service-broker.js#L234) graceful shutdown event handlers. In this case you have to register them manually.                               |
-| `validation`                   | `Boolean`                             | `true`           | Enable [parameters validation](validating.html).                                                                                                                                                                      |
-| `validator`                    | `Validator`                           | `null`           | Custom Validator class for validation.                                                                                                                                                                                |
-| `metrics`                      | `Boolean`                             | `false`          | Enable [metrics](metrics.html) function.                                                                                                                                                                              |
-| `metricsRate`                  | `Number`                              | `1`              | Rate of metrics calls. `1` means to measure every request.                                                                                                                                                            |
-| `internalServices`             | `Boolean`                             | `true`           | Register [internal services](services.html#Internal-services).                                                                                                                                                        |
-| `internalMiddlewares`          | `Boolean`                             | `true`           | Register [internal middlewares](middlewares.html#Internal-middlewares).                                                                                                                                               |
-| `hotReload`                    | `Boolean`                             | `false`          | Watch the loaded services and hot reload if they changed. [Read more](services.html#Hot-reloading-services).                                                                                                          |
-| `middlewares`                  | `Array<Function>`                     | `null`           | Register middlewares. _Useful when you use Moleculer Runner._                                                                                                                                                         |
-| `replCommands`                 | `Array<Object>`                       | `null`           | Register custom REPL commands.                                                                                                                                                                                        |
-| `created`                      | `Function`                            | `null`           | Fired when the broker created. _Useful when you use Moleculer Runner._                                                                                                                                                |
-| `started`                      | `Function`                            | `null`           | Fired when the broker started. _Useful when you use Moleculer Runner._                                                                                                                                                |
-| `stopped`                      | `Function`                            | `null`           | Fired when the broker stopped. _Useful when you use Moleculer Runner._                                                                                                                                                |
-| `ServiceFactory`               | `ServiceClass`                        | `null`           | Custom Service class. If not `null`, broker will use it when creating services.                                                                                                                                       |
-| `ContextFactory`               | `ContextClass`                        | `null`           | Custom Context class. If not `null`, broker will use it when creating contexts.                                                                                                                                       |
+| Name                         | Type                      | Default         | Description                                                                                                                   |
+| ---------------------------- | ------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `Namespace`                  | `string`                  | `random string` | Namespace of nodes to segment your nodes on the same network.                                                                 |
+| `DiscoverNodeID`             | `func`                    | `random string` | Unique node identifier. Must be unique in a namespace.                                                                        |
+| `LogLevel`                   | `string`                  | `info`          | Log level for built-in logger (trace, debug, info, warn, error, fatal).                                                       |
+| `LogFormat`                  | `string`                  | `TEXT`          | Log formatter for built-in console logger. Values: `TEXT`, `JSON`                                                             |
+| `Transporter`                | `string`                  | `MEMORY`        | Predefined transporter name. [Read more](networking.html).                                                                    |
+| `TransporterFactory`         | `func`                    | `nil`           | Transporter factory. You can create your own transporter or use new transporters                                              |
+| `MCallTimeout`               | `time.Duration`           | `5 secs`        | Timeout period for multiple calls ctx.MCall(...)                                                                              |
+| `RetryPolicy`                | `struct`                  |                 | Retry policy settings. [Read more](fault-tolerance.html#Retry)                                                                |
+| `MaxCallLevel`               | `int`                     | `100`           | Limit of calling level. If it reaches the limit, broker will throw an `MaxCallLevelError` error. _(Infinite loop protection)_ |
+| `HeartbeatFrequency`         | `time.Duration`           | `15 secs`       | Period to send heartbeat packet to other nodes.                                                                               |
+| `HeartbeatTimeout`           | `time.Duration`           | `30 secs`       | Period to wait before setting node to unavailable status.                                                                     |
+| `OfflineCheckFrequency`      | `time.Duration`           | `20 secs`       | Period to check for off-line nodes.                                                                                           |
+| `NeighboursCheckTimeout`     | `time.Duration`           | `2 secs`        | Period to wait for neighbours. Used during registry bootstrap and self-discovery.                                             |
+| `WaitForDependenciesTimeout` | `time.Duration`           | `2 secs`        | Period to wait for dependencies (other services) to be found. This value is used when starting a new service.                 |
+| `Metrics`                    | `Boolean`                 | `false`         | Enable [metrics](metrics.html) function.                                                                                      |
+| `MetricsRate`                | `float32`                 | `1`             | Rate of metrics calls. `1` means to measure every request. `0.5` means to measure half of the requests.                       |
+| `DisableInternalServices`    | `Boolean`                 | `true`          | Register [internal services](services.html#Internal-services).                                                                |
+| `DisableInternalMiddlewares` | `Boolean`                 | `true`          | Register [internal middlewares](middlewares.html#Internal-middlewares).                                                       |
+| `DontWaitForNeighbours`      | `Boolean`                 | `false`         | Tell if the broker will wait for neighbours during start-up.                                                                  |
+| `WaitForNeighboursInterval`  | `time.Duration`           | `200 millisecs` | Period to wait for neighbours.                                                                                                |
+| `Middlewares`                | `[]moleculer.Middlewares` | `empty`         | Register middlewares.                                                                                                         |
+| `Created`                    | `func`                    | `no op`         | Fired when the broker is created.                                                                                             |
+| `Started`                    | `func`                    | `no op`         | Fired when the broker started.                                                                                                |
+| `Stopped`                    | `func`                    | `no op`         | Fired when the broker stopped.                                                                                                |
 
-### Full options object
+<img src="assets/under_construction.png" width=150/>
 
-```js
-{
-    namespace: "dev",
-    nodeID: "node-25",
+These options are not fully implemented and tested yet:
 
-    logger: true,
-    logLevel: "info",
-    logFormatter: "default",
-    logObjectPrinter: null,
+| Name                           | Type                             | Default          | Description                                                                                                                                                                                                       |
+| ------------------------------ | -------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RequestTimeout`               | `time.Duration`                  | `0`              | Period to wait before reject a request with a `RequestTimeout` error. Disabled: `0`                                                                                                                               |
+| `Tracking`                     | `struct`                         |                  | Tracking requests and waiting for running requests before shutdowning. [Read more](fault-tolerance.html)                                                                                                          |
+| `Registry`                     | `Object`                         |                  | Settings of [Service Registry](registry.html)                                                                                                                                                                     |
+| `circuitBreaker`               | `Object`                         |                  | Settings of [Circuit Breaker](fault-tolerance.html#Circuit-Breaker)                                                                                                                                               |
+| `bulkhead`                     | `Object`                         |                  | Settings of [bulkhead](fault-tolerance.html#Bulkhead)                                                                                                                                                             |
+| `transit.maxQueueSize`         | `Number`                         | `50000`          | A protection against inordinate memory usages when there are too many outgoing requests. If there are more than _stated_ outgoing live requests, the new requests will be rejected with `QueueIsFullError` error. |
+| `transit.disableReconnect`     | `Boolean`                        | `false`          | Disables the reconnection logic while starting a broker                                                                                                                                                           |
+| `transit.packetLogFilter`      | `Array`                          | `empty`          | Filters out the packets in debug logs                                                                                                                                                                             |
+| `cacher`                       | `String` or `Object` or `Cacher` | `null`           | Cacher settings. [Read more](caching.html)                                                                                                                                                                        |
+| `serializer`                   | `String` or `Serializer`         | `JSONSerializer` | Instance of serializer. [Read more](networking.html)                                                                                                                                                              |
+| `skipProcessEventRegistration` | `Boolean`                        | `false`          | Skip the [default](https://github.com/moleculer-go/moleculer/blob/master/src/service-broker.js#L234) graceful shutdown event handlers. In this case you have to register them manually.                           |
+| `validation`                   | `Boolean`                        | `true`           | Enable [parameters validation](validating.html).                                                                                                                                                                  |
+| `validator`                    | `Validator`                      | `null`           | Custom Validator class for validation.                                                                                                                                                                            |
 
-    transporter: "nats://localhost:4222",
+### Example Config
 
-    requestTimeout: 5000,
-    retryPolicy: {
-        enabled: true,
-        retries: 5,
-        delay: 100,
-        maxDelay: 1000,
-        factor: 2,
-        check: err => err && !!err.retryable
-    },
+```go
+import (
+ "github.com/moleculer-go/moleculer"
+ "github.com/moleculer-go/moleculer/broker"
+)
 
-    maxCallLevel: 100,
-    heartbeatInterval: 5,
-    heartbeatTimeout: 15,
-
-    tracking: {
-        enabled: true,
-        shutdownTimeout: 5000,
-    },
-
-    disableBalancer: false,
-
-    registry: {
-        strategy: "RoundRobin",
-        preferLocal: true
-    },
-
-    circuitBreaker: {
-        enabled: true,
-        threshold: 0.5,
-        windowTime: 60,
-        minRequestCount: 20,
-        halfOpenTime: 10 * 1000,
-        check: err => err && err.code >= 500
-    },
-
-    bulkhead: {
-        enabled: true,
-        concurrency: 10,
-        maxQueueSize: 100,
-    },
-
-    transit: {
-        maxQueueSize: 50 * 1000,
-        disableReconnect: false,
-        packetLogFilter: []
-    },
-
-    cacher: "memory",
-    serializer: null,
-
-    skipProcessEventRegistration: false
-
-    validation: true,
-    validator: null,
-
-    metrics: true,
-    metricsRate: 1,
-
-    internalServices: true,
-    internalMiddlewares: true,
-
-    hotReload: true,
-
-    ServiceFactory: null,
-    ContextFactory: null,
-
-    middlewares: [myMiddleware()],
-
-    replCommands: [],
-
-    created(broker) {
-    },
-
-    started(broker) {
-    },
-
-    stopped(broker) {
-    }
-}
+bkr := broker.New(&moleculer.Config{
+	LogLevel:                   "INFO",
+	LogFormat:                  "TEXT",
+	DiscoverNodeID:             discoverNodeID,
+	Transporter:                "MEMORY",
+	HeartbeatFrequency:         15 * time.Second,
+	HeartbeatTimeout:           30 * time.Second,
+	OfflineCheckFrequency:      20 * time.Second,
+	NeighboursCheckTimeout:     2 * time.Second,
+	WaitForDependenciesTimeout: 2 * time.Second,
+	Metrics:                    false,
+	MetricsRate:                1,
+	DisableInternalServices:    false,
+	DisableInternalMiddlewares: false,
+	Created:                    func() {},
+	Started:                    func() {},
+	Stopped:                    func() {},
+	MaxCallLevel:               100,
+	RetryPolicy: RetryPolicy{
+		Enabled: false,
+	},
+	RequestTimeout:            0,
+	MCallTimeout:              5 * time.Second,
+	WaitForNeighboursInterval: 200 * time.Millisecond,
+})
 ```
 
-{% note info Moleculer runner %}
-You don't need to create manually ServiceBroker in your project. Use the [Moleculer Runner](runner.html) to create and execute a broker and load services. [Read more about Moleculer Runner](runner.html).
-{% endnote %}
+## Examples
 
-## Ping
-
-To ping remote nodes, use `broker.ping` method. You can ping a node, or all available nodes. It returns a `Promise` which contains the received ping informations (latency, time difference). A timeout value can be defined.
-
-### Ping a node with 1 second timeout
-
-```js
-broker.ping("node-123", 1000).then(res => broker.logger.info(res));
-```
-
-**Output**
-
-```js
-{
-    nodeID: 'node-123',
-    elapsedTime: 16,
-    timeDiff: -3
-}
-```
-
-> The `timeDiff` value is the difference of the system clock between these two nodes.
-
-### Ping multiple nodes
-
-```js
-broker.ping(["node-100", "node-102"]).then(res => broker.logger.info(res));
-```
-
-**Output**
-
-```js
-{
-    "node-100": {
-        nodeID: 'node-100',
-        elapsedTime: 10,
-        timeDiff: -2
-    },
-    "node-102": {
-        nodeID: 'node-102',
-        elapsedTime: 250,
-        timeDiff: 850
-    }
-}
-```
-
-### Ping all available nodes
-
-```js
-broker.ping().then(res => broker.logger.info(res));
-```
-
-**Output**
-
-```js
-{
-    "node-100": {
-        nodeID: 'node-100',
-        elapsedTime: 10,
-        timeDiff: -2
-    } ,
-    "node-101": {
-        nodeID: 'node-101',
-        elapsedTime: 18,
-        timeDiff: 32
-    },
-    "node-102": {
-        nodeID: 'node-102',
-        elapsedTime: 250,
-        timeDiff: 850
-    }
-}
-```
-
-## Properties
-
-| Name                | Type      | Description                                                   |
-| ------------------- | --------- | ------------------------------------------------------------- |
-| `broker.nodeID`     | `String`  | Node ID.                                                      |
-| `broker.Promise`    | `Promise` | Bluebird Promise class.                                       |
-| `broker.namespace`  | `String`  | Namespace.                                                    |
-| `broker.logger`     | `Logger`  | Logger class of ServiceBroker.                                |
-| `broker.cacher`     | `String`  | Request ID. If you make nested-calls, it will be the same ID. |
-| `broker.serializer` | `String`  | Parent context ID (in nested-calls).                          |
-| `broker.validator`  | `Any`     | Request params. _Second argument from `broker.call`._         |
-| `broker.options`    | `Object`  | Broker options.                                               |
-
-## Methods
-
-| Name                                                      | Response  | Description                                     |
-| --------------------------------------------------------- | --------- | ----------------------------------------------- |
-| `broker.start()`                                          | `Promise` | Start broker.                                   |
-| `broker.stop()`                                           | `Promise` | Stop broker.                                    |
-| `broker.repl()`                                           | -         | Start REPL mode.                                |
-| `broker.getLogger(module, props)`                         | `Logger`  | Get a child logger.                             |
-| `broker.fatal(message, err, needExit)`                    | -         | Throw an error and exit the process.            |
-| `broker.loadServices(folder, fileMask)`                   | `Number`  | Load services from a folder.                    |
-| `broker.loadService(filePath)`                            | `Service` | Load a service from file.                       |
-| `broker.createService(schema, schemaMods)`                | `Service` | Create a service from schema.                   |
-| `broker.destroyService(service)`                          | `Promise` | Destroy a loaded local service.                 |
-| `broker.getLocalService(name, version)`                   | `Service` | Get a local service instance by name & version. |
-| `broker.waitForServices(serviceNames, timeout, interval)` | `Promise` | Wait for services.                              |
-| `broker.call(actionName, params, opts)`                   | `Promise` | Call a service.                                 |
-| `broker.mcall(def)`                                       | `Promise` | Multiple service calling.                       |
-| `broker.emit(eventName, payload, groups)`                 | -         | Emit a balanced event.                          |
-| `broker.broadcast(eventName, payload, groups)`            | -         | Broadcast an event.                             |
-| `broker.broadcastLocal(eventName, payload, groups)`       | -         | Broadcast an event to local services.           |
-| `broker.ping(nodeID, timeout)`                            | `Promise` | Ping remote nodes.                              |
+-   [Moleculer DB Examples](https://github.com/moleculer-go/moleculer-db/blob/master/examples/usersMongo/users.service.go)
+-   [WhatsApp Example](https://github.com/moleculer-go/example-whatsapp/blob/master/cli/whatsapp_service.go)
+-   [Broker Integration Tests](https://github.com/moleculer-go/moleculer/blob/develop/broker/broker_test.go)
