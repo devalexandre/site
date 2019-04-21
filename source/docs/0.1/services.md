@@ -111,15 +111,15 @@ In this way you can extend services and resuse functionality. When a service use
 moleculer.ServiceSchema{
   Name: "users",
   Settings: map[string]interface{}{
-  	"fields":    []string{"_id", "username", "name"},
-  	"populates": map[string]interface{}{"friends": "users.get"},
+    "fields":    []string{"_id", "username", "name"},
+    "populates": map[string]interface{}{"friends": "users.get"},
   },
   Mixins: []moleculer.Mixin{
     db.Mixin(&db.MongoAdapter{
-  	  MongoURL:   "mongodb://localhost:27017",
-  	  Collection: "users",
-  	  Database:   "test",
-  	  Timeout:    time.Second * 5,
+      MongoURL:   "mongodb://localhost:27017",
+      Collection: "users",
+      Database:   "test",
+      Timeout:    time.Second * 5,
    })},
   Actions: []moleculer.Action{
   {
@@ -229,708 +229,312 @@ You can subscribe to events under the `events` key.
 moleculer.ServiceSchema{
   Name: "report",
   Events: []moleculer.Event{
-
-  events: {
-    // Subscribe to "user.created" event
-    "user.created"(payload) {
-      this.logger.info("User created:", payload);
-      // Do something
+    {
+      // Subscribe to "user.created" event
+      Name: "user.created",
+      Handler: func(c moleculer.Context, p moleculer.Payload) {
+        c.Logger().Info("User created: ", p)
+      },
     },
-
-    // Subscribe to all "user.*" event
-    "user.*"(payload, sender, eventName) {
-      // Do something with payload. The `eventName` contains
-      // the original event name. E.g. `user.modified`.
-      // The `sender` is the nodeID of sender.
-    }
-
-    // Subscribe to a local event
-    "$node.connected"({ node }) {
-      this.logger.info(`Node '${node.id}' is connected!`);
-    }
-  }
-};
+    {
+      // Subscribe to a local event
+      Name:  "$node.connected",
+      Handler: func(c moleculer.Context, p moleculer.Payload) {
+        c.Logger().Info("Node: ", p.Get("node").Get("id").String()," is connected!")
+      },
+    },
+  },
+}
 ```
-
-> In handlers the `this` is always pointed to the Service instance.
 
 ### Grouping
 
 The broker groups the event listeners by group name. By default, the group name is the service name. But you can overwrite it in the event definition.
 
-```js
-module.exports = {
-    name: "payment",
-    events: {
-        "order.created": {
-            // Register handler to the "other" group instead of "payment" group.
-            group: "other",
-            handler(payload) {
-                // ...
-            }
-        }
-    }
-};
-```
-
-## Methods
-
-To create private methods in the service, put your functions under the `methods` key. These functions are private, can't be called with `broker.call`. But you can call it inside service (from action handlers, event handlers and lifecycle event handlers).
-
-**Usage**
-
-```js
-module.exports = {
-  name: "mailer",
-  actions: {
-    send(ctx) {
-      // Call the `sendMail` method
-      return this.sendMail(ctx.params.recipients, ctx.params.subject, ctx.params.body);
-    }
+```go
+moleculer.ServiceSchema{
+  Name: "payment",
+  Events: []moleculer.Event{
+    {
+      Name: "order.created",
+      // Register handler to the "other" group instead of "payment" group.
+      Group: "other",
+      Handler: func(c moleculer.Context, p moleculer.Payload) {
+        c.Logger().Info("User created: ", p)
+      },
+    },
   },
-
-  methods: {
-    // Send an email to recipients
-    sendMail(recipients, subject, body) {
-      return new Promise((resolve, reject) => {
-        ...
-      });
-    }
-  }
-};
+}
 ```
-
-> The method name can't be `name`, `version`, `settings`, `schema`, `broker`, `actions`, `logger`, because these words are reserved in the schema.
-
-> In methods the `this` is always pointed to the Service instance.
 
 ## Lifecycle events
 
-There are some lifecycle service events, that will be triggered by broker. They are placed in the root of schema.
+There are some lifecycle service events, that will be triggered by broker.
 
-```js
-module.exports = {
-  name: "www",
-  actions: {...},
-  events: {...},
-  methods: {...},
+```go
+import (
+  "github.com/moleculer-go/moleculer"
+  log "github.com/sirupsen/logrus"
+)
 
-  created() {
-    // Fired when the service instance created (with `broker.loadService` or `broker.createService`)
+moleculer.ServiceSchema{
+  Name: "coffeMachine",
+
+  Created: func(moleculer.ServiceSchema, *log.Entry) {
+    // Fired when is published with `broker.Piblish()`
   },
 
-  async started() {
-    // Fired when broker starts this service (in `broker.start()`)
+  Started: func(c BrokerContext, s ServiceSchema) {
+    // Fired when broker starts this service (in `broker.Start()`)
   }
 
-  async stopped() {
-    // Fired when broker stops this service (in `broker.stop()`)
+  Stopped: func(c BrokerContext, s ServiceSchema) {
+    // Fired when broker stops this service (in `broker.Stop()`)
   }
-};
+}
 ```
 
 ## Dependencies
 
-If your service depends on other services, use the `dependencies` property in the schema. The service waits for dependent services before calls the `started` lifecycle event handler.
-
-```js
-module.exports = {
-  name: "posts",
-  settings: {
-    $dependencyTimeout: 30000 // Default: 0 - no timeout
-  },
-  dependencies: [
-    "likes", // shorthand w/o version
-    { name: "users", version: 2 }, // with numeric version
-    { name: "comments", version: "staging" } // with string version
-  ],
-  async started() {
-    this.logger.info("It will be called after all dependent services are available.");
-    const users = await this.broker.call("users.list");
-  }
-  ....
-}
-```
-
-The `started` service handler is called once the `likes`, `users` and `comments` services are available (either the local or remote nodes).
-
-### Wait for services via ServiceBroker
-
-To wait for services, you can also use the `waitForServices` method of `ServiceBroker`. It returns a `Promise` which will be resolved, when all defined services are available & started.
-
-**Parameters**
-
-| Parameter  | Type                | Default | Description                                                                                   |
-| ---------- | ------------------- | ------- | --------------------------------------------------------------------------------------------- |
-| `services` | `String` or `Array` | -       | Service list to waiting                                                                       |
-| `timeout`  | `Number`            | `0`     | Waiting timeout. `0` means no timeout. If reached, a `MoleculerServerError` will be rejected. |
-| `interval` | `Number`            | `1000`  | Frequency of watches in milliseconds                                                          |
-
-**Example**
-
-```js
-broker.waitForServices(["posts", "users"]).then(() => {
-    // Called after the `posts` & `users` services are available
-});
-```
-
-**Set timeout & interval**
-
-```js
-broker
-    .waitForServices("accounts", 10 * 1000, 500)
-    .then(() => {
-        // Called if `accounts` service becomes available in 10 seconds
-    })
-    .catch(err => {
-        // Called if service is not available in 10 seconds
-    });
-```
-
-**Versioned services**
-
-```js
-await broker.waitForServices([
-    { name: "posts", version: 2 },
-    { name: "users" }
-]);
-```
-
-## Metadata
-
-The `Service` schema has a `metadata` property. You can store here any meta information about service. You can access it as `this.metadata` inside service functions.
-_Moleculer core modules don't use it. You can store it whatever you want._
-
-```js
-module.exports = {
-  name: "posts",
-  settings: {},
-  metadata: {
-    scalable: true,
-    priority: 5
-  },
-
-  actions: { ... }
-};
-```
-
-> The `metadata` is also obtainable on remote nodes. It is transferred during service discovering.
-
-## Properties of Service instances
-
-In service functions, `this` is always pointed to the Service instance. It has some properties & methods what you can use in your service functions.
-
-| Name                   | Type                 | Description                                                              |
-| ---------------------- | -------------------- | ------------------------------------------------------------------------ |
-| `this.name`            | `String`             | Name of service (from schema)                                            |
-| `this.version`         | `Number` or `String` | Version of service (from schema)                                         |
-| `this.settings`        | `Object`             | Settings of service (from schema)                                        |
-| `this.metadata`        | `Object`             | Metadata of service (from schema)                                        |
-| `this.schema`          | `Object`             | Schema definition of service                                             |
-| `this.broker`          | `ServiceBroker`      | Instance of broker                                                       |
-| `this.Promise`         | `Promise`            | Class of Promise (Bluebird)                                              |
-| `this.logger`          | `Logger`             | Logger instance                                                          |
-| `this.actions`         | `Object`             | Actions of service. _Service can call own actions directly_              |
-| `this.waitForServices` | `Function`           | Link to ['broker.waitForServices' method](broker.html#Wait-for-services) |
-
-## Create a service
-
-There are several ways to create and load a service.
-
-### broker.createService()
-
-For testing, developing or prototyping, use the `broker.createService` method to load & create a service by schema. It's simplest & fastest.
-
-```js
-broker.createService({
-    name: "math",
-    actions: {
-        add(ctx) {
-            return Number(ctx.params.a) + Number(ctx.params.b);
-        }
-    }
-});
-```
-
-### Load service from file
-
-The recommended way is to place your service code into a single file and load it with the broker.
-
-**math.service.js**
-
-```js
-// Export the schema of service
-module.exports = {
-    name: "math",
-    actions: {
-        add(ctx) {
-            return Number(ctx.params.a) + Number(ctx.params.b);
-        },
-        sub(ctx) {
-            return Number(ctx.params.a) - Number(ctx.params.b);
-        }
-    }
-};
-```
-
-**Load it with broker:**
-
-```js
-// Create broker
-const broker = new ServiceBroker();
-
-// Load service
-broker.loadService("./math.service");
-
-// Start broker
-broker.start();
-```
-
-In the service file you can also create the Service instance. In this case, you have to export a function which returns the instance of [Service](#service).
-
-```js
-const { Service } = require("moleculer");
-
-// Export a function, the `loadService` will call it with the ServiceBroker instance.
-module.exports = function(broker) {
-    return new Service(broker, {
-        name: "math",
-        actions: {
-            add(ctx) {
-                return Number(ctx.params.a) + Number(ctx.params.b);
-            },
-            sub(ctx) {
-                return Number(ctx.params.a) - Number(ctx.params.b);
-            }
-        }
-    });
-};
-```
-
-Or create a function which returns with the schema of service
-
-```js
-// Export a function, the `loadService` will call with the ServiceBroker instance.
-module.exports = function() {
-  let users = [....];
-
-  return {
-    name: "math",
-    actions: {
-      create(ctx) {
-        users.push(ctx.params);
-      }
-    }
-  };
-}
-```
-
-### Load multiple services from a folder
-
-If you have many services (and you will have) we suggest to put them to a `services` folder and load all of them with the `broker.loadServices` method.
-
-**Syntax**
-
-```js
-broker.loadServices((folder = "./services"), (fileMask = "**/*.service.js"));
-```
-
-**Example**
-
-```js
-// Load every *.service.js file from the "./services" folder (including subfolders)
-broker.loadServices();
-
-// Load every *.service.js file from the current folder (including subfolders)
-broker.loadServices("./");
-
-// Load every user*.service.js file from the "./svc" folder
-broker.loadServices("./svc", "user*.service.js");
-```
-
-### Load with Moleculer Runner (recommended)
-
-We recommend to use the [Moleculer Runner](runner.html) to start a ServiceBroker and load services. [Read more about Moleculer Runner](runner.html). It is the easiest way to start a node.
-
-## Hot reloading services
-
-Moleculer has a built-in hot-reloading function. During development, it can be very useful because it reloads your services when you modify it. You can enable it in broker options or in [Moleculer Runner](runner.html).
-[Demo video how it works.](https://www.youtube.com/watch?v=l9FsAvje4F4)
-
-**Enable in broker options**
-
-```js
-const broker = new ServiceBroker({
-    hotReload: true
-});
-
-broker.loadService("./services/test.service.js");
-```
-
-**Enable it in Moleculer Runner**
-
-Turn it on with `--hot` or `-H` flags.
-
-```bash
-$ moleculer-runner --hot ./services/test.service.js
-```
-
-{% note info %}
-Hot reloading function is working only with Moleculer Runner or if you load your services with `broker.loadService` or `broker.loadServices`. It doesn't work with `broker.createService`.
-{% endnote %}
-
-{% note info %}
-Hot reloading watches only the `service.js` file. If you are using additional JS files in your services and they are changed, broker won't detect it. In this case it is better to use [nodemon](https://github.com/remy/nodemon) to restart all services and broker.
-{% endnote %}
-
-## Local variables
-
-If you would like to use local properties/variables in your service, declare them in the `created` event handler.
-
-**Example for local variables**
-
-```js
-const http = require("http");
-
-module.exports = {
-  name: "www",
-
-  settings: {
-    port: 3000
-  },
-
-  created() {
-    // Create HTTP server
-    this.server = http.createServer(this.httpHandler);
-  },
-
-  started() {
-    // Listening...
-    this.server.listen(this.settings.port);
-  },
-
-  stopped() {
-    // Stop server
-    this.server.close();
-  },
-
-  methods() {
-    // HTTP handler
-    httpHandler(req, res) {
-      res.end("Hello Moleculer!");
-    }
+If your service depends on other services, use the `Dependencies` property in the schema. The service waits for dependent services before calls the `Started` lifecycle event handler and before the service is available in the registry.
+
+```go
+moleculer.ServiceSchema{
+  Name: "coffeMachine",
+  Dependencies: []string{"users", "comments"},
+  Started: func(c BrokerContext, s ServiceSchema) {
+    c.Logger().info("It will be called after all dependent services are available.");
+    users := <-c.Call("users.list", payload.Empty());
+    //...
   }
 }
 ```
 
-{% note warn Naming restriction %}
-It is important to be aware that you can't use variable name which is reserved for service or coincides with your method names! E.g. `this.name`, `this.version`, `this.settings`, `this.schema`...etc.  
-{% endnote %}
+The `Started` service handler is called once the `users` and `comments` services are available (either in the local or remote brokers).
 
-## ES6 classes
+## Publish your Service
 
-If you like better ES6 classes than Moleculer service schema, you can write your services in ES6 classes. There are two ways to do it.
-
-### Native ES6 classes with schema parsing
-
-Define `actions` and `events` handlers as class methods and call the `parseServiceSchema` method in constructor with schema definition where the handlers pointed to these class methods.
-
-```js
-const Service = require("moleculer").Service;
-
-class GreeterService extends Service {
-    constructor(broker) {
-        super(broker);
-
-        this.parseServiceSchema({
-            name: "greeter",
-            version: "v2",
-            meta: {
-                scalable: true
-            },
-            dependencies: ["auth", "users"],
-
-            settings: {
-                upperCase: true
-            },
-            actions: {
-                hello: this.hello,
-                welcome: {
-                    cache: {
-                        keys: ["name"]
-                    },
-                    params: {
-                        name: "string"
-                    },
-                    handler: this.welcome
-                }
-            },
-            events: {
-                "user.created": this.userCreated
-            },
-            created: this.serviceCreated,
-            started: this.serviceStarted,
-            stopped: this.serviceStopped
-        });
-    }
-
-    // Action handler
-    hello() {
-        return "Hello Moleculer";
-    }
-
-    // Action handler
-    welcome(ctx) {
-        return this.sayWelcome(ctx.params.name);
-    }
-
-    // Private method
-    sayWelcome(name) {
-        this.logger.info("Say hello to", name);
-        return `Welcome, ${
-            this.settings.upperCase ? name.toUpperCase() : name
-        }`;
-    }
-
-    // Event handler
-    userCreated(user) {
-        this.broker.call("mail.send", { user });
-    }
-
-    serviceCreated() {
-        this.logger.info("ES6 Service created.");
-    }
-
-    serviceStarted() {
-        this.logger.info("ES6 Service started.");
-    }
-
-    serviceStopped() {
-        this.logger.info("ES6 Service stopped.");
-    }
-}
-
-module.exports = GreeterService;
-```
-
-### Use decorators
-
-Thanks for [@ColonelBundy](https://github.com/ColonelBundy), you can use ES7/TS decorators as well: [moleculer-decorators](https://github.com/ColonelBundy/moleculer-decorators)
-
-{% note info Need a compiler %}
-Please note, you must use Typescript or Babel to compile decorators.
-{% endnote %}
-
-**Example service**
-
-```js
-const { ServiceBroker } = require("moleculer");
-const { Service, Action, Event, Method } = require("moleculer-decorators");
-const web = require("moleculer-web");
-const broker = new ServiceBroker();
-
-@Service({
-    mixins: [web],
-    settings: {
-        port: 3000,
-        routes: [
-            //...
-        ]
-    }
+```go
+bkr := broker.New(&moleculer.Config{})
+bkr.Publish(moleculer.ServiceSchema{
+  Name: "math",
+    Actions: []moleculer.Action{{
+    Name: "add",
+    Handler: func(context moleculer.Context, params moleculer.Payload) interface{} {
+  }}},
 })
-class MyService {
-    @Action()
-    Login(ctx) {
-        //...
-    }
+bkr.Start()
+```
 
-    // With options
-    @Action({
-        cache: false,
-        params: {
-            a: "number",
-            b: "number"
+## Struts
+
+`struts`?
+
+### Can I craft my services using a simple struct? Or even reuse an existing objects?
+
+Yes you can! 👏 👏 👏
+
+The only requirement is that it must have a method `func (x MyObject) Name() string { return "ana" }`.
+And that is it.
+
+```go
+type myOwnType struct {
+    //some crazy stuff
+}
+func (svc HttpService) Name() string {
+  return "nameOfYourService"
+}
+```
+
+Beyond that there are the conventions that you need to follow to expose useful actions and listen to events.
+
+```go
+//...
+type HttpService struct {
+  Settings map[string]interface{}
+  Mixins   []GatewayMixin
+  settings      map[string]interface{}
+  server        *http.Server
+  router        *mux.Router
+  actionsRouter *mux.Router
+}
+// ⚙ You must have a name
+func (svc HttpService) Name() string {
+  return "api"
+}
+// ⭐ You can also say what your dependencies are.  ⭐
+func (svc *HttpService) Dependencies() []string {
+  return []string{"$node"}
+}
+// ⭐ You can have a Started handler also!  ⭐
+func (svc *HttpService) Started(context moleculer.BrokerContext, schema moleculer.ServiceSchema) {
+  svc.settings = service.MergeSettings(defaultSettings, svc.Settings)
+  address := svc.getAddress()
+  svc.server = &http.Server{Addr: address}
+  svc.router = mux.NewRouter()
+  svc.server.Handler = svc.router
+  for _, mixin := range svc.Mixins {
+    mixin.RouterStarting(context, svc.router)
+  }
+  svc.reveserProxy(context)
+  go svc.startServer(context)
+  go populateActionsRouter(context.(moleculer.Context), svc.settings, svc.actionsRouter)
+  context.Logger().Info("Gateway Started()")
+}
+// ⭐ You can have a Stopped handler also!  ⭐
+func (svc *HttpService) Stopped(context moleculer.BrokerContext, schema moleculer.ServiceSchema) {
+  if svc.server != nil {
+    err := svc.server.Shutdown(nil)
+    if err != nil {
+      context.Logger().Error("Error shutting down server - error: ", err)
+    }
+  }
+}
+// ⭐ That is how you listen for events ! ⭐
+func (svc *HttpService) Events() []moleculer.Event {
+  return []moleculer.Event{
+    {
+      Name: "$registry.service.added",
+      Handler: func(c moleculer.Context, p moleculer.Payload) {
+        if svc.actionsRouter == nil {
+           return
         }
-    })
-    Login2(ctx) {
-        //...
-    }
+        go populateActionsRouter(c, svc.settings, svc.actionsRouter)
+      },
+    },
+  }
+}
+```
 
-    @Event
-    "event.name"(payload, sender, eventName) {
-        //...
-    }
+### What other ways can I have my actions?
 
-    @Method
-    authorize(ctx, route, req, res) {
-        //...
-    }
+```go
+import (
+	"fmt"
 
-    hello() {
-        // Private
-        //...
-    }
+	"github.com/moleculer-go/moleculer"
+	"github.com/moleculer-go/moleculer/broker"
+)
 
-    started() {
-        // Reserved for moleculer, fired when started
-        //...
-    }
-
-    created() {
-        // Reserved for moleculer, fired when created
-        //...
-    }
-
-    stopped() {
-        // Reserved for moleculer, fired when stopped
-        //...
-    }
+type MathService struct {
 }
 
-broker.createService(MyService);
-broker.start();
+func (s MathService) Name() string {
+	return "math"
+}
+//  ⭐ You can have just the parameters in case you don't need the context ⭐
+func (s *MathService) Add(params moleculer.Payload) int {
+	return params.Get("a").Int() + params.Get("b").Int()
+}
+// ⭐ You might just need the arguments, but to be able to call this actions the arguments needs to be passed as an array! ⭐
+func (s *MathService) Sub(a int, b int) int {
+	return a - b
+}
+//  ⭐ You can also have an action that receive no parameters ⭐
+func (s *MathService) Inc() {
+	//do magic!
+}
+
+func main() {
+	var bkr = broker.New(&moleculer.Config{LogLevel: "error"})
+	bkr.Publish(&MathService{})
+	bkr.Start()
+	result := <-bkr.Call("math.add", map[string]int{
+		"a": 10,
+		"b": 130,
+	})
+	fmt.Println("result: ", result.Int())
+    //$ result: 140
+    result = <-bkr.Call("math.sub", []int{ // remember for action sub we need to wrap the argments in an array! look above
+		50,
+		20,
+	})
+	fmt.Println("result: ", result.Int())
+    //$ result: 30
+    <-bkr.Call("math.inc", payload.Empty())
+    bkr.Stop()
+}
 ```
 
 ## Internal services
 
-The `ServiceBroker` contains some internal services to check the node health or get some registry informations. You can disable to load them with the `internalServices: false` broker option.
+The `Broker` contains some internal services to check the node health or get some registry informations. You can disable to load them with the `DisableInternalServices: true` config option.
 
 ### List of nodes
 
 It lists all known nodes (including local node).
 
-```js
-broker.call("$node.list").then(res => console.log(res));
+```go
+nodes := <-broker.Call("$node.list", payload.Empty())
 ```
 
 **Parameters**
 
-| Name            | Type      | Default | Description                |
-| --------------- | --------- | ------- | -------------------------- |
-| `withServices`  | `Boolean` | `false` | List with services.        |
-| `onlyAvailable` | `Boolean` | `false` | List only available nodes. |
+| Name            | Type   | Default | Description                |
+| --------------- | ------ | ------- | -------------------------- |
+| `withServices`  | `bool` | `false` | List with services.        |
+| `onlyAvailable` | `bool` | `false` | List only available nodes. |
 
 ### List of services
 
 It lists all registered services (local & remote).
 
-```js
-broker.call("$node.services").then(res => console.log(res));
+```go
+services := <-broker.Call("$node.services", payload.Empty())
 ```
 
 **Parameters**
 
-| Name            | Type      | Default | Description                           |
-| --------------- | --------- | ------- | ------------------------------------- |
-| `onlyLocal`     | `Boolean` | `false` | List only local services.             |
-| `skipInternal`  | `Boolean` | `false` | Skip the internal services (`$node`). |
-| `withActions`   | `Boolean` | `false` | List with actions.                    |
-| `onlyAvailable` | `Boolean` | `false` | List only available services.         |
+| Name            | Type   | Default | Description                           |
+| --------------- | ------ | ------- | ------------------------------------- |
+| `onlyLocal`     | `bool` | `false` | List only local services.             |
+| `skipInternal`  | `bool` | `false` | Skip the internal services (`$node`). |
+| `withActions`   | `bool` | `false` | List with actions.                    |
+| `onlyAvailable` | `bool` | `false` | List only available services.         |
 
 ### List of local actions
 
 It lists all registered actions (local & remote).
 
-```js
-broker.call("$node.actions").then(res => console.log(res));
+```go
+actions := broker.Call("$node.actions", payload.Empty())
 ```
 
-It has some options which you can declare within `params`.
+**Parameters**
 
-**Options**
-
-| Name            | Type      | Default | Description                          |
-| --------------- | --------- | ------- | ------------------------------------ |
-| `onlyLocal`     | `Boolean` | `false` | List only local actions.             |
-| `skipInternal`  | `Boolean` | `false` | Skip the internal actions (`$node`). |
-| `withEndpoints` | `Boolean` | `false` | List with endpoints _(nodes)_.       |
-| `onlyAvailable` | `Boolean` | `false` | List only available actions.         |
+| Name            | Type   | Default | Description                          |
+| --------------- | ------ | ------- | ------------------------------------ |
+| `onlyLocal`     | `bool` | `false` | List only local actions.             |
+| `skipInternal`  | `bool` | `false` | Skip the internal actions (`$node`). |
+| `withEndpoints` | `bool` | `false` | List with endpoints _(nodes)_.       |
+| `onlyAvailable` | `bool` | `false` | List only available actions.         |
 
 ### List of local events
 
 It lists all event subscriptions.
 
-```js
-broker.call("$node.events").then(res => console.log(res));
+```go
+events := <-broker.Call("$node.events", payload.New(map[string]bool{
+  "onlyLocal": true,
+}))
 ```
 
-It has some options which you can declare within `params`.
+**Parameters**
 
-**Options**
-
-| Name            | Type      | Default | Description                                |
-| --------------- | --------- | ------- | ------------------------------------------ |
-| `onlyLocal`     | `Boolean` | `false` | List only local subscriptions.             |
-| `skipInternal`  | `Boolean` | `false` | Skip the internal event subscriptions `$`. |
-| `withEndpoints` | `Boolean` | `false` | List with endpoints _(nodes)_.             |
-| `onlyAvailable` | `Boolean` | `false` | List only available subscriptions.         |
+| Name            | Type   | Default | Description                                |
+| --------------- | ------ | ------- | ------------------------------------------ |
+| `onlyLocal`     | `bool` | `false` | List only local subscriptions.             |
+| `skipInternal`  | `bool` | `false` | Skip the internal event subscriptions `$`. |
+| `withEndpoints` | `bool` | `false` | List with endpoints _(nodes)_.             |
+| `onlyAvailable` | `bool` | `false` | List only available subscriptions.         |
 
 ### Health of node
 
+<img src="assets/under_construction.png" width=150/>
+Not Implemented yet!
+
 It returns the health info of local node (including process & OS information).
 
-```js
-broker.call("$node.health").then(res => console.log(res));
-```
-
-Example health info:
-
-```js
-{
-  "cpu": {
-    "load1": 0,
-    "load5": 0,
-    "load15": 0,
-    "cores": 4,
-    "utilization": 0
-  },
-  "mem": {
-    "free": 1217519616,
-    "total": 17161699328,
-    "percent": 7.094400109979598
-  },
-  "os": {
-    "uptime": 366733.2786046,
-    "type": "Windows_NT",
-    "release": "6.1.7601",
-    "hostname": "Developer-PC",
-    "arch": "x64",
-    "platform": "win32",
-    "user": {
-      "uid": -1,
-      "gid": -1,
-      "username": "Developer",
-      "homedir": "C:\\Users\\Developer",
-      "shell": null
-    }
-  },
-  "process": {
-    "pid": 13096,
-    "memory": {
-      "rss": 47173632,
-      "heapTotal": 31006720,
-      "heapUsed": 22112024
-    },
-    "uptime": 25.447
-  },
-  "client": {
-    "type": "nodejs",
-    "version": "0.12.0",
-    "langVersion": "v8.9.4"
-  },
-  "net": {
-    "ip": [
-      "192.168.2.100",
-      "192.168.232.1",
-      "192.168.130.1",
-      "192.168.56.1",
-      "192.168.99.1"
-    ]
-  },
-  "time": {
-    "now": 1487338958409,
-    "iso": "2018-02-17T13:42:38.409Z",
-    "utc": "Fri, 17 Feb 2018 13:42:38 GMT"
-  }
-}
+```go
+health := <-broker.Call("$node.health", payload.Empty())
 ```
