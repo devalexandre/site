@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://gomicro.services/docs/0.1/actions.html</loc>
+    
+    <lastmod>2019-04-21T21:58:08.386Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gomicro.services/docs/0.1/services.html</loc>
     
-    <lastmod>2019-04-21T07:40:41.228Z</lastmod>
+    <lastmod>2019-04-21T20:35:01.491Z</lastmod>
     
   </url>
   
@@ -320,13 +327,6 @@
     <loc>https://gomicro.services/docs/0.1/middlewares.html</loc>
     
     <lastmod>2019-04-20T06:15:09.232Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/actions.html</loc>
-    
-    <lastmod>2019-04-20T06:09:09.961Z</lastmod>
     
   </url>
   

@@ -41,18 +41,18 @@
   <link rel="alternate" href="/atom.xml" title="Moleculer Go - Progressive microservices framework in Go">
   -->
   <!-- Open Graph -->
-  <meta name="description" content="Actions The actions are the callable/public methods of the service. The action calling represents a remote-procedure-call (RPC). It has request parameters &amp;amp; returns response, like a HTTP request.">
+  <meta name="description" content="Actions The actions are the callable/public methods of the service.Actions follow the RPC pattern. It has request parameters &amp;amp; returns response, like a HTTP request. If you have multiple instances">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta property="og:url" content="https://gomicro.services/docs/0.1/actions.html">
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
-<meta property="og:description" content="Actions The actions are the callable/public methods of the service. The action calling represents a remote-procedure-call (RPC). It has request parameters &amp;amp; returns response, like a HTTP request.">
+<meta property="og:description" content="Actions The actions are the callable/public methods of the service.Actions follow the RPC pattern. It has request parameters &amp;amp; returns response, like a HTTP request. If you have multiple instances">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://gomicro.services/docs/0.1/assets/action-balancing.gif">
-<meta property="og:updated_time" content="2019-04-20T06:09:09.961Z">
+<meta property="og:updated_time" content="2019-04-21T21:58:08.386Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
-<meta name="twitter:description" content="Actions The actions are the callable/public methods of the service. The action calling represents a remote-procedure-call (RPC). It has request parameters &amp;amp; returns response, like a HTTP request.">
+<meta name="twitter:description" content="Actions The actions are the callable/public methods of the service.Actions follow the RPC pattern. It has request parameters &amp;amp; returns response, like a HTTP request. If you have multiple instances">
 <meta name="twitter:image" content="https://gomicro.services/docs/0.1/assets/action-balancing.gif">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
@@ -119,190 +119,56 @@
               <div class="article-content" itemprop="articleBody">
                 <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/actions.md" class="corner-right article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
                 <h1 id="Actions" class="article-heading"><a href="#Actions" class="headerlink" title="Actions"></a>Actions<a class="article-anchor" href="#Actions" aria-hidden="true"></a></h1><hr>
-<p>The actions are the callable/public methods of the service. The action calling represents a remote-procedure-call (RPC). It has request parameters &amp; returns response, like a HTTP request.</p>
-<p>If you have multiple instances of services, the broker will load balancing the request among instances. <a href="balancing.html">Read more about balancing</a>.</p>
+<p>The actions are the callable/public methods of the service.<br>Actions follow the RPC pattern. It has request parameters &amp; returns response, like a HTTP request.</p>
+<p>If you have multiple instances of the same services, the broker will load balancing the request among instances. <a href="balancing.html">Read more about balancing</a>.</p>
 <div align="center"><br><img src="assets/action-balancing.gif" alt="Action balancing diagram"><br></div>
 
-<h2 id="Call-services" class="article-heading"><a href="#Call-services" class="headerlink" title="Call services"></a>Call services<a class="article-anchor" href="#Call-services" aria-hidden="true"></a></h2><p>To call a service, use the <code>broker.call</code> method. The broker looks for the service (and a node) which has the given action and call it. The function returns a <code>Promise</code>.</p>
-<h3 id="Syntax" class="article-heading"><a href="#Syntax" class="headerlink" title="Syntax"></a>Syntax<a class="article-anchor" href="#Syntax" aria-hidden="true"></a></h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> res = <span class="keyword">await</span> broker.call(actionName, params, opts);</span><br></pre></td></tr></table></figure>
+<h2 id="Call-services" class="article-heading"><a href="#Call-services" class="headerlink" title="Call services"></a>Call services<a class="article-anchor" href="#Call-services" aria-hidden="true"></a></h2><p>To call a service, use the <code>broker.Call</code> method or <code>context.Call</code> method. The broker looks for the service (and a node) which has the given action and call it.</p>
+<h3 id="Syntax" class="article-heading"><a href="#Syntax" class="headerlink" title="Syntax"></a>Syntax<a class="article-anchor" href="#Syntax" aria-hidden="true"></a></h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">res := broker.Call(actionName, params)</span><br></pre></td></tr></table></figure>
 <p>The <code>actionName</code> is a dot-separated string. The first part of it is the service name, while the second part of it represents the action name. So if you have a <code>posts</code> service with a <code>create</code> action, you can call it as <code>posts.create</code>.</p>
-<p>The <code>params</code> is an object which is passed to the action as a part of the <a href="context.html">Context</a>. The service can access it via <code>ctx.params</code>. <em>It is optional.</em></p>
-<p>The <code>opts</code> is an object to set/override some request parameters, e.g.: <code>timeout</code>, <code>retryCount</code>. <em>It is optional.</em></p>
-<p><strong>Available calling options:</strong></p>
+<p>The <code>params</code> is an <code>interface{}</code> that might be serialized in case of remote calls. The <code>params</code> are wrapped in a moleculer.Payload which is passed to the action as a part of the <a href="context.html">Context</a> and as the params argument. A service actions can access it via <code>ctx.Payload()</code> or directly in the params argument.</p>
+<h3 id="Usages" class="article-heading"><a href="#Usages" class="headerlink" title="Usages"></a>Usages<a class="article-anchor" href="#Usages" aria-hidden="true"></a></h3><p><strong>Call without params</strong></p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">list := &lt;-broker.Call(<span class="string">"user.list"</span>, payload.Empty())</span><br><span class="line">fmt.Println(<span class="string">"User list: "</span>, list)</span><br></pre></td></tr></table></figure>
+<p><strong>Call with params</strong></p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">user := &lt;-broker.Call(<span class="string">"user.get"</span>, <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>&#123;<span class="string">"id"</span>: <span class="number">3</span>&#125;)</span><br><span class="line">fmt.Println(<span class="string">"User: "</span>, user)</span><br></pre></td></tr></table></figure>
+<p><strong>Call with error handling</strong></p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">res := &lt;-broker.Call(<span class="string">"posts.update"</span>, <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>&#123;<span class="string">"id"</span>: <span class="number">2</span>, <span class="string">"name"</span>: <span class="literal">nil</span>&#125;)</span><br><span class="line"><span class="keyword">if</span> res.IsError() &#123;</span><br><span class="line">  fmt.Println(<span class="string">"Unable to update Post!"</span>, res.Error())</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  fmt.Println(<span class="string">"Post updated!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="moleculer-Context" class="article-heading"><a href="#moleculer-Context" class="headerlink" title="moleculer.Context"></a>moleculer.Context<a class="article-anchor" href="#moleculer-Context" aria-hidden="true"></a></h2><p>When you call an action, the broker creates a <code>moleculer.Context</code> instance which contains all request information and passes it to the action handler as a single argument.</p>
+<p><strong>Available methods of <code>Context</code>:</strong></p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
-<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>timeout</code></td>
-<td><code>Number</code></td>
-<td><code>null</code></td>
-<td>Timeout of request in milliseconds. If the request is timed out and you don’t define <code>fallbackResponse</code>, broker will throw a <code>RequestTimeout</code> error. To disable set <code>0</code>. If it’s not defined, broker uses the <code>requestTimeout</code> value of broker options. <a href="fault-tolerance.html#Timeout">Read more</a></td>
+<td><code>MCall(...)</code></td>
+<td>Perform multiple calls, label/name each call so the results of each call can be matched to its label/name</td>
 </tr>
 <tr>
-<td><code>retries</code></td>
-<td><code>Number</code></td>
-<td><code>null</code></td>
-<td>Count of retry of request. If the request is timed out, broker will try to call again. To disable set <code>0</code>. If it’s not defined, broker uses the <code>retryPolicy.retries</code> value of broker options. <a href="fault-tolerance.html#Retry">Read more</a></td>
+<td><code>Call(...)</code></td>
+<td>Perform a single call</td>
 </tr>
 <tr>
-<td><code>fallbackResponse</code></td>
-<td><code>Any</code></td>
-<td><code>null</code></td>
-<td>Returns it, if the request has failed. <a href="fault-tolerance.html#Fallback">Read more</a></td>
+<td><code>Emit(...)</code></td>
+<td>Emit an event to a single listener</td>
 </tr>
 <tr>
-<td><code>nodeID</code></td>
-<td><code>String</code></td>
-<td><code>null</code></td>
-<td>Target nodeID. If set, it will make a direct call to the given node.</td>
+<td><code>Broadcast(...)</code></td>
+<td>Broadcast an event to all listeners</td>
 </tr>
 <tr>
-<td><code>meta</code></td>
-<td><code>Object</code></td>
-<td><code>null</code></td>
-<td>Metadata of request. Access it via <code>ctx.meta</code> in actions handlers. It will be transferred &amp; merged at nested calls, as well.</td>
-</tr>
-<tr>
-<td><code>parentCtx</code></td>
-<td><code>Context</code></td>
-<td><code>null</code></td>
-<td>Parent <code>Context</code> instance.</td>
-</tr>
-<tr>
-<td><code>requestID</code></td>
-<td><code>String</code></td>
-<td><code>null</code></td>
-<td>Request ID or correlation ID. <em>It appears in the metrics events.</em></td>
+<td><code>Logger()</code></td>
+<td>Access to the broker logger. The logger contain contextual information, like which nodeID, service name, action name and etc to enhance the logs.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="Usages" class="article-heading"><a href="#Usages" class="headerlink" title="Usages"></a>Usages<a class="article-anchor" href="#Usages" aria-hidden="true"></a></h3><p><strong>Call without params</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">broker.call(<span class="string">"user.list"</span>)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">"User list: "</span>, res));</span><br></pre></td></tr></table></figure></p>
-<p><strong>Call with params</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">broker.call(<span class="string">"user.get"</span>, &#123; <span class="attr">id</span>: <span class="number">3</span> &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">"User: "</span>, res));</span><br></pre></td></tr></table></figure></p>
-<p><strong>Call with async/await</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> res = <span class="keyword">await</span> broker.call(<span class="string">"user.get"</span>, &#123; <span class="attr">id</span>: <span class="number">3</span> &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"User: "</span>, res);</span><br></pre></td></tr></table></figure></p>
-<p><strong>Call with options</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">broker.call(<span class="string">"user.recommendation"</span>, &#123; <span class="attr">limit</span>: <span class="number">5</span> &#125;, &#123;</span><br><span class="line">    timeout: <span class="number">500</span>,</span><br><span class="line">    retries: <span class="number">3</span>,</span><br><span class="line">    fallbackResponse: defaultRecommendation</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">"Result: "</span>, res));</span><br></pre></td></tr></table></figure></p>
-<p><strong>Call with error handling</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">broker.call("posts.update", &#123; id: 2, # "Modified post title" &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">"Post updated!"</span>))</span><br><span class="line">    .catch(<span class="function"><span class="params">err</span> =&gt;</span> <span class="built_in">console</span>.error(<span class="string">"Unable to update Post!"</span>, err));</span><br></pre></td></tr></table></figure></p>
-<p><strong>Direct call: get health info from the “node-21” node</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">broker.call(<span class="string">"$node.health"</span>, &#123;&#125;, &#123; <span class="attr">nodeID</span>: <span class="string">"node-21"</span> &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">"Result: "</span>, res));</span><br></pre></td></tr></table></figure></p>
-<h3 id="Metadata" class="article-heading"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata<a class="article-anchor" href="#Metadata" aria-hidden="true"></a></h3><p>Send meta informations to services with <code>meta</code> property. Access it via <code>ctx.meta</code> in action handlers. Please note at nested calls the meta is merged.<br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">broker.createService(&#123;</span><br><span class="line">    name: <span class="string">"test"</span>,</span><br><span class="line">    actions: &#123;</span><br><span class="line">        first(ctx) &#123;</span><br><span class="line">            <span class="keyword">return</span> ctx.call(<span class="string">"test.second"</span>, <span class="literal">null</span>, &#123; <span class="attr">meta</span>: &#123;</span><br><span class="line">                b: <span class="number">5</span></span><br><span class="line">            &#125;&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        second(ctx) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(ctx.meta);</span><br><span class="line">            <span class="comment">// Prints: &#123; a: "John", b: 5 &#125;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">broker.call(<span class="string">"test.first"</span>, <span class="literal">null</span>, &#123; <span class="attr">meta</span>: &#123;</span><br><span class="line">    a: <span class="string">"John"</span></span><br><span class="line">&#125;&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>The <code>meta</code> is sent back to the caller service. Use it to send extra meta information back to the caller. E.g.: send response headers back to API gateway or set resolved logged in user to metadata.</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">broker.createService(&#123;</span><br><span class="line">    name: <span class="string">"test"</span>,</span><br><span class="line">    actions: &#123;</span><br><span class="line">        <span class="keyword">async</span> first(ctx) &#123;</span><br><span class="line">            <span class="keyword">await</span> ctx.call(<span class="string">"test.second"</span>, <span class="literal">null</span>, &#123; <span class="attr">meta</span>: &#123;</span><br><span class="line">                a: <span class="string">"John"</span></span><br><span class="line">            &#125;&#125;);</span><br><span class="line"></span><br><span class="line">            <span class="built_in">console</span>.log(ctx.meta);</span><br><span class="line">            <span class="comment">// Prints: &#123; a: "John", b: 5 &#125;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        second(ctx) &#123;</span><br><span class="line">            <span class="comment">// Modify meta</span></span><br><span class="line">            ctx.meta.b = <span class="number">5</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="Streaming" class="article-heading"><a href="#Streaming" class="headerlink" title="Streaming"></a>Streaming<a class="article-anchor" href="#Streaming" aria-hidden="true"></a></h2><p>Moleculer supports Node.js streams as request <code>params</code> and as response. Use it to transfer uploaded file from a gateway or encode/decode or compress/decompress streams.</p>
-<h3 id="Examples" class="article-heading"><a href="#Examples" class="headerlink" title="Examples"></a>Examples<a class="article-anchor" href="#Examples" aria-hidden="true"></a></h3><p><strong>Send a file to a service as a stream</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> stream = fs.createReadStream(fileName);</span><br><span class="line"></span><br><span class="line">broker.call(<span class="string">"storage.save"</span>, stream, &#123; <span class="attr">meta</span>: &#123; <span class="attr">filename</span>: <span class="string">"avatar-123.jpg"</span> &#125;&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>Please note, the <code>params</code> should be a stream, you cannot add any more variables to the <code>params</code>. Use the <code>meta</code> property to transfer additional data.</p>
-<p><strong>Receiving a stream in a service</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"storage"</span>,</span><br><span class="line">    actions: &#123;</span><br><span class="line">        save(ctx) &#123;</span><br><span class="line">            <span class="keyword">const</span> s = fs.createWriteStream(<span class="string">`/tmp/<span class="subst">$&#123;ctx.meta.filename&#125;</span>`</span>);</span><br><span class="line">            ctx.params.pipe(s);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p><strong>Return a stream as response in a service</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"storage"</span>,</span><br><span class="line">    actions: &#123;</span><br><span class="line">        get: &#123;</span><br><span class="line">            params: &#123;</span><br><span class="line">                filename: <span class="string">"string"</span></span><br><span class="line">            &#125;,</span><br><span class="line">            handler(ctx) &#123;</span><br><span class="line">                <span class="keyword">return</span> fs.createReadStream(<span class="string">`/tmp/<span class="subst">$&#123;ctx.params.filename&#125;</span>`</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p><strong>Process received stream on the caller side</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> filename = <span class="string">"avatar-123.jpg"</span>;</span><br><span class="line">broker.call(<span class="string">"storage.get"</span>, &#123; filename &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">stream</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> s = fs.createWriteStream(<span class="string">`./<span class="subst">$&#123;filename&#125;</span>`</span>);</span><br><span class="line">        stream.pipe(s);</span><br><span class="line">        s.on(<span class="string">"close"</span>, () =&gt; broker.logger.info(<span class="string">"File has been received"</span>));</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure></p>
-<p><strong>AES encode/decode example service</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> crypto = <span class="built_in">require</span>(<span class="string">"crypto"</span>);</span><br><span class="line"><span class="keyword">const</span> password = <span class="string">"moleculer"</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"aes"</span>,</span><br><span class="line">    actions: &#123;</span><br><span class="line">        encrypt(ctx) &#123;</span><br><span class="line">            <span class="keyword">const</span> encrypt = crypto.createCipher(<span class="string">"aes-256-ctr"</span>, password);</span><br><span class="line">            <span class="keyword">return</span> ctx.params.pipe(encrypt);</span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">        decrypt(ctx) &#123;</span><br><span class="line">            <span class="keyword">const</span> decrypt = crypto.createDecipher(<span class="string">"aes-256-ctr"</span>, password);</span><br><span class="line">            <span class="keyword">return</span> ctx.params.pipe(decrypt);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h2 id="Action-visibility" class="article-heading"><a href="#Action-visibility" class="headerlink" title="Action visibility"></a>Action visibility<a class="article-anchor" href="#Action-visibility" aria-hidden="true"></a></h2><p>The action has a <code>visibility</code> property to control the visibility &amp; callability of service actions.</p>
-<p><strong>Available values:</strong></p>
-<ul>
-<li><code>published</code> or <code>null</code>: public action. It can be called locally, remotely and can be published via API Gateway</li>
-<li><code>public</code>: public action, can be called locally &amp; remotely but not published via API GW</li>
-<li><code>protected</code>: can be called only locally (from local services)</li>
-<li><code>private</code>: can be called only internally (via <code>this.actions.xy()</code> inside service)</li>
-</ul>
-<p><strong>Change visibility</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"posts"</span>,</span><br><span class="line">    actions: &#123;</span><br><span class="line">        <span class="comment">// It's published by default</span></span><br><span class="line">        find(ctx) &#123;&#125;,</span><br><span class="line">        clean: &#123;</span><br><span class="line">            <span class="comment">// Callable only via `this.actions.clean`</span></span><br><span class="line">            visibility: <span class="string">"private"</span>,</span><br><span class="line">            handler(ctx) &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        cleanEntities() &#123;</span><br><span class="line">            <span class="comment">// Call the action directly</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.actions.clean();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>The default values is <code>null</code> (means <code>published</code>) due to backward compatibility.</p>
-</blockquote>
-<h2 id="Action-hooks" class="article-heading"><a href="#Action-hooks" class="headerlink" title="Action hooks"></a>Action hooks<a class="article-anchor" href="#Action-hooks" aria-hidden="true"></a></h2><p>Define action hooks to wrap certain actions coming from mixins.<br>There are <code>before</code>, <code>after</code> and <code>error</code> hooks. Assign it to a specified action or all actions (<code>*</code>) in service.<br>The hook can be a <code>Function</code> or a <code>String</code>. The latter must be a local service method name.</p>
-<p><strong>Before hooks</strong></p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> DbService = <span class="built_in">require</span>(<span class="string">"moleculer-db"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"posts"</span>,</span><br><span class="line">    mixins: [DbService]</span><br><span class="line">    hooks: &#123;</span><br><span class="line">        before: &#123;</span><br><span class="line">            <span class="comment">// Define a global hook for all actions</span></span><br><span class="line">            <span class="comment">// The hook will call the `resolveLoggedUser` method.</span></span><br><span class="line">            <span class="string">"*"</span>: <span class="string">"resolveLoggedUser"</span>,</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Define multiple hooks</span></span><br><span class="line">            remove: [</span><br><span class="line">                <span class="function"><span class="keyword">function</span> <span class="title">isAuthenticated</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (!ctx.user)</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Forbidden"</span>);</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="function"><span class="keyword">function</span> <span class="title">isOwner</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (!<span class="keyword">this</span>.checkOwner(ctx.params.id, ctx.user.id))</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Only owner can remove it."</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    methods: &#123;</span><br><span class="line">        <span class="keyword">async</span> resolveLoggedUser(ctx) &#123;</span><br><span class="line">            <span class="keyword">if</span> (ctx.meta.user)</span><br><span class="line">                ctx.user = <span class="keyword">await</span> ctx.call(<span class="string">"users.get"</span>, &#123; <span class="attr">id</span>: ctx.meta.user.id &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>After &amp; Error hooks</strong></p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> DbService = <span class="built_in">require</span>(<span class="string">"moleculer-db"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"users"</span>,</span><br><span class="line">    mixins: [DbService]</span><br><span class="line">    hooks: &#123;</span><br><span class="line">        after: &#123;</span><br><span class="line">            <span class="comment">// Define a global hook for all actions to remove sensitive data</span></span><br><span class="line">            <span class="string">"*"</span>: <span class="function"><span class="keyword">function</span>(<span class="params">ctx, res</span>) </span>&#123;</span><br><span class="line">                <span class="comment">// Remove password</span></span><br><span class="line">                <span class="keyword">delete</span> res.password;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Please note, must return result (either the original or a new)</span></span><br><span class="line">                <span class="keyword">return</span> res;</span><br><span class="line">            &#125;,</span><br><span class="line">            get: [</span><br><span class="line">                <span class="comment">// Add a new virtual field to the entity</span></span><br><span class="line">                <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params">ctx, res</span>) </span>&#123;</span><br><span class="line">                    res.friends = <span class="keyword">await</span> ctx.call(<span class="string">"friends.count"</span>, &#123; <span class="attr">query</span>: &#123; <span class="attr">follower</span>: res._id &#125;&#125;);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">return</span> res;</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="comment">// Populate the `referrer` field</span></span><br><span class="line">                <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params">ctx, res</span>) </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (res.referrer)</span><br><span class="line">                        res.referrer = <span class="keyword">await</span> ctx.call(<span class="string">"users.get"</span>, &#123; <span class="attr">id</span>: res._id &#125;);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">return</span> res;</span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        error: &#123;</span><br><span class="line">            <span class="comment">// Global error handler</span></span><br><span class="line">            <span class="string">"*"</span>: <span class="function"><span class="keyword">function</span>(<span class="params">ctx, err</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">this</span>.logger.error(<span class="string">`Error occurred when '<span class="subst">$&#123;ctx.action.name&#125;</span>' action was called`</span>, err);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Throw further the error</span></span><br><span class="line">                <span class="keyword">throw</span> err;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>The recommended use case is to create mixins filling up the service with methods and in <code>hooks</code> set method names.</p>
-<p><strong>Mixin</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    methods: &#123;</span><br><span class="line">        checkIsAuthenticated(ctx) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!ctx.meta.user)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Unauthenticated"</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">        checkUserRole(ctx) &#123;</span><br><span class="line">            <span class="keyword">if</span> (ctx.action.role &amp;&amp; ctx.meta.user.role != ctx.action.role)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Forbidden"</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">        checkOwner(ctx) &#123;</span><br><span class="line">            <span class="comment">// Check the owner of entity</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><strong>Use mixin methods in hooks</strong><br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> MyAuthMixin = <span class="built_in">require</span>(<span class="string">"./my.mixin"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    name: <span class="string">"posts"</span>,</span><br><span class="line">    mixins: [MyAuthMixin]</span><br><span class="line">    hooks: &#123;</span><br><span class="line">        before: &#123;</span><br><span class="line">            <span class="string">"*"</span>: [<span class="string">"checkIsAuthenticated"</span>],</span><br><span class="line">            create: [<span class="string">"checkUserRole"</span>],</span><br><span class="line">            update: [<span class="string">"checkUserRole"</span>, <span class="string">"checkOwner"</span>],</span><br><span class="line">            remove: [<span class="string">"checkUserRole"</span>, <span class="string">"checkOwner"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    actions: &#123;</span><br><span class="line">        find: &#123;</span><br><span class="line">            <span class="comment">// No required role</span></span><br><span class="line">            handler(ctx) &#123;&#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        create: &#123;</span><br><span class="line">            role: <span class="string">"admin"</span>,</span><br><span class="line">            handler(ctx) &#123;&#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        update: &#123;</span><br><span class="line">            role: <span class="string">"user"</span>,</span><br><span class="line">            handler(ctx) &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h2 id="Contexts" class="article-heading"><a href="#Contexts" class="headerlink" title="Contexts"></a>Contexts<a class="article-anchor" href="#Contexts" aria-hidden="true"></a></h2><p>When you call an action, the broker creates a <code>Context</code> instance which contains all request information and passes it to the action handler as a single argument.</p>
-<p><strong>Available properties &amp; methods of <code>Context</code>:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ctx.id</code></td>
-<td><code>String</code></td>
-<td>Context ID</td>
-</tr>
-<tr>
-<td><code>ctx.broker</code></td>
-<td><code>ServiceBroker</code></td>
-<td>Instance of the broker.</td>
-</tr>
-<tr>
-<td><code>ctx.action</code></td>
-<td><code>Object</code></td>
-<td>Instance of action definition.</td>
-</tr>
-<tr>
-<td><code>ctx.nodeID</code></td>
-<td><code>String</code></td>
-<td>The caller or target Node ID.</td>
-</tr>
-<tr>
-<td><code>ctx.requestID</code></td>
-<td><code>String</code></td>
-<td>Request ID. If you make nested-calls, it will be the same ID.</td>
-</tr>
-<tr>
-<td><code>ctx.parentID</code></td>
-<td><code>String</code></td>
-<td>Parent context ID (in nested-calls).</td>
-</tr>
-<tr>
-<td><code>ctx.params</code></td>
-<td><code>Any</code></td>
-<td>Request params. <em>Second argument from <code>broker.call</code>.</em></td>
-</tr>
-<tr>
-<td><code>ctx.meta</code></td>
-<td><code>Any</code></td>
-<td>Request metadata. <em>It will be also transferred to nested-calls.</em></td>
-</tr>
-<tr>
-<td><code>ctx.level</code></td>
-<td><code>Number</code></td>
-<td>Request level (in nested-calls). The first level is <code>1</code>.</td>
-</tr>
-<tr>
-<td><code>ctx.call()</code></td>
-<td><code>Function</code></td>
-<td>Make nested-calls. Same arguments like in <code>broker.call</code></td>
-</tr>
-<tr>
-<td><code>ctx.emit()</code></td>
-<td><code>Function</code></td>
-<td>Emit an event, same as <code>broker.emit</code></td>
-</tr>
-<tr>
-<td><code>ctx.broadcast()</code></td>
-<td><code>Function</code></td>
-<td>Broadcast an event, same as <code>broker.broadcast</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="Context-tracking" class="article-heading"><a href="#Context-tracking" class="headerlink" title="Context tracking"></a>Context tracking<a class="article-anchor" href="#Context-tracking" aria-hidden="true"></a></h3><p>If you want graceful service shutdowns, enable the Context tracking feature in broker options. If you enable it, all services will wait for all running contexts before shutdown.<br>A timeout value can be defined with <code>shutdownTimeout</code> broker option. The default values is <code>5</code> seconds.</p>
-<p>**Enable context tracking &amp; change the timeout value.<br><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> broker = <span class="keyword">new</span> ServiceBroker(&#123;</span><br><span class="line">    nodeID: <span class="string">"node-1"</span>,</span><br><span class="line">    tracking: &#123;</span><br><span class="line">        enabled: <span class="literal">true</span>,</span><br><span class="line">        shutdownTimeout: <span class="number">10</span> * <span class="number">1000</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>The shutdown timeout can be overwritten by <code>$shutdownTimeout</code> property in service settings.</p>
-</blockquote>
-<p><strong>Disable tracking in calling option</strong></p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">broker.call(<span class="string">"posts.find"</span>, &#123;&#125;, &#123; <span class="attr">tracking</span>: <span class="literal">false</span> &#125;);</span><br></pre></td></tr></table></figure>
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-04-20T06:09:09.961Z" itemprop="dateModified">Last updated: 2019-04-20</time>
+                <time class="article-footer-updated" datetime="2019-04-21T21:58:08.386Z" itemprop="dateModified">Last updated: 2019-04-21</time>
                 <a href="services.html" class="article-footer-prev" title="Services"><i class="fa fa-chevron-left"></i><span>Prev</span></a><a href="events.html" class="article-footer-next" title="Events"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
@@ -311,7 +177,7 @@
           <aside id="article-toc" role="navigation">
             <div id="article-toc-inner">
               <strong class="sidebar-title">Contents</strong>
-              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Actions"><span class="toc-text">Actions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Call-services"><span class="toc-text">Call services</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Syntax"><span class="toc-text">Syntax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Usages"><span class="toc-text">Usages</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Metadata"><span class="toc-text">Metadata</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Streaming"><span class="toc-text">Streaming</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Examples"><span class="toc-text">Examples</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Action-visibility"><span class="toc-text">Action visibility</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Action-hooks"><span class="toc-text">Action hooks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Contexts"><span class="toc-text">Contexts</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Context-tracking"><span class="toc-text">Context tracking</span></a></li></ol></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Actions"><span class="toc-text">Actions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Call-services"><span class="toc-text">Call services</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Syntax"><span class="toc-text">Syntax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Usages"><span class="toc-text">Usages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#moleculer-Context"><span class="toc-text">moleculer.Context</span></a></li></ol></li></ol>
               <a href="#" id="article-toc-top">Back to Top</a>
             </div>
           </aside>
