@@ -2,26 +2,33 @@
 
 ---
 
-The `Service` represents a microservice in the Moleculer framework. You can define actions and subscribe to events. To create a service you must define a schema. The service schema is similar to [a component of VueJS](https://vuejs.org/v2/guide/components.html#What-are-Components).
+The `Service` represents a microservice in the Moleculer framework. You can define actions and subscribe to events. To create a service can use a schema directly, or use a simple struct.
+
+![Gopher Services](assets/gopher-services.jpg)
 
 ## Schema
 
-The schema has some main parts: `name`, `version`, `settings`, `actions`, `methods`, `events`.
+The schema has some main parts: `name`, `version`, `settings`, `actions`, and `events`.
 
 ### Simple service schema to define two actions
 
-```js
-{
-    name: "math",
-    actions: {
-        add(ctx) {
-            return Number(ctx.params.a) + Number(ctx.params.b);
-        },
-
-        sub(ctx) {
-            return Number(ctx.params.a) - Number(ctx.params.b);
-        }
-    }
+```go
+var mathService = moleculer.ServiceSchema{
+  Name: "math",
+  Actions: []moleculer.Action{
+    {
+      Name:  "add",
+      Handler: func addAction(ctx moleculer.Context, params moleculer.Payload) interface{} {
+        return params.Get("a").Int() + params.Get("b").Int()
+      },
+    },
+    {
+      Name:  "sub",
+      Handler: func(ctx moleculer.Context, params moleculer.Payload) interface{} {
+        return params.Get("a").Int() - params.Get("b").Int()
+      },
+    },
+  },
 }
 ```
 
@@ -29,118 +36,118 @@ The schema has some main parts: `name`, `version`, `settings`, `actions`, `metho
 
 The Service has some base properties in the schema.
 
-```js
-{
-    name: "posts",
-    version: 1
+```go
+moleculer.ServiceSchema{
+  Name: "posts",
 }
 ```
 
-The `name` is a mandatory property so it must be defined. It's the first part of action name when you call it.
+The `Name` is a mandatory property so it must be defined. It's the first part of action name when you call it.
 
-> To disable service name prefixing set `$noServiceNamePrefix: true` in Service settings.
+The `Version` is an optional property. Use it to run multiple version from the same service. It is a prefix in the action name.
 
-The `version` is an optional property. Use it to run multiple version from the same service. It is a prefix in the action name. It can be a `Number` or a `String`.
-
-```js
-{
-    name: "posts",
-    version: 2,
-    actions: {
-        find() {...}
-    }
+```go
+moleculer.ServiceSchema{
+  Name: "posts",
+  Version: "2",
+  Actions: []moleculer.Action{
+    {
+      Name:  "find",
+      Handler: ...,
+    },
+  },
 }
 ```
+
+<img src="assets/under_construction.png" width=150/> `version as prefix on action names is not implemented yet.`
 
 To call this `find` action on version `2` service:
 
-```js
-broker.call("v2.posts.find");
+```go
+broker.Call("v2.posts.find", nil);
 ```
 
 {% note info REST call %}
 Via [API Gateway](moleculer-web.html), make a request to `GET /v2/posts/find`.
 {% endnote %}
 
-> To disable version prefixing set `$noVersionPrefix: true` in Service settings.
-
 ## Settings
 
-The `settings` property is a store, where you can store every settings/options to your service. You can reach it via `this.settings` inside the service.
+The `settings` property is a key-value store, where you can store every settings/options to your service.
 
-```js
-{
-    name: "mailer",
-    settings: {
-        transport: "mailgun"
-    },
-
-    action: {
-        send(ctx) {
-            if (this.settings.transport == "mailgun") {
-                ...
-            }
-        }
+```go
+var instanceSettings map[string]interface{}
+moleculer.ServiceSchema{
+ Name: "mailer",
+ Settings: map[string]interface{}{
+  "transport": "mailgun",
+ },
+ Created: func(s moleculer.ServiceSchema, l *log.Entry) {
+  instanceSettings = svc.Settings
+ },
+ Actions: []moleculer.Action{
+  {
+   Name:  "send",
+   Handler: func(ctx moleculer.Context, p moleculer.Payload) interface{} {
+    if instanceSettings["transport"] == "mailgun" {
+     //.. do something
     }
+   },
+  },
+ }
 }
 ```
 
 > The `settings` is also obtainable on remote nodes. It is transferred during service discovering.
 
-## Internal settings
-
-There are some internal settings which are used by core modules. These setting names start with `$` _(dollar sign)_.
-
-| Name                   | Type      | Default | Description                                          |
-| ---------------------- | --------- | ------- | ---------------------------------------------------- |
-| `$noVersionPrefix`     | `Boolean` | `false` | Disable version prefixing in action names.           |
-| `$noServiceNamePrefix` | `Boolean` | `false` | Disable service name prefixing in action names.      |
-| `$dependencyTimeout`   | `Number`  | `0`     | Timeout for dependency waiting.                      |
-| `$shutdownTimeout`     | `Number`  | `0`     | Timeout for waiting for active requests at shutdown. |
-
 ## Mixins
 
-Mixins are a flexible way to distribute reusable functionalities for Moleculer services. The Service constructor merges these mixins with the current schema. It is to extend another service to your service. When a service uses mixins, all properties in the mixin will be "mixed" into the current service.
+Mixins are a flexible way to distribute reusable functionalities for Moleculer services. Moleculer will merges the mixins actions, lifecycle methods with the service schema.
+In this way you can extend services and resuse functionality. When a service uses mixins, all actions, settings, and lifecycle methods are "mixed" into the service.
 
-**Example how to extend `moleculer-web` service**
+**Example using `moleculer-db`**
 
-```js
-const ApiGwService = require("moleculer-web");
-
-module.exports = {
-    name: "api",
-    mixins: [ApiGwService]
-    settings: {
-        // Change port setting
-        port: 8080
-    },
-    actions: {
-        myAction() {
-            // Add a new action to apiGwService service
-        }
-    }
+```go
+moleculer.ServiceSchema{
+  Name: "users",
+  Settings: map[string]interface{}{
+  	"fields":    []string{"_id", "username", "name"},
+  	"populates": map[string]interface{}{"friends": "users.get"},
+  },
+  Mixins: []moleculer.Mixin{
+    db.Mixin(&db.MongoAdapter{
+  	  MongoURL:   "mongodb://localhost:27017",
+  	  Collection: "users",
+  	  Database:   "test",
+  	  Timeout:    time.Second * 5,
+   })},
+  Actions: []moleculer.Action{
+  {
+   Name:  "notify",
+   Handler:...,
+  },
+ }
 }
 ```
 
-The above example creates an `api` service which inherits all from `ApiGwService` but overwrite the port setting and extend it with a new `myAction` action.
+The above example creates an `users` service which inherits all from `db.Mixin`, overwrite the fields and populates setting and expose a new action called `notify`.
 
 ### Merge algorithm
 
 The merge algorithm depends on the property type.
 
-| Property                        | Algorithm                                                                                                                                              |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `name`, `version`               | Merge & overwrite.                                                                                                                                     |
-| `settings`                      | Extend with [defaultsDeep](https://lodash.com/docs/4.17.4#defaultsDeep).                                                                               |
-| `metadata`                      | Extend with [defaultsDeep](https://lodash.com/docs/4.17.4#defaultsDeep).                                                                               |
-| `actions`                       | Extend with [defaultsDeep](https://lodash.com/docs/4.17.4#defaultsDeep). _You can disable an action from mixin if you set to `false` in your service._ |
-| `hooks`                         | Extend with [defaultsDeep](https://lodash.com/docs/4.17.4#defaultsDeep).                                                                               |
-| `methods`                       | Merge & overwrite.                                                                                                                                     |
-| `events`                        | Concatenate listeners.                                                                                                                                 |
-| `created`, `started`, `stopped` | Concatenate listeners.                                                                                                                                 |
-| `mixins`                        | Merge & overwrite.                                                                                                                                     |
-| `dependencies`                  | Merge & overwrite.                                                                                                                                     |
-| any other                       | Merge & overwrite.                                                                                                                                     |
+| Property                        | Algorithm              |
+| ------------------------------- | ---------------------- |
+| `Name`, `Version`               | Merge & overwrite.     |
+| `Settings`                      | Merge & overwrite.     |
+| `Metadata`                      | Merge & overwrite.     |
+| `Actions`                       | Merge & overwrite.     |
+| `Hooks`                         | Merge & overwrite.     |
+| `Events`                        | Concatenate listeners. |
+| `Created`, `Started`, `Stopped` | Concatenate listeners. |
+| `Mixins`                        | Merge & overwrite.     |
+| `Dependencies`                  | Merge & overwrite.     |
+| any other                       | Merge & overwrite.     |
 
 {% note info Merge algorithm examples %}
 **Merge & overwrite**: if serviceA has `a: 5`, `b: 8` and serviceB has `c: 10`, `b: 15`, the mixed service will have `a: 5`, `b: 15` and `c: 10`.
@@ -150,96 +157,98 @@ The merge algorithm depends on the property type.
 ## Actions
 
 The actions are the callable/public methods of the service. They are callable with `broker.call` or `ctx.call`.
-The action could be a ˙`Function` (shorthand for handler) or an object with some properties and `handler`.
-The actions should be placed under the `actions` key in the schema.
 
-```js
-module.exports = {
-    name: "math",
-    actions: {
-        // Shorthand definition, only a handler function
-        add(ctx) {
-            return Number(ctx.params.a) + Number(ctx.params.b);
-        },
-
-        // Normal definition with other properties. In this case
-        // the `handler` function is required!
-        mult: {
-            cache: false,
-            params: {
-                a: "number",
-                b: "number"
-            },
-            handler(ctx) {
-                // The action properties are accessible as `ctx.action.*`
-                if (!ctx.action.cache)
-                    return Number(ctx.params.a) * Number(ctx.params.b);
-            }
-        }
-    }
-};
+```go
+moleculer.ServiceSchema{
+  Name: "math",
+  Actions: []moleculer.Action{
+    {
+      Name:  "add",
+      Handler: func addAction(ctx moleculer.Context, params moleculer.Payload) interface{} {
+        return params.Get("a").Int() + params.Get("b").Int()
+      },
+    },
+    {
+      Name:  "sub",
+      Handler: func(ctx moleculer.Context, params moleculer.Payload) interface{} {
+        return params.Get("a").Int() - params.Get("b").Int()
+      },
+    },
+  },
+}
 ```
 
 You can call the above actions as
 
-```js
-const res = await broker.call("math.add", { a: 5, b: 7 });
-const res = await broker.call("math.mult", { a: 10, b: 31 });
+```go
+res := <-bkr.Call("math.add", map[string]int{ "a": 5, "b": 7 });
+res := <-bkr.Call("math.mult", map[string]int{ "a": 10, "b": 31 });
 ```
 
-Inside actions, you can call other nested actions in other services with `ctx.call` method. It is an alias to `broker.call`, but it sets itself as parent context (due to tracing).
+Inside actions, you can call other nested actions in other services with `ctx.call` method. It is an alias to `broker.call`, but it sets itself as parent context for tracing purposes.
 
-```js
-module.exports = {
-    name: "posts",
-    actions: {
-        async get(ctx) {
-            // Find a post by ID
-            let post = posts[ctx.params.id];
-
-            // Populate the post.author field through "users" service
-            // Call the "users.get" action with author ID
-            const user = await ctx.call("users.get", { id: post.author });
-            if (user) {
-                // Replace the author ID with the received user object
-                post.author = user;
-            }
-
-            return post;
+```go
+moleculer.ServiceSchema{
+  Name: "posts",
+  Actions: []moleculer.Action{
+    {
+      Name:  "get",
+      Handler: func addAction(ctx moleculer.Context, params moleculer.Payload) interface{} {
+        // Find a post by ID
+        postId := params.Get("id").String()
+        posts := <-ctx.Call("posts.find", map[string]interface{}{
+            "query": map[string]interface{}{
+                "id": postId,
+            },
+        })
+        post := posts.First()
+        // Populate the post.author field through "users" service
+        // Call the "users.get" action with author ID
+        users := <-ctx.call("users.find", map[string]interface{}{
+            "query": map[string]interface{}{
+                "id": post.Get("authorId"),
+            },
+        })
+        user := users.First()
+        if user.Exists() {
+            // Replace the author ID with the received user object
+            post.Add("author", user)
         }
-    }
-};
+        return post
+      },
+    },
+  },
+}
 ```
-
-> In handlers the `this` is always pointed to the Service instance.
 
 ## Events
 
 You can subscribe to events under the `events` key.
 
-```js
-module.exports = {
-    name: "report",
+```go
+moleculer.ServiceSchema{
+  Name: "report",
+  Events: []moleculer.Event{
 
-    events: {
-        // Subscribe to "user.created" event
-        "user.created"(payload) {
-            this.logger.info("User created:", payload);
-            // Do something
-        },
+  events: {
+    // Subscribe to "user.created" event
+    "user.created"(payload) {
+      this.logger.info("User created:", payload);
+      // Do something
+    },
 
-        // Subscribe to all "user.*" event
-        "user.*"(payload, sender, eventName) {
-            // Do something with payload. The `eventName` contains
-            // the original event name. E.g. `user.modified`.
-            // The `sender` is the nodeID of sender.
-        }
-
-        // Subscribe to a local event
-        "$node.connected"({ node }) {
-            this.logger.info(`Node '${node.id}' is connected!`);
-        }
+    // Subscribe to all "user.*" event
+    "user.*"(payload, sender, eventName) {
+      // Do something with payload. The `eventName` contains
+      // the original event name. E.g. `user.modified`.
+      // The `sender` is the nodeID of sender.
     }
+
+    // Subscribe to a local event
+    "$node.connected"({ node }) {
+      this.logger.info(`Node '${node.id}' is connected!`);
+    }
+  }
 };
 ```
 
@@ -272,22 +281,22 @@ To create private methods in the service, put your functions under the `methods`
 
 ```js
 module.exports = {
-    name: "mailer",
-    actions: {
-        send(ctx) {
-            // Call the `sendMail` method
-            return this.sendMail(ctx.params.recipients, ctx.params.subject, ctx.params.body);
-        }
-    },
-
-    methods: {
-        // Send an email to recipients
-        sendMail(recipients, subject, body) {
-            return new Promise((resolve, reject) => {
-                ...
-            });
-        }
+  name: "mailer",
+  actions: {
+    send(ctx) {
+      // Call the `sendMail` method
+      return this.sendMail(ctx.params.recipients, ctx.params.subject, ctx.params.body);
     }
+  },
+
+  methods: {
+    // Send an email to recipients
+    sendMail(recipients, subject, body) {
+      return new Promise((resolve, reject) => {
+        ...
+      });
+    }
+  }
 };
 ```
 
@@ -301,22 +310,22 @@ There are some lifecycle service events, that will be triggered by broker. They 
 
 ```js
 module.exports = {
-    name: "www",
-    actions: {...},
-    events: {...},
-    methods: {...},
+  name: "www",
+  actions: {...},
+  events: {...},
+  methods: {...},
 
-    created() {
-        // Fired when the service instance created (with `broker.loadService` or `broker.createService`)
-    },
+  created() {
+    // Fired when the service instance created (with `broker.loadService` or `broker.createService`)
+  },
 
-    async started() {
-        // Fired when broker starts this service (in `broker.start()`)
-    }
+  async started() {
+    // Fired when broker starts this service (in `broker.start()`)
+  }
 
-    async stopped() {
-        // Fired when broker stops this service (in `broker.stop()`)
-    }
+  async stopped() {
+    // Fired when broker stops this service (in `broker.stop()`)
+  }
 };
 ```
 
@@ -328,16 +337,16 @@ If your service depends on other services, use the `dependencies` property in th
 module.exports = {
   name: "posts",
   settings: {
-      $dependencyTimeout: 30000 // Default: 0 - no timeout
+    $dependencyTimeout: 30000 // Default: 0 - no timeout
   },
   dependencies: [
-      "likes", // shorthand w/o version
-      { name: "users", version: 2 }, // with numeric version
-      { name: "comments", version: "staging" } // with string version
+    "likes", // shorthand w/o version
+    { name: "users", version: 2 }, // with numeric version
+    { name: "comments", version: "staging" } // with string version
   ],
   async started() {
-      this.logger.info("It will be called after all dependent services are available.");
-      const users = await this.broker.call("users.list");
+    this.logger.info("It will be called after all dependent services are available.");
+    const users = await this.broker.call("users.list");
   }
   ....
 }
@@ -394,14 +403,14 @@ _Moleculer core modules don't use it. You can store it whatever you want._
 
 ```js
 module.exports = {
-    name: "posts",
-    settings: {},
-    metadata: {
-        scalable: true,
-        priority: 5
-    },
+  name: "posts",
+  settings: {},
+  metadata: {
+    scalable: true,
+    priority: 5
+  },
 
-    actions: { ... }
+  actions: { ... }
 };
 ```
 
@@ -503,16 +512,16 @@ Or create a function which returns with the schema of service
 ```js
 // Export a function, the `loadService` will call with the ServiceBroker instance.
 module.exports = function() {
-    let users = [....];
+  let users = [....];
 
-    return {
-        name: "math",
-        actions: {
-            create(ctx) {
-                users.push(ctx.params);
-            }
-        }
-    };
+  return {
+    name: "math",
+    actions: {
+      create(ctx) {
+        users.push(ctx.params);
+      }
+    }
+  };
 }
 ```
 
@@ -584,33 +593,33 @@ If you would like to use local properties/variables in your service, declare the
 const http = require("http");
 
 module.exports = {
-    name: "www",
+  name: "www",
 
-    settings: {
-        port: 3000
-    },
+  settings: {
+    port: 3000
+  },
 
-    created() {
-        // Create HTTP server
-        this.server = http.createServer(this.httpHandler);
-    },
+  created() {
+    // Create HTTP server
+    this.server = http.createServer(this.httpHandler);
+  },
 
-    started() {
-        // Listening...
-        this.server.listen(this.settings.port);
-    },
+  started() {
+    // Listening...
+    this.server.listen(this.settings.port);
+  },
 
-    stopped() {
-        // Stop server
-        this.server.close();
-    },
+  stopped() {
+    // Stop server
+    this.server.close();
+  },
 
-    methods() {
-        // HTTP handler
-        httpHandler(req, res) {
-            res.end("Hello Moleculer!");
-        }
+  methods() {
+    // HTTP handler
+    httpHandler(req, res) {
+      res.end("Hello Moleculer!");
     }
+  }
 }
 ```
 
@@ -868,60 +877,60 @@ Example health info:
 
 ```js
 {
-    "cpu": {
-        "load1": 0,
-        "load5": 0,
-        "load15": 0,
-        "cores": 4,
-        "utilization": 0
-    },
-    "mem": {
-        "free": 1217519616,
-        "total": 17161699328,
-        "percent": 7.094400109979598
-    },
-    "os": {
-        "uptime": 366733.2786046,
-        "type": "Windows_NT",
-        "release": "6.1.7601",
-        "hostname": "Developer-PC",
-        "arch": "x64",
-        "platform": "win32",
-        "user": {
-            "uid": -1,
-            "gid": -1,
-            "username": "Developer",
-            "homedir": "C:\\Users\\Developer",
-            "shell": null
-        }
-    },
-    "process": {
-        "pid": 13096,
-        "memory": {
-            "rss": 47173632,
-            "heapTotal": 31006720,
-            "heapUsed": 22112024
-        },
-        "uptime": 25.447
-    },
-    "client": {
-        "type": "nodejs",
-        "version": "0.12.0",
-        "langVersion": "v8.9.4"
-    },
-    "net": {
-        "ip": [
-            "192.168.2.100",
-            "192.168.232.1",
-            "192.168.130.1",
-            "192.168.56.1",
-            "192.168.99.1"
-        ]
-    },
-    "time": {
-        "now": 1487338958409,
-        "iso": "2018-02-17T13:42:38.409Z",
-        "utc": "Fri, 17 Feb 2018 13:42:38 GMT"
+  "cpu": {
+    "load1": 0,
+    "load5": 0,
+    "load15": 0,
+    "cores": 4,
+    "utilization": 0
+  },
+  "mem": {
+    "free": 1217519616,
+    "total": 17161699328,
+    "percent": 7.094400109979598
+  },
+  "os": {
+    "uptime": 366733.2786046,
+    "type": "Windows_NT",
+    "release": "6.1.7601",
+    "hostname": "Developer-PC",
+    "arch": "x64",
+    "platform": "win32",
+    "user": {
+      "uid": -1,
+      "gid": -1,
+      "username": "Developer",
+      "homedir": "C:\\Users\\Developer",
+      "shell": null
     }
+  },
+  "process": {
+    "pid": 13096,
+    "memory": {
+      "rss": 47173632,
+      "heapTotal": 31006720,
+      "heapUsed": 22112024
+    },
+    "uptime": 25.447
+  },
+  "client": {
+    "type": "nodejs",
+    "version": "0.12.0",
+    "langVersion": "v8.9.4"
+  },
+  "net": {
+    "ip": [
+      "192.168.2.100",
+      "192.168.232.1",
+      "192.168.130.1",
+      "192.168.56.1",
+      "192.168.99.1"
+    ]
+  },
+  "time": {
+    "now": 1487338958409,
+    "iso": "2018-02-17T13:42:38.409Z",
+    "utc": "Fri, 17 Feb 2018 13:42:38 GMT"
+  }
 }
 ```

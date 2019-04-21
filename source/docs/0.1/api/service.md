@@ -1,9 +1,5 @@
 # Service
 
----
-
-# Service
-
 `new Service(broker, schema)`
 
 Service class

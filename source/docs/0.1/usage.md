@@ -1,5 +1,7 @@
 # Usage
 
+---
+
 # Install Moleculer Go
 
 Moleculer can be installed with npm or yarn
@@ -56,8 +58,9 @@ $ go run github.com/moleculer-go/moleculer/examples/standalone
 
 # Create a Moleculer Go project
 
+<img src="assets/under_construction.png" width=150/>
+
 Use the [Moleculer CLI tool](moleculer-cli.html) to create a new Moleculer-based microservices project.
-![Under Construction](https://img.shields.io/badge/under-construction-red.svg)
 
 1. Create a new project (named `first-demo`)
 

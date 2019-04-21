@@ -1,5 +1,7 @@
 # Broker
 
+---
+
 The `Broker` is the main component of Moleculer.
 
 Is where you publish your services, calls actions, emits events and communicates with other brokers.

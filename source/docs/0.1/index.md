@@ -1,4 +1,6 @@
-## What is Moleculer?
+# What is Moleculer?
+
+---
 
 Moleculer is a simple, fast, modern and powerful microservices framework written in Go (https://golang.org/).
 
