@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://gomicro.services/docs/0.1/lifecycle.html</loc>
+    
+    <lastmod>2019-04-22T02:07:55.449Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gomicro.services/docs/0.1/events.html</loc>
     
     <lastmod>2019-04-22T01:52:36.819Z</lastmod>
@@ -75,13 +82,6 @@
     <loc>https://gomicro.services/docs/0.1/context.html</loc>
     
     <lastmod>2019-04-20T06:16:19.358Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/lifecycle.html</loc>
-    
-    <lastmod>2019-04-20T06:16:18.302Z</lastmod>
     
   </url>
   
