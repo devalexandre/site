@@ -67,17 +67,17 @@ It is not balanced, all service instances will receive it.
 Send broadcast events with `broker.Broadcast(name, payload)` or `context.Broadcast(name, payload)` method.
 
 ```go
-ctx.Broadcast("config.changed", config);
+ctx.Broadcast("config.changed", config)
 ```
 
 Specify which groups/services receive the event:
 
 ```go
 // Send to all "mail" service instances
-ctx.Broadcast("user.created", user, "mail");
+ctx.Broadcast("user.created", user, "mail")
 
 // Send to all "user" & "purchase" service instances.
-ctx.Broadcast("user.created", user, []string{"user", "purchase"});
+ctx.Broadcast("user.created", user, []string{"user", "purchase"})
 ```
 
 ### Subscribe to events
