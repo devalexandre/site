@@ -15,12 +15,12 @@ The broker starts transporter connecting but it doesn't publish the local servic
 </div>
 
 {% note warn Avoid deadlocks %}
-Dead-locks can be made when two services wait for each other. E.g.: `users` service has `dependencies: ["posts"]` and `posts` service has `dependencies: ["users"]`. To avoid it, remove the concerned service from `dependencies` and use `this.waitForServices` method in `started` handler instead.
+Dead-locks can be made when two services wait for each other. E.g.: `users` service has `Dependencies: []string{"posts"}` and `posts` service has `dependencies: []string{"users"}`.
 {% endnote %}
 
 ### Stopping logic
 
-When you call `broker.stop` or stop the process, at first broker publishes an empty service list to remote nodes, so they can route the requests to other instances instead of services under stopping. Next, the broker starts stopping all local services. After that, the transporter disconnects.
+When you call `broker.Stop()` or stop the process, at first broker notify the remote nodes, so they can route the requests to other instances instead of services under stopping. Next, the broker starts stopping all local services. After that, the transporter disconnects.
 
 <div align="center">
 ![Broker stopping lifecycle diagram](assets/lifecycle/broker-stop.svg)
@@ -32,63 +32,54 @@ This section describes what happens when a service is starting & stopping and ho
 
 ### `created` event handler
 
-It is triggered when the service instance is created (e.g.: at `broker.createService` or `broker.loadService`).
-Use it to create other module instances (e.g. http server, database modules) and store them in `this`.
+It is called when the service instance is created (e.g.: at `broker.Publish()`
 
-```js
-const http = require("http");
-
-module.exports = {
-    name: "www",
-    created() {
-        // Create HTTP server
-        this.server = http.createServer(this.httpHandler);
-    }
-};
+```go
+moleculer.ServiceSchema{
+  Name: "www",
+  Created: func(c moleculer.Context, p moleculer.Payload) {
+    //prepare something important ?
+  },
+}
 ```
-
-> This is a sync event handler. You **cannot** return a `Promise` and you **cannot** use `async/await`.
 
 ### `started` event handler
 
-It is triggered when the `broker.start` is called and the broker starts all local services. Use it to connect to database, listen servers...etc.
+It is triggered when the broker starts all local services. Use it to connect to database, listen servers...etc. In this case the gateway is starting a http server.
 
-```js
-module.exports = {
-    name: "users",
-    async started() {
-        try {
-            await this.db.connect();
-        } catch (e) {
-            throw new MoleculerServerError(
-                "Unable to connect to database.",
-                e.message
-            );
-        }
-    }
-};
+```go
+type HttpService struct {
+  //...
+}
+// Started httpService started. It process the settings (default + params), starts a http server,
+// notify the plugins that the http server is starting.
+func (svc *HttpService) Started(context moleculer.BrokerContext, schema moleculer.ServiceSchema) {
+  svc.settings = service.MergeSettings(defaultSettings, svc.Settings)
+  address := svc.getAddress()
+  svc.server = &http.Server{Addr: address}
+  svc.router = mux.NewRouter()
+  svc.server.Handler = svc.router
+  for _, mixin := range svc.Mixins {
+    mixin.RouterStarting(context, svc.router)
+  }
+  svc.reveserProxy(context)
+  go svc.startServer(context)
+  go populateActionsRouter(context.(moleculer.Context), svc.settings, svc.actionsRouter)
+
 ```
-
-> This is an async event handler. A `Promise` can be returned or use `async/await`.
 
 ### `stopped` event handler
 
-It is triggered when the `broker.stop` is called and the broker starts stopping all local services. Use it to close database connections, close sockets...etc.
+It is called when the broker is stopping all local services. Use it to close and release any resources your service might be using. Files, db, http servers etc.
 
-```js
-module.exports = {
-    name: "users",
-    async stopped() {
-        try {
-            await this.db.disconnect();
-        } catch (e) {
-            this.logger.warn(
-                "Unable to stop database connection gracefully.",
-                e
-            );
-        }
+```go
+func (svc *HttpService) Stopped(context moleculer.BrokerContext, schema moleculer.ServiceSchema) {
+  if svc.server != nil {
+    err := svc.server.Shutdown(nil)
+    if err != nil {
+      context.Logger().Error("Error shutting down server - error: ", err)
     }
-};
+  }
+  context.Logger().Info("Gateway stopped()")
+}
 ```
-
-> This is an async event handler. A `Promise` can be returned or use `async/await`.
