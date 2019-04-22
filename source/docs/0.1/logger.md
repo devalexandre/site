@@ -2,6 +2,14 @@
 
 ---
 
+{% note info WIP Documentation %}
+
+<img src="assets/under_construction.png" width=150/>
+
+This documentation is still a working in progress and this page has not been fully converted yet :(
+
+We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
+{% endnote %}
 In Moleculer project every main module has a custom logger instance. They inherit it from the broker logger instance which you can set in the [broker options](broker.html#Broker-options).
 
 It supports also external loggers like [Pino](http://getpino.io/), [Bunyan](https://github.com/trentm/node-bunyan), [Winston](https://github.com/winstonjs/winston), ...etc.

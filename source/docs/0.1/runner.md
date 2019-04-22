@@ -2,6 +2,14 @@
 
 ---
 
+{% note info WIP Documentation %}
+
+<img src="assets/under_construction.png" width=150/>
+
+This documentation is still a working in progress and this page has not been fully converted yet :(
+
+We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
+{% endnote %}
 There is a project runner helper script in the Moleculer project. With it you don't need to create a ServiceBroker instance with options, but a `moleculer.config.js` or `moleculer.config.json` file in the root of repo, fill it with your options, then call the `moleculer-runner` NPM script.
 Another solution is to put them into environment variables instead of putting options to file.
 

@@ -2,6 +2,15 @@
 
 ---
 
+{% note info WIP Documentation %}
+
+<img src="assets/under_construction.png" width=150/>
+
+This documentation is still a working in progress and this page has not been fully converted yet :(
+
+We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
+{% endnote %}
+
 ## Circuit Breaker
 
 The Moleculer has a built-in circuit-breaker solution. It is a threshold-based implementation. It uses a time window to check the failed request rate. Once the threshold value is reached, it trips the circuit breaker.

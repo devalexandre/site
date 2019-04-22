@@ -13,7 +13,7 @@ If you have multiple instances of the same services, the broker will load balanc
 
 ## Call services
 
-To call a service, use the `broker.Call` method or `context.Call` method. The broker looks for the service (and a node) which has the given action and call it.
+To call a service, use the `broker.Call()` method or `context.Call()` method. The broker looks for the service (and a node) which has the given action and call it.
 
 ### Syntax
 

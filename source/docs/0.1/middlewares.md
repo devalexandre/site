@@ -2,6 +2,17 @@
 
 ---
 
+{% note info WIP Documentation %}
+
+<img src="assets/under_construction.png" width=150/>
+
+For MVP we have the basics of MIddelwares working. We already use it for some internal core functions, but the API is not user-friendly yet. We will tackle this soon as we develop more plugins that require middlewares.
+
+This documentation is still a working in progress and this page has not been fully converted yet :(
+
+We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
+{% endnote %}
+
 Moleculer supports middlewares. The middleware is an `Object` with hooks & wrapper functions. Wrap action handlers, event handlers, broker methods and hook lifecycle events.
 
 **All available methods:**

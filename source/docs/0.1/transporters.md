@@ -2,6 +2,14 @@
 
 ---
 
+{% note info WIP Documentation %}
+
+<img src="assets/under_construction.png" width=150/>
+
+This documentation is still a working in progress and this page has not been fully converted yet :(
+
+We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
+{% endnote %}
 Transporter is an important module if you are running services on multiple nodes. Transporter communicates with other nodes. It transfers events, calls requests and processes responses ...etc. If a service runs on multiple instances on different nodes, the requests will be load-balanced among live nodes.
 
 ## Built-in transporters

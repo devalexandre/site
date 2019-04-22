@@ -2,6 +2,15 @@
 
 ---
 
+{% note info WIP Documentation %}
+
+<img src="assets/under_construction.png" width=150/>
+
+This documentation is still a working in progress and this page has not been fully converted yet :(
+
+We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
+{% endnote %}
+
 ## Dynamic service discovery
 
 The Moleculer framework has a built-in service discovery feature. But you don't need to use any central service discovery tool (like Zookeeper, Consul, etcd) because it is integrated into the Moleculer protocol.

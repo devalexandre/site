@@ -2,6 +2,14 @@
 
 ---
 
+{% note info WIP Documentation %}
+
+<img src="assets/under_construction.png" width=150/>
+
+This documentation is still a working in progress and this page has not been fully converted yet :(
+
+We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
+{% endnote %}
 When you call an action, the broker creates a `Context` instance which contains all request information and passes it to the action handler as a single argument.
 
 **Available properties & methods of `Context`:**

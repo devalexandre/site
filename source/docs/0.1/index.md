@@ -79,10 +79,6 @@ $ go run github.com/moleculer-go/moleculer-db/examples/populates
 
 ```
 
-## How fast?
-
-![Under Construction](https://img.shields.io/badge/under-construction-red.svg)
-
 {% note info Versioning %}
 Until Moleculer reaches a `1.0` release, breaking changes will be released with a new minor version. For example `0.1.1`, and `0.1.4` will be backward compatible, but `0.2.0` will have breaking changes.
 {% endnote %}
