@@ -2,9 +2,7 @@
 
 ---
 
-The `Broker` is the main component of Moleculer.
-
-Is where you publish your services, calls actions, emits events and communicates with other brokers.
+The `Broker` is the main component of Moleculer. Is where you publish your services, calls actions, emits events and communicates with other brokers.
 
 <div align="center">
     <img src="assets/service-broker-layers.png" />
@@ -21,7 +19,7 @@ import (
 )
 
 bkr := broker.New()
-bkr.Publish(services...)
+bkr.Publish(user, posts, comments)
 bkr.Start()
 bkr.Stop()
 ```
