@@ -48,13 +48,12 @@
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
 <meta property="og:description" content="What is Moleculer? Moleculer is a simple, fast, modern and powerful microservices framework written in Go (https://golang.org/). It helps you to build simple, efficient, reliable &amp;amp; scalable servic">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://gomicro.services/images/main-example.png">
 <meta property="og:image" content="https://gomicro.services/images/timeline.png">
-<meta property="og:updated_time" content="2019-04-22T02:51:35.000Z">
+<meta property="og:updated_time" content="2019-04-22T22:46:54.543Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta name="twitter:description" content="What is Moleculer? Moleculer is a simple, fast, modern and powerful microservices framework written in Go (https://golang.org/). It helps you to build simple, efficient, reliable &amp;amp; scalable servic">
-<meta name="twitter:image" content="https://gomicro.services/images/main-example.png">
+<meta name="twitter:image" content="https://gomicro.services/images/timeline.png">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
   
@@ -122,7 +121,7 @@
 <p>Moleculer is a simple, fast, modern and powerful microservices framework written in Go (<a href="https://golang.org/)" target="_blank" rel="noopener">https://golang.org/)</a>.</p>
 <p>It helps you to build simple, efficient, reliable &amp; scalable services.</p>
 <p>Easy to go from 1 machine to many machines. Easy to focus on your problem.</p>
-<h2 id="Example" class="article-heading"><a href="#Example" class="headerlink" title="Example"></a>Example<a class="article-anchor" href="#Example" aria-hidden="true"></a></h2><p><img src="/images/main-example.png" alt="Example"></p>
+<h2 id="Example" class="article-heading"><a href="#Example" class="headerlink" title="Example"></a>Example<a class="article-anchor" href="#Example" aria-hidden="true"></a></h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line">	<span class="string">"github.com/moleculer-go/moleculer"</span></span><br><span class="line">	<span class="string">"github.com/moleculer-go/moleculer/broker"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> MathService <span class="keyword">struct</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s MathService)</span> <span class="title">Name</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">"math"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *MathService)</span> <span class="title">Add</span><span class="params">(params moleculer.Payload)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> params.Get(<span class="string">"a"</span>).Int() + params.Get(<span class="string">"b"</span>).Int()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *MathService)</span> <span class="title">Sub</span><span class="params">(a <span class="keyword">int</span>, b <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> a - b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> bkr = broker.New(&amp;moleculer.Config&#123;LogLevel: <span class="string">"error"</span>&#125;)</span><br><span class="line">	bkr.Publish(&amp;MathService&#123;&#125;)</span><br><span class="line">	bkr.Start()</span><br><span class="line">	result := &lt;-bkr.Call(<span class="string">"math.add"</span>, <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>&#123;</span><br><span class="line">		<span class="string">"a"</span>: <span class="number">10</span>,</span><br><span class="line">		<span class="string">"b"</span>: <span class="number">130</span>,</span><br><span class="line">	&#125;)</span><br><span class="line">	fmt.Println(<span class="string">"result: "</span>, result.Int())</span><br><span class="line">	<span class="comment">//$ result: 140</span></span><br><span class="line">	bkr.Stop()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="Roadmap" class="article-heading"><a href="#Roadmap" class="headerlink" title="Roadmap"></a>Roadmap<a class="article-anchor" href="#Roadmap" aria-hidden="true"></a></h1><p><img src="/images/timeline.png" alt="Timeline"></p>
 <h2 id="v0-1-0-MVP" class="article-heading"><a href="#v0-1-0-MVP" class="headerlink" title="v0.1.0 (MVP)"></a>v0.1.0 (MVP)<a class="article-anchor" href="#v0-1-0-MVP" aria-hidden="true"></a></h2><p>Development is <code>complete</code> - Documentation is <code>in-progress</code> and benchmark is also <code>in-progress</code>.</p>
 <p><strong>Contents:</strong></p>
@@ -164,7 +163,7 @@
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-04-22T02:51:35.000Z" itemprop="dateModified">Last updated: 2019-04-22</time>
+                <time class="article-footer-updated" datetime="2019-04-22T22:46:54.543Z" itemprop="dateModified">Last updated: 2019-04-22</time>
                 <a href="usage.html" class="article-footer-next" title="Usage"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
