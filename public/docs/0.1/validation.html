@@ -41,17 +41,19 @@
   <link rel="alternate" href="/atom.xml" title="Moleculer Go - Progressive microservices framework in Go">
   -->
   <!-- Open Graph -->
-  <meta name="description" content="Validation Moleculer has a built-in validator module. It uses the fastest-validator library. Built-in validatorconst &amp;#123; ServiceBroker &amp;#125; = require(&quot;moleculer&quot;);const broker = new ServiceBroker">
+  <meta name="description" content="Validation WIP Documentation This documentation is still a working in progress and this page has not been fully converted yet :( We are working on top of the existing Moleculer JS documentation, and t">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta property="og:url" content="https://gomicro.services/docs/0.1/validation.html">
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
-<meta property="og:description" content="Validation Moleculer has a built-in validator module. It uses the fastest-validator library. Built-in validatorconst &amp;#123; ServiceBroker &amp;#125; = require(&quot;moleculer&quot;);const broker = new ServiceBroker">
+<meta property="og:description" content="Validation WIP Documentation This documentation is still a working in progress and this page has not been fully converted yet :( We are working on top of the existing Moleculer JS documentation, and t">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-04-20T06:15:34.414Z">
+<meta property="og:image" content="https://gomicro.services/docs/0.1/assets/under_construction.png">
+<meta property="og:updated_time" content="2019-04-22T02:49:47.855Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
-<meta name="twitter:description" content="Validation Moleculer has a built-in validator module. It uses the fastest-validator library. Built-in validatorconst &amp;#123; ServiceBroker &amp;#125; = require(&quot;moleculer&quot;);const broker = new ServiceBroker">
+<meta name="twitter:description" content="Validation WIP Documentation This documentation is still a working in progress and this page has not been fully converted yet :( We are working on top of the existing Moleculer JS documentation, and t">
+<meta name="twitter:image" content="https://gomicro.services/docs/0.1/assets/under_construction.png">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
   
@@ -117,6 +119,10 @@
               <div class="article-content" itemprop="articleBody">
                 <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/validation.md" class="corner-right article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
                 <h1 id="Validation" class="article-heading"><a href="#Validation" class="headerlink" title="Validation"></a>Validation<a class="article-anchor" href="#Validation" aria-hidden="true"></a></h1><hr>
+<blockquote class="note info"><strong class="note-title">WIP Documentation</strong><p><img src="assets/under_construction.png" width="150/"></p>
+<p>This documentation is still a working in progress and this page has not been fully converted yet :(</p>
+<p>We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)</p>
+</blockquote>
 <p>Moleculer has a built-in validator module. It uses the <a href="https://github.com/icebob/fastest-validator" target="_blank" rel="noopener">fastest-validator</a> library.</p>
 <h2 id="Built-in-validator" class="article-heading"><a href="#Built-in-validator" class="headerlink" title="Built-in validator"></a>Built-in validator<a class="article-anchor" href="#Built-in-validator" aria-hidden="true"></a></h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; ServiceBroker &#125; = <span class="built_in">require</span>(<span class="string">"moleculer"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> broker = <span class="keyword">new</span> ServiceBroker(&#123;</span><br><span class="line">    validation: <span class="literal">true</span> <span class="comment">// Default is true</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">broker.createService(&#123;</span><br><span class="line">    name: <span class="string">"say"</span>,</span><br><span class="line">    actions: &#123;</span><br><span class="line">        hello: &#123;</span><br><span class="line">            <span class="comment">// Parameters definitions to validator</span></span><br><span class="line">            params: &#123;</span><br><span class="line">                name: &#123; <span class="attr">type</span>: <span class="string">"string"</span>, <span class="attr">min</span>: <span class="number">2</span> &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            handler(ctx) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"Hello "</span> + ctx.params.name;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">broker</span><br><span class="line">    .call(<span class="string">"say.hello"</span>)</span><br><span class="line">    .then(<span class="built_in">console</span>.log)</span><br><span class="line">    .catch(<span class="function"><span class="params">err</span> =&gt;</span> <span class="built_in">console</span>.error(err.message));</span><br><span class="line"><span class="comment">// -&gt; throw ValidationError: "The 'name' field is required!"</span></span><br><span class="line"></span><br><span class="line">broker</span><br><span class="line">    .call(<span class="string">"say.hello"</span>, &#123; <span class="attr">name</span>: <span class="number">123</span> &#125;)</span><br><span class="line">    .then(<span class="built_in">console</span>.log)</span><br><span class="line">    .catch(<span class="function"><span class="params">err</span> =&gt;</span> <span class="built_in">console</span>.error(err.message));</span><br><span class="line"><span class="comment">// -&gt; throw ValidationError: "The 'name' field must be a string!"</span></span><br><span class="line"></span><br><span class="line">broker</span><br><span class="line">    .call(<span class="string">"say.hello"</span>, &#123; <span class="attr">name</span>: <span class="string">"Walter"</span> &#125;)</span><br><span class="line">    .then(<span class="built_in">console</span>.log)</span><br><span class="line">    .catch(<span class="function"><span class="params">err</span> =&gt;</span> <span class="built_in">console</span>.error(err.message));</span><br><span class="line"><span class="comment">// -&gt; "Hello Walter"</span></span><br></pre></td></tr></table></figure>
 <p><a href="https://runkit.com/icebob/moleculer-validation-example" target="_blank" rel="noopener">Play it on Runkit</a></p>
@@ -130,7 +136,7 @@
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-04-20T06:15:34.414Z" itemprop="dateModified">Last updated: 2019-04-20</time>
+                <time class="article-footer-updated" datetime="2019-04-22T02:49:47.855Z" itemprop="dateModified">Last updated: 2019-04-22</time>
                 <a href="index.html" class="article-footer-next" title="What is Moleculer?"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               

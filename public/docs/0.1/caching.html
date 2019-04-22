@@ -41,19 +41,20 @@
   <link rel="alternate" href="/atom.xml" title="Moleculer Go - Progressive microservices framework in Go">
   -->
   <!-- Open Graph -->
-  <meta name="description" content="Caching Moleculer has a built-in caching solution to cache responses of service actions. To enable it, set a cacher type in broker option and set the cache: true in action definition what you want to">
+  <meta name="description" content="Caching WIP Documentation This documentation is still a working in progress and this page has not been fully converted yet :( We are working on top of the existing Moleculer JS documentation, and that">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta property="og:url" content="https://gomicro.services/docs/0.1/caching.html">
 <meta property="og:site_name" content="Moleculer Go - Progressive microservices framework in Go">
-<meta property="og:description" content="Caching Moleculer has a built-in caching solution to cache responses of service actions. To enable it, set a cacher type in broker option and set the cache: true in action definition what you want to">
+<meta property="og:description" content="Caching WIP Documentation This documentation is still a working in progress and this page has not been fully converted yet :( We are working on top of the existing Moleculer JS documentation, and that">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://gomicro.services/docs/0.1/assets/under_construction.png">
 <meta property="og:image" content="https://img.shields.io/badge/performance-%2B20%25-brightgreen.svg">
-<meta property="og:updated_time" content="2019-04-20T06:15:36.007Z">
+<meta property="og:updated_time" content="2019-04-22T02:47:21.439Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
-<meta name="twitter:description" content="Caching Moleculer has a built-in caching solution to cache responses of service actions. To enable it, set a cacher type in broker option and set the cache: true in action definition what you want to">
-<meta name="twitter:image" content="https://img.shields.io/badge/performance-%2B20%25-brightgreen.svg">
+<meta name="twitter:description" content="Caching WIP Documentation This documentation is still a working in progress and this page has not been fully converted yet :( We are working on top of the existing Moleculer JS documentation, and that">
+<meta name="twitter:image" content="https://gomicro.services/docs/0.1/assets/under_construction.png">
 <meta name="twitter:site" content="MoleculerG">
   <!-- Google Analytics -->
   
@@ -119,6 +120,10 @@
               <div class="article-content" itemprop="articleBody">
                 <a href="https://github.com/moleculer-go/site/edit/master/source/docs/0.1/caching.md" class="corner-right article-edit-link" title="Improve this doc"><i class="fa fa-pencil"></i></a>
                 <h1 id="Caching" class="article-heading"><a href="#Caching" class="headerlink" title="Caching"></a>Caching<a class="article-anchor" href="#Caching" aria-hidden="true"></a></h1><hr>
+<blockquote class="note info"><strong class="note-title">WIP Documentation</strong><p><img src="assets/under_construction.png" width="150/"></p>
+<p>This documentation is still a working in progress and this page has not been fully converted yet :(</p>
+<p>We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)</p>
+</blockquote>
 <p>Moleculer has a built-in caching solution to cache responses of service actions. To enable it, set a <code>cacher</code> type in <a href="broker.html#Broker-options">broker option</a> and set the <code>cache: true</code> in <a href="services.html#Actions">action definition</a> what you want to cache.</p>
 <p><strong>Cached action example</strong></p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; ServiceBroker &#125; = <span class="built_in">require</span>(<span class="string">"moleculer"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create broker</span></span><br><span class="line"><span class="keyword">const</span> broker = <span class="keyword">new</span> ServiceBroker(&#123;</span><br><span class="line">    cacher: <span class="string">"Memory"</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create a service</span></span><br><span class="line">broker.createService(&#123;</span><br><span class="line">    name: <span class="string">"users"</span>,</span><br><span class="line">    actions: &#123;</span><br><span class="line">        list: &#123;</span><br><span class="line">            <span class="comment">// Enable caching to this action</span></span><br><span class="line">            cache: <span class="literal">true</span>,</span><br><span class="line">            handler(ctx) &#123;</span><br><span class="line">                <span class="keyword">this</span>.logger.info(<span class="string">"Handler called!"</span>);</span><br><span class="line">                <span class="keyword">return</span> [&#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">"John"</span> &#125;, &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">name</span>: <span class="string">"Jane"</span> &#125;];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">broker</span><br><span class="line">    .start()</span><br><span class="line">    .then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// Will be called the handler, because the cache is empty</span></span><br><span class="line">        <span class="keyword">return</span> broker</span><br><span class="line">            .call(<span class="string">"users.list"</span>)</span><br><span class="line">            .then(<span class="function"><span class="params">res</span> =&gt;</span> broker.logger.info(<span class="string">"Users count:"</span>, res.length));</span><br><span class="line">    &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// Return from cache, handler won't be called</span></span><br><span class="line">        <span class="keyword">return</span> broker</span><br><span class="line">            .call(<span class="string">"users.list"</span>)</span><br><span class="line">            .then(<span class="function"><span class="params">res</span> =&gt;</span></span><br><span class="line">                broker.logger.info(<span class="string">"Users count from cache:"</span>, res.length)</span><br><span class="line">            );</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
@@ -297,7 +302,7 @@
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-04-20T06:15:36.007Z" itemprop="dateModified">Last updated: 2019-04-20</time>
+                <time class="article-footer-updated" datetime="2019-04-22T02:47:21.439Z" itemprop="dateModified">Last updated: 2019-04-22</time>
                 <a href="fault-tolerance.html" class="article-footer-prev" title="Fault tolerance"><i class="fa fa-chevron-left"></i><span>Prev</span></a><a href="validating.html" class="article-footer-next" title="Validating"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               

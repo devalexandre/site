@@ -49,7 +49,7 @@
 <meta property="og:description" content="Actions The actions are the callable/public methods of the service.Actions follow the RPC pattern. It has request parameters &amp;amp; returns response, like a HTTP request. If you have multiple instances">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://gomicro.services/docs/0.1/assets/action-balancing.gif">
-<meta property="og:updated_time" content="2019-04-21T21:58:08.386Z">
+<meta property="og:updated_time" content="2019-04-22T02:31:39.528Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Moleculer Go - Progressive microservices framework in Go">
 <meta name="twitter:description" content="Actions The actions are the callable/public methods of the service.Actions follow the RPC pattern. It has request parameters &amp;amp; returns response, like a HTTP request. If you have multiple instances">
@@ -123,7 +123,7 @@
 <p>If you have multiple instances of the same services, the broker will load balancing the request among instances. <a href="balancing.html">Read more about balancing</a>.</p>
 <div align="center"><br><img src="assets/action-balancing.gif" alt="Action balancing diagram"><br></div>
 
-<h2 id="Call-services" class="article-heading"><a href="#Call-services" class="headerlink" title="Call services"></a>Call services<a class="article-anchor" href="#Call-services" aria-hidden="true"></a></h2><p>To call a service, use the <code>broker.Call</code> method or <code>context.Call</code> method. The broker looks for the service (and a node) which has the given action and call it.</p>
+<h2 id="Call-services" class="article-heading"><a href="#Call-services" class="headerlink" title="Call services"></a>Call services<a class="article-anchor" href="#Call-services" aria-hidden="true"></a></h2><p>To call a service, use the <code>broker.Call()</code> method or <code>context.Call()</code> method. The broker looks for the service (and a node) which has the given action and call it.</p>
 <h3 id="Syntax" class="article-heading"><a href="#Syntax" class="headerlink" title="Syntax"></a>Syntax<a class="article-anchor" href="#Syntax" aria-hidden="true"></a></h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">res := broker.Call(actionName, params)</span><br></pre></td></tr></table></figure>
 <p>The <code>actionName</code> is a dot-separated string. The first part of it is the service name, while the second part of it represents the action name. So if you have a <code>posts</code> service with a <code>create</code> action, you can call it as <code>posts.create</code>.</p>
 <p>The <code>params</code> is an <code>interface{}</code> that might be serialized in case of remote calls. The <code>params</code> are wrapped in a moleculer.Payload which is passed to the action as a part of the <a href="context.html">Context</a> and as the params argument. A service actions can access it via <code>ctx.Payload()</code> or directly in the params argument.</p>
@@ -168,7 +168,7 @@
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2019-04-21T21:58:08.386Z" itemprop="dateModified">Last updated: 2019-04-21</time>
+                <time class="article-footer-updated" datetime="2019-04-22T02:31:39.528Z" itemprop="dateModified">Last updated: 2019-04-22</time>
                 <a href="services.html" class="article-footer-prev" title="Services"><i class="fa fa-chevron-left"></i><span>Prev</span></a><a href="events.html" class="article-footer-next" title="Events"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
