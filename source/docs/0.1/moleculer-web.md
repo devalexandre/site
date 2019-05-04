@@ -11,24 +11,19 @@ This documentation is still a working in progress and this page has not been ful
 We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
 {% endnote %}
 
-## moleculer-web [![npm](https://img.shields.io/npm/v/moleculer-web.svg?maxAge=3600)](https://www.npmjs.com/package/moleculer-web)
+## moleculer-web 
 
-The [moleculer-web](https://github.com/moleculer-go/moleculer-web) is the official API gateway service for Moleculer framework. Use it to publish your services as RESTful APIs.
+The [moleculer-web](https://github.com/moleculer-go/moleculer-web) is the official API gateway service for Moleculer Go. Use it to publish your services as RESTful APIs and your events over WebSockets.
 
 ## Features
 
 -   support HTTP & HTTPS
 -   serve static files
+-   reverse proxy for easy development
 -   multiple routes
--   support Connect-like middlewares in global-level, route-level and alias-level.
 -   alias names (with named parameters & REST routes)
 -   whitelist
 -   multiple body parsers (json, urlencoded)
--   CORS headers
--   Rate limiter
--   before & after call hooks
--   Buffer & Stream handling
--   middleware mode (use as a middleware with Express)
 
 ## Install
 
