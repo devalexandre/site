@@ -80,7 +80,7 @@ Use the [Moleculer CLI tool](moleculer-cli.html) to create a new Moleculer-based
     ```bash
     $ go run .
     ```
-4. Open the [http://localhost:3000/](http://localhost:3000/) link in your browser. It shows a start page which contains two links to call the `greeter` service via [API gateway](https://github.com/moleculer-go/moleculer-web).
+4. Open the [http://localhost:3000/](http://localhost:3000/) link in your browser. It shows a start page which contains two links to call the `greeter` service via [API gateway](https://github.com/moleculer-go/gateway).
 
 {% note info Congratulations! %}
 You have just created your first Moleculer-based microservices project! The next step is to check our [examples](examples.html) or [demo projects](https://github.com/moleculer-go/moleculer-examples).

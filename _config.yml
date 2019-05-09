@@ -61,7 +61,7 @@ alias:
   docs/modules.html: docs/0.1/modules.html
   docs/moleculer-cli.html: docs/0.1/moleculer-cli.html
   docs/moleculer-repl.html: docs/0.1/moleculer-repl.html
-  docs/moleculer-web.html: docs/0.1/moleculer-web.html
+  docs/gateway.html: docs/0.1/gateway.html
   docs/nodes.html: docs/0.1/nodes.html
   docs/runner.html: docs/0.1/runner.html
   docs/serializers.html: docs/0.1/serializers.html
@@ -91,7 +91,7 @@ alias:
   0.12/docs/metrics.html: docs/0.1/metrics.html
   0.12/docs/moleculer-cli.html: docs/0.1/moleculer-cli.html
   0.12/docs/moleculer-repl.html: docs/0.1/moleculer-repl.html
-  0.12/docs/moleculer-web.html: docs/0.1/moleculer-web.html
+  0.12/docs/gateway.html: docs/0.1/gateway.html
   0.12/docs/nodes.html: docs/0.1/nodes.html
   0.12/docs/runner.html: docs/0.1/runner.html
   0.12/docs/serializers.html: docs/0.1/serializers.html

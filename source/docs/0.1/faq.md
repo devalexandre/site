@@ -21,7 +21,7 @@ Use the following command:
 $ node --inspect=0.0.0.0:9229 node_modules/moleculer/bin/moleculer-runner services
 ```
 
-# API Gateway (moleculer-web)
+# Gateway
 
 ## Why am I getting `413 - request entity too large` error message when sending a big POST body
 

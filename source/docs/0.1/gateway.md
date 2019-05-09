@@ -2,18 +2,69 @@
 
 ---
 
-{% note info WIP Documentation %}
+The [gateway](https://github.com/moleculer-go/gateway) is the official API gateway service for Moleculer Go.
+You can use it to **expose** your services over HTTP as RESTful APIs:
 
-<img src="assets/under_construction.png" width=150/>
+```go
+package main
 
-This documentation is still a working in progress and this page has not been fully converted yet :(
+import (
+  "fmt"
+  "io/ioutil"
+  "net/http"
 
-We are working on top of the existing Moleculer JS documentation, and that is why you might see pages with some JavaScript :)
-{% endnote %}
+  "github.com/moleculer-go/moleculer"
 
-## moleculer-web 
+  "github.com/moleculer-go/gateway"
+  "github.com/moleculer-go/moleculer/broker"
+)
 
-The [moleculer-web](https://github.com/moleculer-go/moleculer-web) is the official API gateway service for Moleculer Go. Use it to publish your services as RESTful APIs and your events over WebSockets.
+type UserService struct {
+}
+
+func (svc *UserService) Name() string {
+  return "user"
+}
+
+func (svc *UserService) Greet(params moleculer.Payload) string {
+  return "Horay! " + params.Get("name").String() + ", you have called an action using the HTTP gateway!"
+}
+
+func main() {
+  userSvc := &UserService{}
+  gatewaySvc := &gateway.HttpService{
+    Settings: map[string]interface{}{"port": "9015"},
+    Depends:  []string{"user"},
+  }
+
+  bkr := broker.New(&moleculer.Config{LogLevel: "error"})
+  bkr.Publish(gatewaySvc, userSvc)
+  bkr.Start()
+
+  response, _ := http.Get("http://localhost:9015/user/greet?name=John_Snow")
+  // $ Horay! John_Snow, you have called an action using the HTTP gateway!
+  fmt.Println(bodyContent(response))
+
+  bkr.Stop()
+}
+
+// bodyContent return the response body as string
+func bodyContent(resp *http.Response) string {
+  defer resp.Body.Close()
+  bts, _ := ioutil.ReadAll(resp.Body)
+  return string(bts)
+}
+```
+
+#### run the example above with:
+
+```bash
+$ go run github.com/moleculer-go/gateway/examples/simple
+# Note: Go 1.11+ required to run a repository like that
+# If you have a older version you need to download the code and run locally.
+```
+
+You can also listen to your events over WebSockets directly from your browser code :)
 
 ## Features
 
@@ -28,7 +79,7 @@ The [moleculer-web](https://github.com/moleculer-go/moleculer-web) is the offici
 ## Install
 
 ```bash
-npm i moleculer-web
+go get github.com/moleculer-go/gateway
 ```
 
 ## Usage
@@ -38,9 +89,9 @@ npm i moleculer-web
 This example uses API Gateway service with default settings.
 You can access all services (including internal `$node.`) via `http://localhost:3000/`
 
-```js
+```go
 const { ServiceBroker } = require("moleculer");
-const ApiService = require("moleculer-web");
+const ApiService = ...
 
 const broker = new ServiceBroker();
 
@@ -489,7 +540,7 @@ You can implement authorization. Do 2 things to enable it.
 **Example authorization**
 
 ```js
-const E = require("moleculer-web").Errors;
+const E = ...
 
 broker.createService({
     mixins: [ApiService],
@@ -531,7 +582,7 @@ broker.createService({
 ```
 
 {% note info %}
-You can find a more detailed role-based JWT authorization example in [full example](https://github.com/moleculer-go/moleculer-web/blob/master/examples/full/index.js#L239).
+You can find a more detailed role-based JWT authorization example in [full example](https://github.com/ moleculer-go/gateway/blob/master/examples/full/index.js#L239).
 {% endnote %}
 
 ## Authentication
@@ -644,7 +695,7 @@ broker.createService({
 
 ## CORS headers
 
-You can use [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) headers in Moleculer-Web service.
+You can use [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) headers in gateway service.
 
 **Usage**
 
@@ -687,7 +738,7 @@ const svc = broker.createService({
 
 ## Rate limiter
 
-The Moleculer-Web has a built-in rate limiter with a memory store.
+Built-in rate limiter with a memory store.
 
 **Usage**
 
@@ -756,34 +807,6 @@ class CustomStore {
         this.hits.clear();
     }
 }
-```
-
-## ExpressJS middleware usage
-
-You can use Moleculer-Web as a middleware in an [ExpressJS](http://expressjs.com/) application.
-
-**Usage**
-
-```js
-const svc = broker.createService({
-    mixins: [ApiService],
-
-    settings: {
-        middleware: true
-    }
-});
-
-// Create Express application
-const app = express();
-
-// Use ApiGateway as middleware
-app.use("/api", svc.express());
-
-// Listening
-app.listen(3000);
-
-// Start server
-broker.start();
 ```
 
 ## Full service settings
@@ -941,40 +964,37 @@ settings: {
 
 ## Examples
 
--   [Simple](https://github.com/moleculer-go/moleculer-web/blob/master/examples/simple/index.js)
+-   [Simple](https://github.com/ moleculer-go/gateway/blob/master/examples/simple/index.js)
 
     -   simple gateway with default settings.
 
--   [SSL server](https://github.com/moleculer-go/moleculer-web/blob/master/examples/ssl/index.js)
+-   [SSL server](https://github.com/ moleculer-go/gateway/blob/master/examples/ssl/index.js)
 
     -   open HTTPS server
     -   whitelist handling
 
--   [WWW with assets](https://github.com/moleculer-go/moleculer-web/blob/master/examples/www/index.js)
+-   [WWW with assets](https://github.com/ moleculer-go/gateway/blob/master/examples/www/index.js)
 
     -   serve static files from the `assets` folder
     -   whitelist
     -   aliases
     -   multiple body-parsers
 
--   [Authorization](https://github.com/moleculer-go/moleculer-web/blob/master/examples/authorization/index.js)
+-   [Authorization](https://github.com/ moleculer-go/gateway/blob/master/examples/authorization/index.js)
 
     -   simple authorization demo
     -   set the authorized user to `Context.meta`
 
--   [REST](https://github.com/moleculer-go/moleculer-web/blob/master/examples/rest/index.js)
+-   [REST](https://github.com/ moleculer-go/gateway/blob/master/examples/rest/index.js)
 
     -   simple server with RESTful aliases
     -   example `posts` service with CRUD actions
 
--   [Express](https://github.com/moleculer-go/moleculer-web/blob/master/examples/express/index.js)
-    -   webserver with Express
-    -   use moleculer-web as a middleware
--   [Socket.io](https://github.com/moleculer-go/moleculer-web/blob/master/examples/socket.io/index.js)
+-   [Socket.io](https://github.com/ moleculer-go/gateway/blob/master/examples/socket.io/index.js)
     -   start socket.io websocket server
     -   call action and send back the response via websocket
     -   send Moleculer events to the browser via websocket
--   [Full](https://github.com/moleculer-go/moleculer-web/blob/master/examples/full/index.js)
+-   [Full](https://github.com/ moleculer-go/gateway/blob/master/examples/full/index.js)
 
     -   SSL
     -   static files
@@ -988,14 +1008,14 @@ settings: {
     -   metrics, statistics & validation from Moleculer
     -   custom error handlers
 
--   [Webpack](https://github.com/moleculer-go/moleculer-web/blob/master/examples/webpack)
+-   [Webpack](https://github.com/ moleculer-go/gateway/blob/master/examples/webpack)
 
     -   Webpack development environment for client-side developing
     -   webpack config file
     -   compression
     -   static file serving
 
--   [Webpack-Vue](https://github.com/moleculer-go/moleculer-web/blob/master/examples/webpack-vue)
+-   [Webpack-Vue](https://github.com/ moleculer-go/gateway/blob/master/examples/webpack-vue)
     -   Webpack+Vue development environment for VueJS client developing
     -   webpack config file
     -   Hot-replacement

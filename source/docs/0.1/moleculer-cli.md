@@ -37,7 +37,7 @@ The above command downloads the template from [moleculer-go/moleculer-template-p
 
 -   [**project**](https://github.com/moleculer-go/moleculer-template-project) - Generate a common Moleculer-based project. _Use it if you want to start a new project which is based on Moleculer framework_
     _ sample service (`greeter`)
-    _ official [API Gateway](https://github.com/moleculer-go/moleculer-web) (optional)
+    _ official [API Gateway](https://github.com/moleculer-go/gateway) (optional)
     _ Docker & Docker Compose files
     _ tests & coverage with [Jest](http://facebook.github.io/jest/) \* lint with [ESLint](http://eslint.org/)
 

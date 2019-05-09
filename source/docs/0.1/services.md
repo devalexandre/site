@@ -68,7 +68,7 @@ broker.Call("v2.posts.find", nil);
 ```
 
 {% note info REST call %}
-Via [API Gateway](moleculer-web.html), make a request to `GET /v2/posts/find`.
+Via [API Gateway](gateway.html), make a request to `GET /v2/posts/find`.
 {% endnote %}
 
 ## Settings

@@ -57,7 +57,7 @@ package main
 import (
 	"github.com/moleculer-go/example-whatsapp/services"
 	"github.com/moleculer-go/moleculer"
-	"github.com/moleculer-go/moleculer-web"
+	"github.com/moleculer-go/gateway"
 	"github.com/moleculer-go/moleculer/broker"
 	"github.com/moleculer-go/moleculer/cli"
 	"github.com/spf13/cobra"

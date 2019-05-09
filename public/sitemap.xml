@@ -2,16 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/index.html</loc>
+    <loc>https://gomicro.services/docs/0.1/gateway.html</loc>
     
-    <lastmod>2019-04-22T22:46:54.543Z</lastmod>
+    <lastmod>2019-05-09T23:51:29.695Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/usage.html</loc>
+    
+    <lastmod>2019-05-09T23:46:12.251Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/moleculer-cli.html</loc>
+    
+    <lastmod>2019-05-09T23:44:57.612Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/modules.html</loc>
+    
+    <lastmod>2019-05-09T23:44:47.421Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/faq.html</loc>
+    
+    <lastmod>2019-05-09T23:44:20.889Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://gomicro.services/docs/0.1/broker.html</loc>
     
-    <lastmod>2019-04-22T02:58:44.468Z</lastmod>
+    <lastmod>2019-05-09T23:44:01.231Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/services.html</loc>
+    
+    <lastmod>2019-05-09T23:42:08.802Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gomicro.services/docs/0.1/index.html</loc>
+    
+    <lastmod>2019-04-22T22:46:54.543Z</lastmod>
     
   </url>
   
@@ -72,30 +114,9 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/moleculer-web.html</loc>
-    
-    <lastmod>2019-04-22T02:48:59.028Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://gomicro.services/docs/0.1/moleculer-repl.html</loc>
     
     <lastmod>2019-04-22T02:48:50.554Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/moleculer-cli.html</loc>
-    
-    <lastmod>2019-04-22T02:48:41.022Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/modules.html</loc>
-    
-    <lastmod>2019-04-22T02:48:34.453Z</lastmod>
     
   </url>
   
@@ -117,13 +138,6 @@
     <loc>https://gomicro.services/docs/0.1/fault-tolerance.html</loc>
     
     <lastmod>2019-04-22T02:48:05.047Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/faq.html</loc>
-    
-    <lastmod>2019-04-22T02:47:59.272Z</lastmod>
     
   </url>
   
@@ -254,23 +268,9 @@
   </url>
   
   <url>
-    <loc>https://gomicro.services/docs/0.1/services.html</loc>
-    
-    <lastmod>2019-04-21T20:35:01.491Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://gomicro.services/docs/0.1/examples.html</loc>
     
     <lastmod>2019-04-21T01:25:17.089Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gomicro.services/docs/0.1/usage.html</loc>
-    
-    <lastmod>2019-04-21T01:25:03.685Z</lastmod>
     
   </url>
   
