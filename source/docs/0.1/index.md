@@ -105,13 +105,13 @@ $ go get github.com/moleculer-go/moleculer
 ```bash
 
 # simple moleculer db example with memory adaptor
-$ go run github.com/moleculer-go/moleculer-db/examples/users
+$ go run github.com/moleculer-go/store/examples/users
 
 # simple moleculer db example with Mongo adaptor
-$ go run github.com/moleculer-go/moleculer-db/examples/usersMongo
+$ go run github.com/moleculer-go/store/examples/usersMongo
 
 # complex moleculer db example with population of fields by other services
-$ go run github.com/moleculer-go/moleculer-db/examples/populates
+$ go run github.com/moleculer-go/store/examples/populates
 
 
 ```

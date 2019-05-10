@@ -167,6 +167,6 @@ bkr := broker.New(&moleculer.Config{
 
 ## Examples
 
--   [Moleculer DB Examples](https://github.com/moleculer-go/moleculer-db/blob/master/examples/usersMongo/users.service.go)
+-   [Moleculer DB Examples](https://github.com/moleculer-go/store/blob/master/examples/usersMongo/users.service.go)
 -   [WhatsApp Example](https://github.com/moleculer-go/example-whatsapp/blob/master/cli/whatsapp_service.go)
 -   [Broker Integration Tests](https://github.com/moleculer-go/moleculer/blob/develop/broker/broker_test.go)

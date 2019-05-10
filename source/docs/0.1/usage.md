@@ -8,6 +8,9 @@ Moleculer can be installed with npm or yarn
 
 ```bash
 $ go get -u github.com/moleculer-go/moleculer
+
+# Or with go modules
+github.com/moleculer-go/moleculer v0.1.2
 ```
 
 # Create your first microservice

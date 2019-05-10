@@ -105,7 +105,7 @@ moleculer.ServiceSchema{
 Mixins are a flexible way to distribute reusable functionalities for Moleculer services. Moleculer will merges the mixins actions, lifecycle methods with the service schema.
 In this way you can extend services and resuse functionality. When a service uses mixins, all actions, settings, and lifecycle methods are "mixed" into the service.
 
-**Example using `moleculer-db`**
+**Example using `moleculer-go/store`**
 
 ```go
 moleculer.ServiceSchema{
@@ -115,7 +115,7 @@ moleculer.ServiceSchema{
     "populates": map[string]interface{}{"friends": "users.get"},
   },
   Mixins: []moleculer.Mixin{
-    db.Mixin(&db.MongoAdapter{
+    store.Mixin(&mongo.MongoAdapter{
       MongoURL:   "mongodb://localhost:27017",
       Collection: "users",
       Database:   "test",
@@ -130,7 +130,7 @@ moleculer.ServiceSchema{
 }
 ```
 
-The above example creates an `users` service which inherits all from `db.Mixin`, overwrite the fields and populates setting and expose a new action called `notify`.
+The above example creates an `users` service which inherits all from `store.Mixin`, overwrite the fields and populates setting and expose a new action called `notify`.
 
 ### Merge algorithm
 
